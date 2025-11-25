@@ -4,7 +4,6 @@
 
 [![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.java.net/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.0.0-blue.svg)](https://spring.io/projects/spring-cloud)
 [![gRPC](https://img.shields.io/badge/gRPC-1.77.0-blue.svg)](https://grpc.io/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
@@ -196,17 +195,15 @@ Before you begin, ensure you have the following installed:
 
 Services run locally with minimal dependencies. Consul is disabled by default.
 
-1. **Start infrastructure services** (PostgreSQL, Redis, Keycloak, LGTM)
+1. **Start infrastructure services** (PostgreSQL, Redis, Keycloak)
    ```bash
-   cd infrastructure/docker/compose/dev
+   cd infrastructure/docker/compose/shared
    docker-compose up -d
    cd -
    ```
 
    Access points:
-   - Consul UI: `http://localhost:8500` (optional)
    - Keycloak admin console: `http://localhost:9090`
-   - Grafana (LGTM): `http://localhost:3100`
 
 2. **Start gRPC services**
    ```bash
@@ -240,10 +237,18 @@ All services run in Docker with full Consul integration for service discovery an
    docker-compose up -d
    ```
 
+   Access points:
+    - Consul UI: `http://localhost:8500` (optional)
+    - Keycloak admin console: `http://localhost:9090`
+    - Grafana (LGTM): `http://localhost:3100`
+
 Services will use the `dev-docker` profile, which enables:
 - Consul-based service discovery
 - Consul KV store for configuration
 - Service-to-service communication via Consul DNS
+
+3. **GraphQL Gateway**
+   Access GraphQL playground at: `http://localhost:8080/graphiql`
 
 ## Project Structure
 
@@ -519,4 +524,4 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 **Built with** ❤️ **using Spring Boot, gRPC, and GraphQL**
 
-For questions or support, please [open an issue](https://github.com/yourusername/sbcgg/issues).
+For questions or support, please [open an issue](./issues).

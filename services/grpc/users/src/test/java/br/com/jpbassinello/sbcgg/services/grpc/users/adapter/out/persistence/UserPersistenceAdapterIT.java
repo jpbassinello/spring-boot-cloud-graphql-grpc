@@ -24,7 +24,7 @@ class UserPersistenceAdapterIT {
 
   @Container
   @ServiceConnection
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17.6-alpine3.22")
+  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17.7-alpine3.22")
       .withDatabaseName("users")
       .withUsername("postgres")
       .withPassword("postgres");

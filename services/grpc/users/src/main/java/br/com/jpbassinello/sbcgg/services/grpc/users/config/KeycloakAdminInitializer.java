@@ -29,7 +29,7 @@ class KeycloakAdminInitializer {
         User.builder()
             .email("admin@sbcgg.com")
             .firstName("Admin")
-            .lastName("MyApp")
+            .lastName("Sbcgg")
             .active(true)
             .emailVerified(true)
             .mobilePhoneNumber("+5519999998888")

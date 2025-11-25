@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MessagesApplication (dev)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="Services">
+    <option name="ACTIVE_PROFILES" value="dev" />
+    <module name="myapp.services.grpc.messages.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="br.com.jpbassinello.myapp.services.messages.MessagesApplication" />
+    <option name="VM_PARAMETERS" value="-Djava.rmi.server.hostname=localhost" />
+    <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
+      <option name="credential" />
+      <option name="region" />
+      <option name="useCurrentConnection" value="false" />
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

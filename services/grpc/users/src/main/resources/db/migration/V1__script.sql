@@ -40,7 +40,7 @@ VALUES ('00000000-0000-0000-0000-000000000000',
         TRUE,
         TRUE,
         'Admin',
-        'MyApp',
+        'Sbcgg',
         NOW(),
         'America/Sao_Paulo');
 

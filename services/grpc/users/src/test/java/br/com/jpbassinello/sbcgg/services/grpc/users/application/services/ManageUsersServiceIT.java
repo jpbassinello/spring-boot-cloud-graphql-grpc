@@ -45,7 +45,7 @@ class ManageUsersServiceIT extends BaseServiceIT {
         ManageUsersUseCase.RegisterUserInput.builder()
             .email("admin@my.app")
             .mobilePhoneNumber("+5519991038011")
-            .firstName("MyApp")
+            .firstName("App")
             .lastName("Admin")
             .password("password")
             .timeZoneId("America/Los_Angeles")
@@ -68,7 +68,7 @@ class ManageUsersServiceIT extends BaseServiceIT {
     var registeredUser = service.register(
         ManageUsersUseCase.RegisterUserInput.builder()
             .email("user@my.app")
-            .firstName("MyApp")
+            .firstName("App")
             .lastName("User")
             .password("password")
             .timeZoneId("America/Sao_Paulo")
