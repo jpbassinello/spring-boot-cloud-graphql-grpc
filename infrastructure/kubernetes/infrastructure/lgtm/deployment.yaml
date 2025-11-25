@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lgtm
+  namespace: sbcgg
+  labels:
+    app: lgtm
+    app.kubernetes.io/name: lgtm
+    app.kubernetes.io/component: observability
+    app.kubernetes.io/part-of: sbcgg-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lgtm
+  template:
+    metadata:
+      labels:
+        app: lgtm
+        app.kubernetes.io/name: lgtm
+        app.kubernetes.io/component: observability
+    spec:
+      containers:
+      - name: lgtm
+        image: grafana/otel-lgtm:0.11.17
+        ports:
+        - containerPort: 3000
+          name: grafana
+          protocol: TCP
+        - containerPort: 4317
+          name: otlp-grpc
+          protocol: TCP
+        - containerPort: 4318
+          name: otlp-http
+          protocol: TCP
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: lgtm-data
+          mountPath: /data
+      volumes:
+      - name: lgtm-data
+        emptyDir: {}

@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: users-service
+
+grpc:
+  client:
+    messages:
+      enable-keep-alive: true
+      keep-alive-without-calls: true
+      negotiation-type: plaintext
+
+keycloak:
+  active: true
+  master-realm: master
+  master-client: admin-cli
+  application-realm: sbcgg
+  application-client: sbcgg
+  username: keycloak

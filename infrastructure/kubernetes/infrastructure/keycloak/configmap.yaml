@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-realm
+  namespace: sbcgg
+  labels:
+    app: keycloak
+    app.kubernetes.io/name: keycloak
+    app.kubernetes.io/component: identity
+    app.kubernetes.io/part-of: sbcgg-platform
+data:
+  # Note: In production, mount this from the actual realm.json file
+  # located at infrastructure/docker/compose/configs/keycloak/realm.json
+  # For now, create a minimal realm or use kubectl create configmap:
+  # kubectl create configmap keycloak-realm --from-file=realm.json=infrastructure/docker/compose/configs/keycloak/realm.json -n sbcgg
+  realm.json: |
+    {
+      "realm": "sbcgg",
+      "enabled": true,
+      "sslRequired": "external",
+      "registrationAllowed": false,
+      "loginWithEmailAllowed": true,
+      "clients": [
+        {
+          "clientId": "sbcgg",
+          "enabled": true,
+          "publicClient": true,
+          "redirectUris": ["*"],
+          "webOrigins": ["*"]
+        }
+      ],
+      "roles": {
+        "realm": [
+          {"name": "USER"},
+          {"name": "ADMIN"}
+        ]
+      }
+    }

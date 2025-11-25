@@ -1,0 +1,50 @@
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/compiler.xml
+.idea/sonarlint
+.idea/libraries
+.idea/aws.xml
+/.idea/git_toolbox_prj.xml
+/.idea/sonarlint-state.xml
+.idea/runConfigurations.xml
+.idea/httpRequests/
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+.idea/**/csv-plugin.xml
+
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+.idea/artifacts
+.idea/jarRepositories.xml
+.idea/modules.xml
+.idea/*.iml
+.idea/modules
+.idea/encodings.xml
+/.idea/codestream.xml
+*.iml
+*.ipr
+
+# Misc
+*.swp
+*.log*
+
+# Gradle
+.gradle/
+.idea/gradle.xml
+build/
+buildSrc/.gradle/
+buildSrc/build/
+build-cache/

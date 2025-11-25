@@ -1,0 +1,27 @@
+server:
+  port: 8090
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/users?cachePrepStmts=true&useServerPrepStmts=true
+    username: postgres
+    password: postgres
+  devtools:
+    livereload:
+      port: 35730
+  config:
+    import:
+      - "optional:classpath:config/jpa/application.yaml"
+      - "optional:classpath:config/app/application.yaml"
+      - "optional:classpath:config/app/application-dev.yaml"
+
+keycloak:
+  server-url: http://localhost:9090
+  password: keycloak
+
+grpc:
+  server:
+    port: 8091
+  client:
+    messages:
+      address: "dns:///localhost:8191"

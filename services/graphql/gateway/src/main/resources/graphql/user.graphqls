@@ -1,0 +1,49 @@
+enum Role {
+    USER
+    ADMIN
+}
+
+enum UserContactMethod {
+    EMAIL
+    MOBILE_PHONE_NUMBER
+}
+
+type User {
+    id: ID!
+    email: String!
+    emailVerified: Boolean!
+    mobilePhoneNumber: String!
+    mobilePhoneNumberVerified: Boolean!
+    firstName: String!
+    lastName: String!
+    active: Boolean!
+    timeZoneId: String!
+    roles: [Role!]!
+    messages(page: Int!): UserMessagePage!
+}
+
+input RegisterUserInput {
+    email: String!
+    mobilePhoneNumber: String!
+    firstName: String!
+    lastName: String!
+    password: String!
+    timeZoneId: String!
+}
+
+input VerifyUserContactMethodInput {
+    userId: UUID!
+    code: String!
+    method: UserContactMethod!
+}
+
+input SearchUserInput {
+    terms: String
+    page: Int!
+    pageSize: Int!
+}
+
+type UserPage {
+    users: [User!]!
+    hasNext: Boolean!
+}

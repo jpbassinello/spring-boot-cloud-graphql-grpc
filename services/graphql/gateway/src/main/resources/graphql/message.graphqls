@@ -1,0 +1,36 @@
+enum MessageChannel {
+    EMAIL,
+    SMS
+}
+
+enum MessageTemplate {
+    CODE_VERIFICATION,
+    WELCOME,
+    OPEN_BODY,
+    FORGOT_PASSWORD,
+    PASSWORD_CHANGED
+}
+
+enum MessageStatus {
+    PENDING,
+    SENT,
+    CANCELLED_MAX_RETRY_ATTEMPTS,
+    CANCELLED_RECIPIENT_NOT_VERIFIED,
+    CANCELLED_UNEXPECTED
+}
+
+type Message {
+    id: ID!
+    userId: UUID!
+    channel: MessageChannel!
+    template: MessageTemplate!
+    recipient: String!
+    registeredAt: DateTime!
+    sentAt: DateTime
+    status: MessageStatus!
+}
+
+type UserMessagePage {
+    messages: [Message!]!
+    hasNext: Boolean!
+}

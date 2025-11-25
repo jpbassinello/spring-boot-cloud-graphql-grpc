@@ -1,0 +1,13 @@
+# Ignore local overrides
+kustomization-local.yaml
+secrets-local.yaml
+
+# Ignore kubeconfig files
+*.kubeconfig
+
+# Ignore generated files
+*.generated.yaml
+
+# Ignore backup files
+*.bak
+*.backup

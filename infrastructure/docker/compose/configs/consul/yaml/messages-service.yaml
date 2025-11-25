@@ -1,0 +1,7 @@
+# local file for grpc microservice configuration
+spring:
+  datasource:
+    password: postgres
+  data:
+    redis:
+      password: redis

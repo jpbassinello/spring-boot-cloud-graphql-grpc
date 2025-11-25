@@ -1,0 +1,27 @@
+"""
+A date with zoned date time information.
+
+Example value: "1983-10-01T23:59:00.000-10:00[Pacific/Honolulu]"
+"""
+scalar DateTime
+
+"""
+A zoned date with no time information.
+
+Example value: "1983-10-01"
+"""
+scalar Date
+
+"""
+An arbitrary precision signed decimal number. This value is serialized as a string to prevent rounding errors.
+
+Example value: "29.99"
+"""
+scalar BigDecimal
+
+"""
+A UUID
+
+Example value: "00000fed-ac32-9641-0000-000000000000"
+"""
+scalar UUID

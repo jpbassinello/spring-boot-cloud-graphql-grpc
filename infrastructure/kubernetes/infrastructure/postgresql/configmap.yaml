@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql-init
+  namespace: sbcgg
+  labels:
+    app: postgresql
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: sbcgg-platform
+data:
+  01-createdb.sql: |
+    -- Create databases for microservices
+    CREATE DATABASE users;
+    CREATE DATABASE messages;
+    CREATE DATABASE keycloak;
+
+    -- Grant privileges
+    GRANT ALL PRIVILEGES ON DATABASE users TO postgres;
+    GRANT ALL PRIVILEGES ON DATABASE messages TO postgres;
+    GRANT ALL PRIVILEGES ON DATABASE keycloak TO postgres;

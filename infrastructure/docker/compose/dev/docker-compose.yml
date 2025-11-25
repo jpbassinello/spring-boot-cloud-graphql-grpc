@@ -1,0 +1,98 @@
+include:
+  - ../shared/docker-compose.yml
+
+services:
+  # service discovery
+  consul:
+    image: hashicorp/consul:1.22.0
+    command: "agent -server -bootstrap-expect=1 -client=0.0.0.0 -ui -data-dir=/consul/data"
+    container_name: sbcgg-consul
+    volumes:
+      - ../configs/consul/yaml:/tmp/yaml:Z
+      - ../configs/consul/init.sh:/tmp/init-consul.sh:Z
+    healthcheck:
+      test: [ "CMD", "consul", "members" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "8500:8500"
+    post_start:
+      - command: [ "/bin/sh", "/tmp/init-consul.sh" ]
+
+  # https://grafana.com/docs/opentelemetry/docker-lgtm/
+  # This project is the easiest way to set up an OpenTelemetry backend with an OpenTelemetry Collector, Grafana, Loki, Mimir, and Tempo for self-managed development, demo, and testing environments
+  lgtm:
+    image: grafana/otel-lgtm:0.11.17
+    container_name: sbcgg-lgtm
+    ports:
+      - '4317:4317'
+      - '4318:4318'
+      - '3100:3000'
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  users:
+    image: sbcgg/users:latest
+    container_name: sbcgg-users
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev-docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+      lgtm:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "http://localhost:8080/actuator/health", "-O", "/dev/null" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  messages:
+    image: sbcgg/messages:latest
+    container_name: sbcgg-messages
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev-docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+      lgtm:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "http://localhost:8080/actuator/health", "-O", "/dev/null" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  gateway:
+    image: sbcgg/gateway:latest
+    container_name: sbcgg-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev-docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      consul:
+        condition: service_healthy
+      lgtm:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "http://localhost:8080/actuator/health", "-O", "/dev/null" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5

@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 3
+      idle-timeout: 60000
+      leak-detection-threshold: 0
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+  jpa:
+    generate-ddl: false
+    open-in-view: false
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+        jdbc:
+          batch_size: 50
+        max_fetch_depth: 0

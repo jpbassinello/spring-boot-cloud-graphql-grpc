@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sbcgg
+  labels:
+    name: sbcgg
+    environment: production
+    app.kubernetes.io/part-of: sbcgg-platform

@@ -1,0 +1,29 @@
+type Query {
+    """
+    Admin only
+    """
+    users(input: SearchUserInput!): UserPage!
+    user(id: UUID!): User
+
+    """
+    Any user
+    """
+    logged: User
+}
+
+type Mutation {
+    """
+    Admin only
+    """
+    registerAdmin(input: RegisterUserInput!): User!
+
+    """
+    Any user
+    """
+    registerUser(input: RegisterUserInput!): User!
+
+    """
+    Verify a user contact method
+    """
+    verifyUserContactMethod(input: VerifyUserContactMethodInput!): Boolean
+}

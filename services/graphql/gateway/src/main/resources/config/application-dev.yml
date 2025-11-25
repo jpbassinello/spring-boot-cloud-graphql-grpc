@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  config:
+    import:
+      - "optional:classpath:config/app/application.yaml"
+  graphql:
+    schema:
+      printer:
+        enabled: true
+    graphiql:
+      enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9090/realms/sbcgg/protocol/openid-connect/certs
+  devtools:
+    livereload:
+      port: 35732
+
+grpc:
+  client:
+    users:
+      address: "dns:///localhost:8091"
+    messages:
+      address: "dns:///localhost:8191"

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: consul-config
+  namespace: sbcgg
+  labels:
+    app: consul
+    app.kubernetes.io/name: consul
+    app.kubernetes.io/component: service-discovery
+    app.kubernetes.io/part-of: sbcgg-platform
+data:
+  users-service.yaml: |
+    spring:
+      datasource:
+        password: postgres
+    keycloak:
+      password: keycloak
+
+  messages-service.yaml: |
+    spring:
+      datasource:
+        password: postgres
+    keycloak:
+      password: keycloak

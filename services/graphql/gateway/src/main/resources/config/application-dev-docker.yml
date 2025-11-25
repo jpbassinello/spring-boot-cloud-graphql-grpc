@@ -1,0 +1,36 @@
+spring:
+  cloud:
+    consul:
+      host: consul
+      config:
+        enabled: true
+        format: YAML
+        fail-fast: true
+  config:
+    import:
+      - "optional:consul:"
+      - "optional:classpath:config/app/application.yaml"
+      - "optional:classpath:config/app/application-dev-docker.yaml"
+  graphql:
+    schema:
+      printer:
+        enabled: true
+    graphiql:
+      enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/sbcgg/protocol/openid-connect/certs
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://lgtm:4318
+
+grpc:
+  client:
+    users:
+      address: "discovery:///users-service"
+    messages:
+      address: "discovery:///messages-service"

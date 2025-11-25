@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package br.com.jpbassinello.sbcgg.grpc.interfaces.messages.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_outer_classname = "MessagesServiceProto";
+option java_package = "br.com.jpbassinello.sbcgg.grpc.interfaces.messages";
+
+enum MessageChannel {
+  MESSAGE_CHANNEL_UNSPECIFIED = 0;
+  MESSAGE_CHANNEL_EMAIL = 1;
+  MESSAGE_CHANNEL_SMS = 2;
+}
+
+enum MessageTemplate {
+  MESSAGE_TEMPLATE_UNSPECIFIED = 0;
+  MESSAGE_TEMPLATE_CODE_VERIFICATION = 1;
+  MESSAGE_TEMPLATE_WELCOME = 2;
+  MESSAGE_TEMPLATE_OPEN_BODY = 3;
+  MESSAGE_TEMPLATE_FORGOT_PASSWORD = 4;
+  MESSAGE_TEMPLATE_PASSWORD_CHANGED = 5;
+}
+
+enum MessageStatus {
+  MESSAGE_STATUS_UNSPECIFIED = 0;
+  MESSAGE_STATUS_PENDING = 1;
+  MESSAGE_STATUS_SENT = 2;
+  MESSAGE_STATUS_CANCELLED_MAX_RETRY_ATTEMPTS = 3;
+  MESSAGE_STATUS_CANCELLED_RECIPIENT_NOT_VERIFIED = 4;
+  MESSAGE_STATUS_CANCELLED_UNEXPECTED = 5;
+}
+
+message Message {
+  string id = 1;
+  string user_id = 2;
+  MessageChannel channel = 3;
+  MessageTemplate template = 4;
+  MessageStatus status = 5;
+  string recipient = 6; // email, mobile phone number
+  google.protobuf.Timestamp registered_at = 7;
+  google.protobuf.Timestamp scheduled_at = 8;
+  google.protobuf.Timestamp sent_at = 9;
+}
+
+message SendMessageInput {
+  string user_id = 1;
+  MessageChannel channel = 2;
+  MessageTemplate template = 3;
+  google.protobuf.Timestamp scheduled_at = 4;
+  string idempotence_key = 5;
+  map<string, string> additional_variables = 6;
+}
+
+message SendMessageRequest {
+  SendMessageInput input = 1;
+}
+
+message SendMessageResponse {
+  Message message = 1;
+}
+
+message SearchMessagesRequest {
+  string user_id = 10;
+  int32 page = 30;
+  int32 page_size = 40;
+}
+
+message SearchMessagesResponse {
+  repeated Message messages = 10;
+  bool has_next = 20;
+}
+
+service MessagesService {
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
+  rpc SearchMessages(SearchMessagesRequest) returns (SearchMessagesResponse) {}
+}

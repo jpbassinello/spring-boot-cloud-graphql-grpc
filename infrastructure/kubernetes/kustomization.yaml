@@ -1,0 +1,46 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: sbcgg
+
+resources:
+# Base namespace
+- base/namespace.yaml
+
+# Configuration
+- config/configmap.yaml
+- config/secrets.yaml
+
+# Infrastructure
+- infrastructure/postgresql/configmap.yaml
+- infrastructure/postgresql/statefulset.yaml
+- infrastructure/postgresql/service.yaml
+- infrastructure/redis/deployment.yaml
+- infrastructure/redis/service.yaml
+- infrastructure/consul/configmap.yaml
+- infrastructure/consul/statefulset.yaml
+- infrastructure/consul/service.yaml
+- infrastructure/keycloak/configmap.yaml
+- infrastructure/keycloak/deployment.yaml
+- infrastructure/keycloak/service.yaml
+- infrastructure/lgtm/deployment.yaml
+- infrastructure/lgtm/service.yaml
+
+# Applications
+- apps/users-service/deployment.yaml
+- apps/users-service/service.yaml
+- apps/users-service/hpa.yaml
+- apps/messages-service/deployment.yaml
+- apps/messages-service/service.yaml
+- apps/messages-service/hpa.yaml
+- apps/gateway/deployment.yaml
+- apps/gateway/service.yaml
+- apps/gateway/hpa.yaml
+
+# Ingress
+- ingress/ingress.yaml
+
+# Common labels
+commonLabels:
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/part-of: sbcgg-platform

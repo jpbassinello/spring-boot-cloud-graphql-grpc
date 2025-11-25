@@ -1,0 +1,18 @@
+spring:
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+    add-properties: false
+  cloud:
+    consul:
+      host: consul
+      config:
+        enabled: true
+        format: YAML
+        fail-fast: true
+      discovery:
+        enabled: true
+        register: true
+        fail-fast: true

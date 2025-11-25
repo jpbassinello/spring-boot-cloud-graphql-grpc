@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sbcgg-config
+  namespace: sbcgg
+  labels:
+    app.kubernetes.io/part-of: sbcgg-platform
+data:
+  # PostgreSQL configuration
+  POSTGRES_HOST: "postgresql.sbcgg.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  POSTGRES_USERS_DB: "users"
+  POSTGRES_MESSAGES_DB: "messages"
+  POSTGRES_KEYCLOAK_DB: "keycloak"
+
+  # Redis configuration
+  REDIS_HOST: "redis.sbcgg.svc.cluster.local"
+  REDIS_PORT: "6379"
+
+  # Consul configuration
+  CONSUL_HOST: "consul.sbcgg.svc.cluster.local"
+  CONSUL_PORT: "8500"
+
+  # Keycloak configuration
+  KEYCLOAK_URL: "http://keycloak.sbcgg.svc.cluster.local:8080"
+  KEYCLOAK_REALM: "sbcgg"
+  KEYCLOAK_CLIENT: "sbcgg"
+
+  # LGTM (Observability) configuration
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://lgtm.sbcgg.svc.cluster.local:4318"
+
+  # Spring profiles
+  SPRING_PROFILES_ACTIVE: "kubernetes"
+
+  # Timezone
+  TZ: "UTC"

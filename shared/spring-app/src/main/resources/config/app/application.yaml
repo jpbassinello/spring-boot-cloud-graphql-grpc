@@ -1,0 +1,27 @@
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,shutdown
+  endpoint:
+    metrics:
+      enabled: true
+    health:
+      enabled: true
+    shutdown:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+logging:
+  level:
+    br.com.jpbassinello.sbcgg: INFO

@@ -1,0 +1,21 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: false
+    consul:
+      enabled: false
+
+otel:
+  sdk:
+    disabled: true
+
+management:
+  metrics:
+    use-global-registry: false

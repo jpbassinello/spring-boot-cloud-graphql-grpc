@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <Match>
+        <Package name="~br\.com\.jpbassinello\.sbcgg\.grpc\.interfaces.*"/>
+    </Match>
+    <Match>
+        <Or>
+            <!-- Ignore returning references to internal representations of objects -->
+            <Bug pattern="EI_EXPOSE_REP"/>
+            <!-- Ignore when internal representation stores reference to external representation -->
+            <Bug pattern="EI_EXPOSE_REP2"/>
+        </Or>
+    </Match>
+</FindBugsFilter>

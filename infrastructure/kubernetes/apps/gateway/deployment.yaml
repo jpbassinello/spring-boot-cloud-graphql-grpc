@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: sbcgg
+  labels:
+    app: gateway
+    app.kubernetes.io/name: gateway
+    app.kubernetes.io/component: api-gateway
+    app.kubernetes.io/part-of: sbcgg-platform
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+        app.kubernetes.io/name: gateway
+        app.kubernetes.io/component: api-gateway
+        version: v1
+    spec:
+      initContainers:
+      - name: wait-for-dependencies
+        image: busybox:1.36
+        command:
+        - sh
+        - -c
+        - |
+          echo "Waiting for Consul..."
+          until nc -z consul.sbcgg.svc.cluster.local 8500; do sleep 2; done
+          echo "Waiting for Users Service..."
+          until nc -z users-service.sbcgg.svc.cluster.local 8091; do sleep 2; done
+          echo "Waiting for Messages Service..."
+          until nc -z messages-service.sbcgg.svc.cluster.local 8191; do sleep 2; done
+          echo "All dependencies are ready!"
+      containers:
+      - name: gateway
+        image: sbcgg/gateway:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "kubernetes"
+        - name: SPRING_DATA_REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: sbcgg-config
+              key: REDIS_HOST
+        - name: SPRING_DATA_REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sbcgg-secrets
+              key: REDIS_PASSWORD
+        - name: SPRING_CLOUD_CONSUL_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: sbcgg-config
+              key: CONSUL_HOST
+        - name: GRPC_CLIENT_USERS_ADDRESS
+          value: "dns:///users-service.sbcgg.svc.cluster.local:8091"
+        - name: GRPC_CLIENT_MESSAGES_ADDRESS
+          value: "dns:///messages-service.sbcgg.svc.cluster.local:8191"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          valueFrom:
+            configMapKeyRef:
+              name: sbcgg-config
+              key: OTEL_EXPORTER_OTLP_ENDPOINT
+        - name: SERVER_PORT
+          value: "8080"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3

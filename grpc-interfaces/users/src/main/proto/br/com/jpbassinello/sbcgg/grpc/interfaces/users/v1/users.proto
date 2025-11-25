@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package br.com.jpbassinello.sbcgg.grpc.interfaces.users.v1;
+
+option java_multiple_files = true;
+option java_outer_classname = "UsersServiceProto";
+option java_package = "br.com.jpbassinello.sbcgg.grpc.interfaces.users";
+
+enum UserRole {
+  USER_ROLE_UNSPECIFIED = 0;
+  USER_ROLE_USER = 1;
+  USER_ROLE_ADMIN = 2;
+}
+
+enum UserContactMethod {
+  USER_CONTACT_METHOD_UNSPECIFIED = 0;
+  USER_CONTACT_METHOD_EMAIL = 1;
+  USER_CONTACT_METHOD_MOBILE_PHONE_NUMBER = 2;
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  bool email_verified = 3;
+  string mobile_phone_number = 4;
+  bool mobile_phone_number_verified = 5;
+  string first_name = 6;
+  string last_name = 7;
+  bool active = 8;
+  string time_zone_id = 9;
+  repeated UserRole roles = 10;
+}
+
+message LoadUserRequest {
+  string id = 1;
+  string email = 2;
+}
+
+message LoadUserResponse {
+  User user = 1;
+}
+
+message UserInput {
+  string email = 1;
+  string mobile_phone_number = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string password = 5;
+  string time_zone_id = 6;
+  repeated UserRole roles = 7;
+}
+
+message RegisterUserRequest {
+  UserInput input = 1;
+}
+
+message RegisterUserResponse {
+  User user = 1;
+}
+
+message SearchUsersRequest {
+  string terms = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message SearchUsersResponse {
+  repeated User users = 1;
+  bool has_next = 2;
+}
+
+message VerifyContactMethodRequest {
+  string user_id = 1;
+  string code = 2;
+  UserContactMethod method = 3;
+}
+
+message VerifyContactMethodResponse {}
+
+service UsersService {
+  rpc LoadUser(LoadUserRequest) returns (LoadUserResponse) {}
+  rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse) {}
+  rpc SearchUsers(SearchUsersRequest) returns (SearchUsersResponse) {}
+  rpc VerifyContactMethod(VerifyContactMethodRequest) returns (VerifyContactMethodResponse) {}
+}

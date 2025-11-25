@@ -1,0 +1,61 @@
+services:
+
+  # the core database engine
+  postgres:
+    image: postgres:17.7-alpine3.22
+    container_name: sbcgg-postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      TZ: "UTC"
+    volumes:
+      - ../configs/postgres:/docker-entrypoint-initdb.d:z
+
+  # Identity and Access Management
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.6
+    container_name: sbcgg-keycloak
+    ports:
+      - "127.0.0.1:9090:8080" # https://github.com/keycloak/keycloak/issues/42739
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      KEYCLOAK_ADMIN: keycloak
+      KEYCLOAK_ADMIN_PASSWORD: keycloak
+      KC_DB: postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_DB_URL: "jdbc:postgresql://postgres:5432/keycloak"
+      TZ: UTC
+      KC_METRICS_ENABLED: true
+      KC_HEALTH_ENABLED: true
+    command: [ "start-dev", "--import-realm" ]
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000;echo -e \"GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n\" >&3;grep \"HTTP/1.1 200 OK\" <&3"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    volumes:
+      - ../configs/keycloak/realm.json:/opt/keycloak/data/import/realm.json:ro
+
+  # shared cache, rate limiting, pub/sub, ...
+  redis:
+    image: redis:8.2.3-alpine3.22
+    command: redis-server --requirepass redis --loglevel warning
+    container_name: sbcgg-redis
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "6379:6379"

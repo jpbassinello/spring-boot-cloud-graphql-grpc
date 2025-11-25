@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lgtm
+  namespace: sbcgg
+  labels:
+    app: lgtm
+    app.kubernetes.io/name: lgtm
+    app.kubernetes.io/component: observability
+    app.kubernetes.io/part-of: sbcgg-platform
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+    name: grafana
+  - port: 4317
+    targetPort: 4317
+    protocol: TCP
+    name: otlp-grpc
+  - port: 4318
+    targetPort: 4318
+    protocol: TCP
+    name: otlp-http
+  selector:
+    app: lgtm
