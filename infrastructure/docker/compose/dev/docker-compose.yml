@@ -50,10 +50,11 @@ services:
       lgtm:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "wget", "--quiet", "http://localhost:8080/actuator/health", "-O", "/dev/null" ]
+      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc", "--port", "8080", "--path", "/actuator/health"]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 15s
 
   messages:
     image: sbcgg/messages:latest
@@ -70,10 +71,11 @@ services:
       lgtm:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "wget", "--quiet", "http://localhost:8080/actuator/health", "-O", "/dev/null" ]
+      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc", "--port", "8080", "--path", "/actuator/health"]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 15s
 
   gateway:
     image: sbcgg/gateway:latest
@@ -92,7 +94,8 @@ services:
       lgtm:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "wget", "--quiet", "http://localhost:8080/actuator/health", "-O", "/dev/null" ]
+      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc", "--port", "8080", "--path", "/actuator/health"]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 15s

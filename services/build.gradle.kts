@@ -21,7 +21,8 @@ subprojects {
             tasks.named<BootBuildImage>("bootBuildImage") {
                 imageName.set("sbcgg/${project.name}:${project.version}")
                 environment.set(mapOf(
-                    "BP_JVM_VERSION" to "25"
+                    "BP_JVM_VERSION" to "25",
+                    "BP_HEALTH_CHECKER_ENABLED" to "true"
                 ))
                 tags.set(listOf(
                     "sbcgg/${project.name}:latest",

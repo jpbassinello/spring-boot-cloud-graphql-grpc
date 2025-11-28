@@ -25,6 +25,9 @@ include(":shared:spring-shedlock")
 include(":shared:util")
 include(":shared:validation")
 
+include(":tests")
+include(":tests:e2e")
+
 // Define dependency versions
 dependencyResolutionManagement {
     versionCatalogs {

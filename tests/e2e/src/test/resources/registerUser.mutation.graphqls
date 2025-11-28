@@ -1,0 +1,17 @@
+mutation RegisterUser($email: String!, $firstName: String!, $lastName: String!, $password: String!, $timeZoneId: String!, $mobilePhoneNumber: String!) {
+    registerUser(
+        input: {
+            email: $email,
+            firstName: $firstName,
+            lastName: $lastName,
+            password: $password,
+            timeZoneId: $timeZoneId,
+            mobilePhoneNumber: $mobilePhoneNumber
+        }
+    ) {
+        id
+        emailVerified
+        mobilePhoneNumberVerified
+        roles
+    }
+}
