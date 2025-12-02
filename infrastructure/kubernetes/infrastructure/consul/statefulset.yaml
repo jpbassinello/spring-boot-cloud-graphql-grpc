@@ -110,8 +110,8 @@ spec:
             sleep 2
           done
           echo "Consul is ready. Initializing KV pairs..."
-          consul kv put config/users-service,kubernetes/data @/tmp/yaml/users-service.yaml
-          consul kv put config/messages-service,kubernetes/data @/tmp/yaml/messages-service.yaml
+          consul kv put config/users-service,dev-docker/data @/tmp/yaml/users-service.yaml
+          consul kv put config/messages-service,dev-docker/data @/tmp/yaml/messages-service.yaml
           echo "Configuration loaded. Keeping container alive..."
           tail -f /dev/null
         volumeMounts:

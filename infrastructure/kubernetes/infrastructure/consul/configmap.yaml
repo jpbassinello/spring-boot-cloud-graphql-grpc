@@ -19,6 +19,7 @@ data:
   messages-service.yaml: |
     spring:
       datasource:
-        password: postgres
-    keycloak:
-      password: keycloak
+       password: postgres
+      data:
+        redis:
+          password: redis

@@ -87,7 +87,7 @@ Before deploying, ensure you have:
 cd infrastructure/kubernetes
 ```
 
-### 2. Update Secrets (IMPORTANT!)
+### 2. Update Secrets (IMPORTANT!) - (not required when running local)
 
 Edit `config/secrets.yaml` and change the default passwords:
 
@@ -104,7 +104,7 @@ kubectl create secret generic sbcgg-secrets \
   --dry-run=client -o yaml > config/secrets.yaml
 ```
 
-### 3. Update Image References
+### 3. Update Image References (not required when running local)
 
 Edit deployment files to use your registry:
 - `apps/users-service/deployment.yaml`
@@ -202,19 +202,7 @@ Configuration is managed through ConfigMaps and Secrets:
 
 ### Spring Profiles
 
-The Kubernetes deployment uses the `kubernetes` Spring profile. Create corresponding configuration files:
-
-```yaml
-# services/grpc/users/src/main/resources/config/application-kubernetes.yaml
-spring:
-  cloud:
-    consul:
-      enabled: true
-      config:
-        enabled: true
-      discovery:
-        enabled: true
-```
+The Kubernetes deployment uses the `dev-docker` Spring profile. Create corresponding configuration files:
 
 ## Deployment
 

@@ -1,0 +1,4 @@
+test:
+  e2e:
+    graphql-gateway-url: http://sbcgg.local/graphql
+    keycloak-url: http://keycloak.sbcgg.local

@@ -2,10 +2,14 @@ package br.com.jpbassinello.sbcgg.tests.e2e;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Data;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -26,15 +30,21 @@ import java.util.Map;
 import java.util.UUID;
 
 @SpringBootTest(classes = {GraphQLGatewayTest.class}, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@EnableConfigurationProperties(GraphQLGatewayTest.Config.class)
 @AutoConfigureWebClient
 class GraphQLGatewayTest {
 
-  private static final String GRAPHQL_GATEWAY_URL = "http://localhost:8080/graphql";
-  private static final String KEYCLOAK_URL = "http://localhost:9090";
   private static final String KEYCLOAK_TOKEN_ENDPOINT = "/realms/sbcgg/protocol/openid-connect/token";
+
+  // @Value("${graphql-gateway-url}:http://localhost:8080/graphql")
+  // private String graphQLGatewayUrl;
+  // @Value("${keycloak-url}:http://localhost:9090")
+  // private String keycloakUrl;
 
   @Autowired
   private RestTemplateBuilder restTemplateBuilder;
+  @Autowired
+  private GraphQLGatewayTest.Config config;
 
   private GraphQlTester graphQlTester;
   private TestRestTemplate restTemplate;
@@ -43,14 +53,14 @@ class GraphQLGatewayTest {
   void setUp() {
     restTemplate = new TestRestTemplate(
         restTemplateBuilder
-            .rootUri(KEYCLOAK_URL)
+            .rootUri(config.keycloakUrl)
     );
 
     var adminAccessToken = getAccessToken("admin@sbcgg.com", "admin");
 
     graphQlTester = HttpGraphQlTester.builder(
             WebTestClient.bindToServer()
-                .baseUrl(GRAPHQL_GATEWAY_URL)
+                .baseUrl(config.graphQLGatewayUrl)
         ).header("authorization", "Bearer " + adminAccessToken)
         .build();
   }
@@ -58,7 +68,7 @@ class GraphQLGatewayTest {
 
   private void registerAndValidateRandomUser() throws IOException {
     var registerUserMutation = IOUtils.toString(
-       GraphQLGatewayTest.class.getResourceAsStream("/registerUser.mutation.graphqls"),
+        GraphQLGatewayTest.class.getResourceAsStream("/registerUser.mutation.graphqls"),
         StandardCharsets.UTF_8
     );
 
@@ -115,5 +125,12 @@ class GraphQLGatewayTest {
 
   @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
   private record TokenResponse(String accessToken) {}
+
+  @ConfigurationProperties(prefix = "test.e2e")
+  @Data
+  public static class Config {
+    private String graphQLGatewayUrl;
+    private String keycloakUrl;
+  }
 
 }

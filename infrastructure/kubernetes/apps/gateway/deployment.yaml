@@ -31,10 +31,6 @@ spec:
         - |
           echo "Waiting for Consul..."
           until nc -z consul.sbcgg.svc.cluster.local 8500; do sleep 2; done
-          echo "Waiting for Users Service..."
-          until nc -z users-service.sbcgg.svc.cluster.local 8091; do sleep 2; done
-          echo "Waiting for Messages Service..."
-          until nc -z messages-service.sbcgg.svc.cluster.local 8191; do sleep 2; done
           echo "All dependencies are ready!"
       containers:
       - name: gateway
@@ -46,26 +42,17 @@ spec:
           protocol: TCP
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "kubernetes"
+          value: "dev-docker"
         - name: SPRING_DATA_REDIS_HOST
           valueFrom:
             configMapKeyRef:
               name: sbcgg-config
               key: REDIS_HOST
-        - name: SPRING_DATA_REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: sbcgg-secrets
-              key: REDIS_PASSWORD
         - name: SPRING_CLOUD_CONSUL_HOST
           valueFrom:
             configMapKeyRef:
               name: sbcgg-config
               key: CONSUL_HOST
-        - name: GRPC_CLIENT_USERS_ADDRESS
-          value: "dns:///users-service.sbcgg.svc.cluster.local:8091"
-        - name: GRPC_CLIENT_MESSAGES_ADDRESS
-          value: "dns:///messages-service.sbcgg.svc.cluster.local:8191"
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           valueFrom:
             configMapKeyRef:
