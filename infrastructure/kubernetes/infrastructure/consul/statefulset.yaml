@@ -24,7 +24,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: consul
-        image: hashicorp/consul:1.22.0
+        image: hashicorp/consul:1.22.1
         command:
         - consul
         - agent
@@ -100,7 +100,7 @@ spec:
           timeoutSeconds: 3
           failureThreshold: 3
       - name: consul-init
-        image: hashicorp/consul:1.22.0
+        image: hashicorp/consul:1.22.1
         command:
         - /bin/sh
         - -c

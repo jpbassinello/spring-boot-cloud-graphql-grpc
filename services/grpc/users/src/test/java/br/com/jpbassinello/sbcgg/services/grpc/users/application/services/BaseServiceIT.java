@@ -17,7 +17,7 @@ abstract class BaseServiceIT {
 
   @Container
   @ServiceConnection
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:17.7-alpine3.22")
+  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18.1-alpine3.23")
       .withDatabaseName("users")
       .withUsername("postgres")
       .withPassword("postgres");

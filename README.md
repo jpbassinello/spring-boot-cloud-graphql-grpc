@@ -9,43 +9,77 @@
 
 ## Table of Contents
 
+- [Motivation](#motivation)
 - [Overview](#overview)
+- [Use Cases](#use-cases)
 - [Architecture](#architecture)
 - [Key Features](#key-features)
 - [Technology Stack](#technology-stack)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Building the Project](#building-the-project)
-  - [Running Services](#running-services)
+    - [Prerequisites](#prerequisites)
+    - [Building the Project](#building-the-project)
+    - [Running Services](#running-services)
 - [Project Structure](#project-structure)
 - [Testing](#testing)
 - [Development](#development)
-  - [Code Style](#code-style)
-  - [Adding New Services](#adding-new-services)
+    - [Code Style](#code-style)
+    - [Adding New Services](#adding-new-services)
 - [Monitoring & Observability](#monitoring--observability)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [License](#license)
 
+## Motivation
+
+As a developer, we understand the value of having an active community in our day-by-day activities. Given something back
+to the community has always been part of my career plans and this project was built with this mentality.
+
+The main idea of this project, even before I decided to publish it publicly, was to help with my own studies. Every time
+I had an interest in a different technology or library, I tried to include it in this repository. For example, as a
+Maven enthusiast, I've never applied Gradle in a real project before. Same situation for Kubernetes.
+
+My plan is to keep sbcgg up-to-date with modern components available. I am open to suggestions for new features and
+different approaches for the project. Feel free to contribute to sbcgg.
+
 ## Overview
 
-SBCGG (Spring Boot Cloud GraphQL gRPC) is a modern, cloud-native microservices platform that demonstrates enterprise-grade architecture patterns and best practices. Built with **Spring Boot 3.5.8** and **Spring Cloud 2025.0.0**, it provides a scalable, resilient foundation for distributed systems.
+SBCGG (Spring Boot Cloud GraphQL gRPC) is a modern, cloud-native microservices platform that demonstrates
+enterprise-grade architecture patterns and best practices. Built with **Spring Boot 3.5.8** and **Spring Cloud 2025.0.0
+**, it provides a scalable, resilient foundation for distributed systems.
 
 ### Industry Adoption
 
 This project leverages battle-tested technologies used by industry leaders:
 
-- **Netflix** pioneered many of the components used in this stack and has been a major contributor to Spring Cloud. Netflix continues to use Spring Boot, gRPC, and GraphQL in their microservices architecture to handle billions of views seamlessly.
+- **Netflix** pioneered many of the components used in this stack and has been a major contributor to Spring Cloud.
+  Netflix continues to use Spring Boot, gRPC, and GraphQL in their microservices architecture to handle billions of
+  views seamlessly.
 
-- **gRPC** is used by major tech companies including **Uber** (for ride-hailing services), **Square** (payment processing), **Netflix** (streaming services), **Spotify** (music streaming), **Dropbox** (file storage), and **Cisco** (network management).
+- **gRPC** is used by major tech companies including **Uber** (for ride-hailing services), **Square** (payment
+  processing), **Netflix** (streaming services), **Spotify** (music streaming), **Dropbox** (file storage), and **Cisco
+  ** (network management).
 
-- **GraphQL** has been adopted by **GitHub** (API platform), **Shopify** (e-commerce), **PayPal** (50+ products), **Twitter** (mobile and web apps), **Airbnb** (booking platform), and **The New York Times** (content delivery).
+- **GraphQL** has been adopted by **GitHub** (API platform), **Shopify** (e-commerce), **PayPal** (50+ products), *
+  *Twitter** (mobile and web apps), **Airbnb** (booking platform), and **The New York Times** (content delivery).
 
-- **HashiCorp Consul** is used by enterprises including **Criteo**, **Citadel**, and **Q2** for service discovery, configuration management, and service mesh capabilities in cloud-native architectures.
+- **HashiCorp Consul** is used by enterprises including **Criteo**, **Citadel**, and **Q2** for service discovery,
+  configuration management, and service mesh capabilities in cloud-native architectures.
+
+## Use Cases
+
+Considering what is common to my projects, the following use cases are implemented in this project aiming to be a
+reusable source:
+
+* As a user, I would like to register in the system
+* As an admin, I would like to register a user in the system
+* As a user, I would like to log in into the system
+* As an admin, I would like to send a message to a user
+* As an admin, I would like to see all the messages of a user
 
 ## Architecture
 
-SBCGG follows a **hexagonal (ports and adapters)** architecture pattern combined with **domain-driven design (DDD)** principles:
+SBCGG follows a **hexagonal (ports and adapters)** architecture pattern combined with **domain-driven design (DDD)**
+principles:
 
 ```
                     ┌─────────────────┐
@@ -96,7 +130,7 @@ SBCGG follows a **hexagonal (ports and adapters)** architecture pattern combined
 - **Centralized Configuration**: HashiCorp Consul KV store for external configuration management
 - **Service Discovery**: Automatic service registration with HashiCorp Consul
 - **Distributed Tracing & Logging**: OpenTelemetry with Grafana LGTM stack (Loki, Grafana, Tempo, Mimir)
-- **Distributed Cache**: Redis 8.2.3 for shared caching across services
+- **Distributed Cache**: Redis 8.4.0 for shared caching across services
 - **Database Migrations**: Flyway for version-controlled schema management
 - **Security**: Keycloak integration for authentication and authorization
 - **Resilience**: Circuit breakers, retries, and timeouts
@@ -108,51 +142,62 @@ SBCGG follows a **hexagonal (ports and adapters)** architecture pattern combined
 ## Technology Stack
 
 ### Core Framework
+
 - [Spring Boot](https://spring.io/projects/spring-boot) 3.5.8 - Application framework
 - [Spring Cloud](https://spring.io/projects/spring-cloud) 2025.0.0 - Microservices toolkit
-- [Spring Security](https://spring.io/projects/spring-security) 6.5.6 - Security framework
+- [Spring Security](https://spring.io/projects/spring-security) 6.5.7 - Security framework
 - [Java](https://openjdk.java.net/) 25 (LTS) - Programming language
 
 ### Communication & Infrastructure
+
 - [gRPC](https://grpc.io/) 1.77.0 - High-performance RPC framework
-- [Protocol Buffers](https://developers.google.com/protocol-buffers) 4.33.0 - Serialization format
+- [Protocol Buffers](https://developers.google.com/protocol-buffers) 4.33.2 - Serialization format
 - [GraphQL Java](https://www.graphql-java.com/) - GraphQL implementation
 - [Spring Cloud Consul](https://docs.spring.io/spring-cloud-consul/reference/) - Service discovery and configuration
-- [HashiCorp Consul](https://www.consul.io/) 1.22.0 - Service mesh, discovery, and configuration
+- [HashiCorp Consul](https://www.consul.io/) 1.22.1 - Service mesh, discovery, and configuration
 
 ### Data & Persistence
+
 - [Spring Data JPA](https://spring.io/projects/spring-data-jpa) - Data access layer
-- [PostgreSQL](https://www.postgresql.org/) 17.7 - Relational database
+- [PostgreSQL](https://www.postgresql.org/) 18.1 - Relational database
 - [HikariCP](https://github.com/brettwooldridge/HikariCP) - JDBC connection pool
 - [Flyway](https://flywaydb.org/) - Database migration tool
-- [Redis](https://redis.io/) 8.2.3 - Distributed cache
+- [Redis](https://redis.io/) 8.4.0 - Distributed cache
 
 ### Observability & Monitoring
+
 - [OpenTelemetry](https://opentelemetry.io/) 2.22.0 - Distributed tracing and logging
-- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.11.17 - Loki (logs), Grafana (visualization), Tempo (traces), Mimir (metrics)
+- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.11.18 - Loki (logs), Grafana (
+  visualization), Tempo (traces), Mimir (metrics)
 - [Micrometer](https://micrometer.io/) - Application metrics
-- [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html) - Production-ready features
+- [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html) -
+  Production-ready features
 
 ### Security & Authentication
+
 - [Keycloak](https://www.keycloak.org/) 25.0.6 - Identity and access management
 
 ### Developer Tools
+
 - [MapStruct](https://mapstruct.org/) 1.6.3 - Type-safe bean mapping
 - [Lombok](https://projectlombok.org/) - Boilerplate reduction
 - [ShedLock](https://github.com/lukas-krecan/ShedLock) 6.10.0 - Distributed lock
 - [UUID Creator](https://github.com/f4b6a3/uuid-creator) 6.1.1 - UUID generation
 
 ### Build & Quality
+
 - [Gradle](https://gradle.org/) 9.1.0 - Build automation
 - [Checkstyle](https://checkstyle.org/) 11.1.0 - Code style enforcement
 - [SpotBugs](https://spotbugs.github.io/) - Static analysis
 - [JaCoCo](https://www.jacoco.org/jacoco/) - Code coverage
 
 ### Testing
+
 - [JUnit 5](https://junit.org/junit5/) - Testing framework
 - [AssertJ](https://assertj.github.io/doc/) - Fluent assertions
 - [Mockito](https://site.mockito.org/) - Mocking framework
-- [Spring Boot Test](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.testing) - Integration testing
+- [Spring Boot Test](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.testing) -
+  Integration testing
 
 ## Getting Started
 
@@ -203,7 +248,7 @@ Services run locally with minimal dependencies. Consul is disabled by default.
    ```
 
    Access points:
-   - Keycloak admin console: `http://localhost:9090`
+    - Keycloak admin console: `http://localhost:9090`
 
 2. **Start gRPC services**
    ```bash
@@ -220,7 +265,8 @@ Services run locally with minimal dependencies. Consul is disabled by default.
    ```
    Access GraphQL playground at: `http://localhost:8080/graphiql`
 
-**Note**: With the `dev` profile (default), services use local configuration files and communicate via localhost. Consul integration is disabled for faster startup.
+**Note**: With the `dev` profile (default), services use local configuration files and communicate via localhost. Consul
+integration is disabled for faster startup.
 
 #### Option 2: Docker Environment (Full Consul Integration)
 
@@ -243,6 +289,7 @@ All services run in Docker with full Consul integration for service discovery an
     - Grafana (LGTM): `http://localhost:3100`
 
 Services will use the `dev-docker` profile, which enables:
+
 - Consul-based service discovery
 - Consul KV store for configuration
 - Service-to-service communication via Consul DNS
@@ -300,8 +347,8 @@ sbcgg/
 
 - **grpc-interfaces**: Protocol Buffer definitions and generated code
 - **services**: Independent microservices
-  - **grpc**: gRPC microservices (users, messages)
-  - **graphql**: GraphQL API gateway
+    - **grpc**: gRPC microservices (users, messages)
+    - **graphql**: GraphQL API gateway
 - **shared**: Reusable libraries shared across services
 - **infrastructure**: Docker Compose configurations, Consul configs, and infrastructure setup
 
@@ -344,14 +391,14 @@ service/
 ### Test Types
 
 1. **Unit Tests** (`*Test.java`)
-   - Test individual components in isolation
-   - Use JUnit 5 and AssertJ
-   - Fast execution, no external dependencies
+    - Test individual components in isolation
+    - Use JUnit 5 and AssertJ
+    - Fast execution, no external dependencies
 
 2. **Integration Tests** (`*IT.java`)
-   - Test components with their dependencies
-   - Use Spring Boot Test framework
-   - May require test containers or embedded services
+    - Test components with their dependencies
+    - Use Spring Boot Test framework
+    - May require test containers or embedded services
 
 ### Writing Tests
 
@@ -361,20 +408,21 @@ service/
 package br.com.jpbassinello.sbcgg.utils;
 
 import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MyUtilTest {
-    @Test
-    void testMyMethod() {
-        // Arrange
-        var input = "test";
+  @Test
+  void testMyMethod() {
+    // Arrange
+    var input = "test";
 
-        // Act
-        var result = MyUtil.myMethod(input);
+    // Act
+    var result = MyUtil.myMethod(input);
 
-        // Assert
-        assertThat(result).isEqualTo("expected");
-    }
+    // Assert
+    assertThat(result).isEqualTo("expected");
+  }
 }
 ```
 
@@ -387,22 +435,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ContextConfiguration(classes = { MyService.class })
+@ContextConfiguration(classes = {MyService.class})
 class MyServiceIT extends BaseServiceIT {
-    @MockBean
-    private ExternalDependency dependency;
+  @MockBean
+  private ExternalDependency dependency;
 
-    @Autowired
-    private MyService service;
+  @Autowired
+  private MyService service;
 
-    @Test
-    void testServiceMethod() {
-        // Arrange, Act, Assert
-        var result = service.process(new ServiceInput("test"));
-        assertThat(result.getValue()).isEqualTo("processed");
-    }
+  @Test
+  void testServiceMethod() {
+    // Arrange, Act, Assert
+    var result = service.process(new ServiceInput("test"));
+    assertThat(result.getValue()).isEqualTo("processed");
+  }
 }
 ```
 
@@ -422,7 +471,8 @@ class MyServiceIT extends BaseServiceIT {
 3. **Implement service** in `services/grpc/`
 4. **Add hexagonal structure**: adapters, application, domain
 5. **Configure service**: Add configuration files in `src/main/resources/config/`
-6. **Add Consul configuration** (for Docker deployment): Create YAML file in `infrastructure/docker/compose/configs/consul/yaml/`
+6. **Add Consul configuration** (for Docker deployment): Create YAML file in
+   `infrastructure/docker/compose/configs/consul/yaml/`
 7. **Configure Consul registration** via Spring Cloud Consul (enabled in `dev-docker` profile)
 8. **Add integration tests**
 
@@ -447,6 +497,7 @@ org.gradle.configureondemand=true
 ```
 
 To verify cache performance:
+
 ```bash
 ./gradlew clean build --scan
 ```
@@ -471,6 +522,7 @@ curl http://localhost:8080/actuator
 ### Distributed Tracing & Logging
 
 OpenTelemetry integration with Grafana LGTM stack provides:
+
 - **Traces**: Distributed tracing across all services via Tempo
 - **Logs**: Centralized logging via Loki with OpenTelemetry appender (logback-spring.xml)
 - **Metrics**: Performance metrics via Mimir
@@ -483,6 +535,7 @@ OpenTelemetry integration with Grafana LGTM stack provides:
 ### Metrics
 
 Micrometer collects metrics for:
+
 - HTTP requests
 - gRPC calls
 - Database queries

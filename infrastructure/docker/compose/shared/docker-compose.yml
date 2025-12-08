@@ -2,7 +2,7 @@ services:
 
   # the core database engine
   postgres:
-    image: postgres:17.7-alpine3.22
+    image: postgres:18.1-alpine3.23
     container_name: sbcgg-postgres
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres" ]
@@ -49,7 +49,7 @@ services:
 
   # shared cache, rate limiting, pub/sub, ...
   redis:
-    image: redis:8.2.3-alpine3.22
+    image: redis:8.4.0-alpine3.22
     command: redis-server --requirepass redis --loglevel warning
     container_name: sbcgg-redis
     healthcheck:

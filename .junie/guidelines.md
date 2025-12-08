@@ -84,10 +84,10 @@ The project uses **Gradle Version Catalogs** (defined in `settings.gradle.kts`) 
 
 ```kotlin
 // Version Catalog Structure
-libs.versions.spring.security = "6.5.6"
+libs.versions.spring.security = "6.5.7"
 libs.versions.spring.cloud = "2025.0.0"
 libs.versions.grpc = "1.77.0"
-libs.versions.protobuf = "4.33.0"
+libs.versions.protobuf = "4.33.2"
 libs.plugins.spring.boot = "3.5.8"
 ```
 
@@ -97,16 +97,16 @@ libs.plugins.spring.boot = "3.5.8"
 |----------|---------|---------|---------|
 | Framework | Spring Boot | 3.5.8 | Application framework |
 | Framework | Spring Cloud | 2025.0.0 | Microservices toolkit |
-| Service Discovery | Consul | 1.22.0 | Service discovery & configuration |
-| Security | Spring Security | 6.5.6 | Security framework |
+| Service Discovery | Consul | 1.22.1 | Service discovery & configuration |
+| Security | Spring Security | 6.5.7 | Security framework |
 | Security | Keycloak | 25.0.6 | Identity & access management |
 | RPC | gRPC | 1.77.0 | High-performance RPC |
 | API | GraphQL Java | latest | GraphQL implementation |
-| Database | PostgreSQL | 17.7 | Relational database |
-| Cache | Redis | 8.2.3 | Distributed cache |
+| Database | PostgreSQL | 18.1 | Relational database |
+| Cache | Redis | 8.4.0 | Distributed cache |
 | Mapping | MapStruct | 1.6.3 | Bean mapping |
 | Observability | OpenTelemetry | 2.22.0 | Distributed tracing & logging |
-| Observability | Grafana LGTM | 0.11.17 | Loki, Grafana, Tempo, Mimir |
+| Observability | Grafana LGTM | 0.11.18 | Loki, Grafana, Tempo, Mimir |
 
 ## Project Structure
 
@@ -320,11 +320,11 @@ docker-compose up -d
 cd -
 ```
 This starts:
-- **PostgreSQL 17.7** - Database
-- **Redis 8.2.3** - Distributed cache
-- **Consul 1.22.0** - Service discovery and configuration
+- **PostgreSQL 18.1** - Database
+- **Redis 8.4.0** - Distributed cache
+- **Consul 1.22.1** - Service discovery and configuration
 - **Keycloak 25.0.6** - Authentication/Authorization
-- **Grafana LGTM 0.11.17** - Observability stack (Loki, Grafana, Tempo, Mimir)
+- **Grafana LGTM 0.11.18** - Observability stack (Loki, Grafana, Tempo, Mimir)
 
 **Note**: Consul automatically loads service configurations from YAML files during initialization via the `init.sh` script.
 

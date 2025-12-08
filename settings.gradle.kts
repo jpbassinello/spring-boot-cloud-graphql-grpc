@@ -32,13 +32,13 @@ include(":tests:e2e")
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            version("spring-security", "6.5.6")
+            version("spring-security", "6.5.7")
             version("spring-cloud", "2025.0.0")
             version("opentelemetry", "2.22.0")
 
             // gRPC
             version("grpc", "1.77.0")
-            version("protobuf", "4.33.0")
+            version("protobuf", "4.33.2")
             version("devh-grpc-spring-boot-starter", "3.1.0.RELEASE")
 
             // Other dependencies
