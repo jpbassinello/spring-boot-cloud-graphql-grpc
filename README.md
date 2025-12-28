@@ -130,9 +130,10 @@ principles:
 - **Centralized Configuration**: HashiCorp Consul KV store for external configuration management
 - **Service Discovery**: Automatic service registration with HashiCorp Consul
 - **Distributed Tracing & Logging**: OpenTelemetry with Grafana LGTM stack (Loki, Grafana, Tempo, Mimir)
-- **Distributed Cache**: Redis 8.4.0 for shared caching across services
+- **Distributed Cache**: Redis for shared caching across services
 - **Database Migrations**: Flyway for version-controlled schema management
 - **Security**: Keycloak integration for authentication and authorization
+- **RBAC**: Role Based Access Control
 - **Resilience**: Circuit breakers, retries, and timeouts
 - **Monitoring**: Spring Boot Actuator with Micrometer metrics
 - **Code Quality**: Checkstyle, SpotBugs, and JaCoCo integration
@@ -175,7 +176,7 @@ principles:
 
 ### Security & Authentication
 
-- [Keycloak](https://www.keycloak.org/) 25.0.6 - Identity and access management
+- [Keycloak](https://www.keycloak.org/) 25.0.3 - Identity and access management
 
 ### Developer Tools
 
@@ -240,7 +241,7 @@ Before you begin, ensure you have the following installed:
 
 Services run locally with minimal dependencies. Consul is disabled by default.
 
-1. **Start infrastructure services** (PostgreSQL, Redis, Keycloak)
+1. **Start the shared infrastructure services** (PostgreSQL, Redis, Keycloak)
    ```bash
    cd infrastructure/docker/compose/shared
    docker-compose up -d
@@ -292,7 +293,7 @@ Services will use the `dev-docker` profile, which enables:
 
 - Consul-based service discovery
 - Consul KV store for configuration
-- Service-to-service communication via Consul DNS
+- Service-to-service communication via Consul
 
 3. **GraphQL Gateway**
    Access GraphQL playground at: `http://localhost:8080/graphiql`

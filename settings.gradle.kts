@@ -33,8 +33,8 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             version("spring-security", "6.5.7")
-            version("spring-cloud", "2025.0.0")
-            version("opentelemetry", "2.22.0")
+            version("spring-cloud", "2025.0.1")
+            version("opentelemetry", "2.23.0")
 
             // gRPC
             version("grpc", "1.77.0")
@@ -48,9 +48,9 @@ dependencyResolutionManagement {
             version("shedlock", "6.10.0")
 
             // Plugins
-            plugin("spring-boot", "org.springframework.boot").version("3.5.8")
-            plugin("spotbugs", "com.github.spotbugs").version("6.4.5")
-            plugin("protobuf", "com.google.protobuf").version("0.9.5")
+            plugin("spring-boot", "org.springframework.boot").version("3.5.9")
+            plugin("spotbugs", "com.github.spotbugs").version("6.4.8")
+            plugin("protobuf", "com.google.protobuf").version("0.9.6")
             plugin("buf", "com.parmet.buf").version("0.8.5")
             plugin("lombok", "io.freefair.lombok").version("9.1.0")
         }

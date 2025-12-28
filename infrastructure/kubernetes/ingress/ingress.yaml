@@ -7,7 +7,6 @@ metadata:
     app.kubernetes.io/part-of: sbcgg-platform
   annotations:
     # NGINX Ingress Controller annotations
-    nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/use-regex: "true"
     # Add CORS support
@@ -95,7 +94,6 @@ metadata:
   labels:
     app.kubernetes.io/part-of: sbcgg-platform
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"

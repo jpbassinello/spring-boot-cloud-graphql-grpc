@@ -170,7 +170,7 @@ apply-secrets: ## Apply secrets (make sure to update config/secrets.yaml first!)
 
 generate-consul-key: ## Generate Consul gossip encryption key
 	@echo "Generating Consul gossip key..."
-	@docker run --rm hashicorp/consul:1.22.1 consul keygen
+	@docker run --rm hashicorp/consul:1.22.2 consul keygen
 
 validate: ## Validate Kubernetes manifests
 	@echo "Validating manifests..."

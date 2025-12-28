@@ -19,15 +19,25 @@ subprojects {
             apply(plugin = "org.springframework.boot")
 
             tasks.named<BootBuildImage>("bootBuildImage") {
+                buildpacks.set(
+                    listOf(
+                        "urn:cnb:builder:paketo-buildpacks/java",
+                        "docker.io/paketobuildpacks/health-checker:latest"
+                    )
+                )
                 imageName.set("sbcgg/${project.name}:${project.version}")
-                environment.set(mapOf(
-                    "BP_JVM_VERSION" to "25",
-                    "BP_HEALTH_CHECKER_ENABLED" to "true"
-                ))
-                tags.set(listOf(
-                    "sbcgg/${project.name}:latest",
-                    "sbcgg/${project.name}:${project.version}"
-                ))
+                environment.set(
+                    mapOf(
+                        "BP_JVM_VERSION" to "25",
+                        "BP_HEALTH_CHECKER_ENABLED" to "true"
+                    )
+                )
+                tags.set(
+                    listOf(
+                        "sbcgg/${project.name}:latest",
+                        "sbcgg/${project.name}:${project.version}"
+                    )
+                )
             }
         }
     }

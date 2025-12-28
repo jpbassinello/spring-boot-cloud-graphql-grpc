@@ -52,7 +52,7 @@ This document provides essential information for developers and AI assistants wo
 ### Prerequisites
 
 - **Java 25 (LTS)** - Required for building and running the project
-- **Gradle 9.1.0** - Wrapper included in the project
+- **Gradle 9.2.1** - Wrapper included in the project
 - **Docker & Docker Compose** - For running infrastructure services (PostgreSQL, Redis, Keycloak)
 
 ### Building the Project
@@ -85,28 +85,28 @@ The project uses **Gradle Version Catalogs** (defined in `settings.gradle.kts`) 
 ```kotlin
 // Version Catalog Structure
 libs.versions.spring.security = "6.5.7"
-libs.versions.spring.cloud = "2025.0.0"
+libs.versions.spring.cloud = "2025.0.1"
 libs.versions.grpc = "1.77.0"
 libs.versions.protobuf = "4.33.2"
-libs.plugins.spring.boot = "3.5.8"
+libs.plugins.spring.boot = "3.5.9"
 ```
 
 ### Key Dependencies
 
-| Category | Library | Version | Purpose |
-|----------|---------|---------|---------|
-| Framework | Spring Boot | 3.5.8 | Application framework |
-| Framework | Spring Cloud | 2025.0.0 | Microservices toolkit |
-| Service Discovery | Consul | 1.22.1 | Service discovery & configuration |
-| Security | Spring Security | 6.5.7 | Security framework |
-| Security | Keycloak | 25.0.6 | Identity & access management |
-| RPC | gRPC | 1.77.0 | High-performance RPC |
-| API | GraphQL Java | latest | GraphQL implementation |
-| Database | PostgreSQL | 18.1 | Relational database |
-| Cache | Redis | 8.4.0 | Distributed cache |
-| Mapping | MapStruct | 1.6.3 | Bean mapping |
-| Observability | OpenTelemetry | 2.22.0 | Distributed tracing & logging |
-| Observability | Grafana LGTM | 0.11.18 | Loki, Grafana, Tempo, Mimir |
+| Category | Library | Version  | Purpose |
+|----------|---------|----------|---------|
+| Framework | Spring Boot | 3.5.9    | Application framework |
+| Framework | Spring Cloud | 2025.0.1 | Microservices toolkit |
+| Service Discovery | Consul | 1.22.2   | Service discovery & configuration |
+| Security | Spring Security | 6.5.7    | Security framework |
+| Security | Keycloak | 25.0.3   | Identity & access management |
+| RPC | gRPC | 1.77.0   | High-performance RPC |
+| API | GraphQL Java | latest   | GraphQL implementation |
+| Database | PostgreSQL | 18.1     | Relational database |
+| Cache | Redis | 8.4.0    | Distributed cache |
+| Mapping | MapStruct | 1.6.3    | Bean mapping |
+| Observability | OpenTelemetry | 2.23.0   | Distributed tracing & logging |
+| Observability | Grafana LGTM | 0.13.0   | Loki, Grafana, Tempo, Mimir |
 
 ## Project Structure
 
@@ -299,6 +299,7 @@ class FeatureServiceIT extends BaseServiceIT {
 - Use `@ActiveProfiles("test")` for test-specific configuration
 - Test **edge cases** and **error conditions**
 - Keep tests **independent** and **idempotent**
+- Prefer full object asserting with `usingRecursiveComparison()`
 
 ❌ **Don't:**
 - Share state between tests
@@ -322,9 +323,9 @@ cd -
 This starts:
 - **PostgreSQL 18.1** - Database
 - **Redis 8.4.0** - Distributed cache
-- **Consul 1.22.1** - Service discovery and configuration
-- **Keycloak 25.0.6** - Authentication/Authorization
-- **Grafana LGTM 0.11.18** - Observability stack (Loki, Grafana, Tempo, Mimir)
+- **Consul 1.22.2** - Service discovery and configuration
+- **Keycloak 25.0.3** - Authentication/Authorization
+- **Grafana LGTM 0.13.0** - Observability stack (Loki, Grafana, Tempo, Mimir)
 
 **Note**: Consul automatically loads service configurations from YAML files during initialization via the `init.sh` script.
 
@@ -988,7 +989,7 @@ org.gradle.configureondemand=true # On-demand configuration
 ## Additional Resources
 
 - [README.md](README.md) - Public project documentation
-- [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/3.5.6/reference/html/)
+- [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/3.5.9/reference/html/)
 - [Spring Cloud Documentation](https://spring.io/projects/spring-cloud)
 - [Spring Cloud Consul Documentation](https://docs.spring.io/spring-cloud-consul/reference/)
 - [Consul Documentation](https://developer.hashicorp.com/consul/docs)

@@ -36,11 +36,6 @@ class GraphQLGatewayTest {
 
   private static final String KEYCLOAK_TOKEN_ENDPOINT = "/realms/sbcgg/protocol/openid-connect/token";
 
-  // @Value("${graphql-gateway-url}:http://localhost:8080/graphql")
-  // private String graphQLGatewayUrl;
-  // @Value("${keycloak-url}:http://localhost:9090")
-  // private String keycloakUrl;
-
   @Autowired
   private RestTemplateBuilder restTemplateBuilder;
   @Autowired
