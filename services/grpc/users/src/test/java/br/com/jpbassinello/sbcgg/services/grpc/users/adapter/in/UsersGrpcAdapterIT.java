@@ -7,23 +7,18 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserRole;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UsersServiceGrpc;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SendMessagePort;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SyncIdentityPort;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import io.grpc.Metadata;
 import io.grpc.StatusRuntimeException;
-import net.devh.boot.grpc.client.autoconfigure.GrpcClientAutoConfiguration;
-import net.devh.boot.grpc.client.inject.GrpcClient;
-import net.devh.boot.grpc.server.autoconfigure.GrpcAdviceAutoConfiguration;
-import net.devh.boot.grpc.server.autoconfigure.GrpcServerAutoConfiguration;
-import net.devh.boot.grpc.server.autoconfigure.GrpcServerFactoryAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -36,11 +31,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@ImportAutoConfiguration({
-    GrpcAdviceAutoConfiguration.class,
-    GrpcServerAutoConfiguration.class,
-    GrpcServerFactoryAutoConfiguration.class,
-    GrpcClientAutoConfiguration.class
+@TestPropertySource(properties = {
+    "spring.grpc.server.port=9191"
 })
 @ActiveProfiles("test")
 @DirtiesContext
@@ -53,9 +45,6 @@ class UsersGrpcAdapterIT {
       .withUsername("postgres")
       .withPassword("postgres");
 
-  @GrpcClient("inProcess")
-  private UsersServiceGrpc.UsersServiceBlockingStub grpcStub;
-
   @MockitoBean
   private SyncIdentityPort syncIdentityPort;
 
@@ -65,8 +54,16 @@ class UsersGrpcAdapterIT {
   @Autowired
   private ObjectMapper objectMapper;
 
+  private UsersServiceGrpc.UsersServiceBlockingStub getGrpcStub() {
+    var channel = io.grpc.ManagedChannelBuilder.forAddress("localhost", 9191)
+        .usePlaintext()
+        .build();
+    return UsersServiceGrpc.newBlockingStub(channel);
+  }
+
   @Test
   void loadUserExpectingNotFound() {
+    var grpcStub = getGrpcStub();
     var userId = UUID.randomUUID();
     var request = LoadUserRequest.newBuilder()
         .setId(userId.toString())
@@ -84,6 +81,7 @@ class UsersGrpcAdapterIT {
 
   @Test
   void registerAdminExpectingConstraintViolations() {
+    var grpcStub = getGrpcStub();
     var request = RegisterUserRequest.newBuilder()
         .setInput(
             UserInput.newBuilder()
@@ -107,7 +105,7 @@ class UsersGrpcAdapterIT {
                 new TypeReference<>() {});
             return new HashSet<>(violations)
                 .equals(Set.of("user.lastName.NotEmpty", "user.email.NotEmpty", "user.password.NotEmpty", "user.mobilePhoneNumber.NotEmpty"));
-          } catch (JsonProcessingException e) {
+          } catch (JacksonException e) {
             return false;
           }
         });

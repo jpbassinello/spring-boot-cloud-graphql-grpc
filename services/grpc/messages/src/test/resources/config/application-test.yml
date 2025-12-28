@@ -2,6 +2,14 @@ spring:
   cloud:
     consul:
       enabled: false
+  grpc:
+    server:
+      inprocess:
+        name: test
+    client:
+      channels:
+        inProcess:
+          address: "in-process:test"
 
 otel:
   sdk:

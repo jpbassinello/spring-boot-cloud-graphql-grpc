@@ -39,6 +39,8 @@ subprojects {
         implementation(platform("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:${rootProject.libs.versions.opentelemetry.get()}"))
         implementation(platform("com.google.protobuf:protobuf-bom:${rootProject.libs.versions.protobuf.get()}"))
         implementation(platform("io.grpc:grpc-bom:${rootProject.libs.versions.grpc.get()}"))
+        implementation(platform("org.springframework.grpc:spring-grpc-dependencies:${rootProject.libs.versions.spring.grpc.get()}"))
+        testImplementation(platform("org.testcontainers:testcontainers-bom:1.21.0"))
         implementation("com.github.spotbugs:spotbugs-annotations:4.9.8")
 
         annotationProcessor("org.mapstruct:mapstruct-processor:${rootProject.libs.versions.mapstruct.get()}")

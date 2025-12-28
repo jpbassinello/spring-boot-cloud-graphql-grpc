@@ -9,11 +9,11 @@ import br.com.jpbassinello.sbcgg.services.messages.application.service.LoadMessa
 import br.com.jpbassinello.sbcgg.services.messages.application.service.ScheduleMessagesUseCase;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@GrpcService
+@Service
 @RequiredArgsConstructor
 class MessagesGrpcAdapter extends MessagesServiceGrpc.MessagesServiceImplBase {
 

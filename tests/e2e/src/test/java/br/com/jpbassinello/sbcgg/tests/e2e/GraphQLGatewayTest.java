@@ -1,27 +1,21 @@
 package br.com.jpbassinello.sbcgg.tests.e2e;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -31,25 +25,21 @@ import java.util.UUID;
 
 @SpringBootTest(classes = {GraphQLGatewayTest.class}, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @EnableConfigurationProperties(GraphQLGatewayTest.Config.class)
-@AutoConfigureWebClient
 class GraphQLGatewayTest {
 
   private static final String KEYCLOAK_TOKEN_ENDPOINT = "/realms/sbcgg/protocol/openid-connect/token";
 
   @Autowired
-  private RestTemplateBuilder restTemplateBuilder;
-  @Autowired
   private GraphQLGatewayTest.Config config;
 
   private GraphQlTester graphQlTester;
-  private TestRestTemplate restTemplate;
+  private RestClient restClient;
 
   @BeforeEach
   void setUp() {
-    restTemplate = new TestRestTemplate(
-        restTemplateBuilder
-            .rootUri(config.keycloakUrl)
-    );
+    restClient = RestClient.builder()
+        .baseUrl(config.keycloakUrl)
+        .build();
 
     var adminAccessToken = getAccessToken("admin@sbcgg.com", "admin");
 
@@ -99,23 +89,22 @@ class GraphQLGatewayTest {
   }
 
   private String getAccessToken(String username, String password) {
-    var headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
     var parameters = new LinkedMultiValueMap<String, String>();
-    parameters.add("grant_type", "password"); // Or "password", "authorization_code", etc.
+    parameters.add("grant_type", "password");
     parameters.add("client_id", "sbcgg");
     parameters.add("client_secret", "GBQWoDGXmVRdoQzxBttBbx0BFaJL3Xoy");
     parameters.add("scope", "openid profile email");
     parameters.add("username", username);
     parameters.add("password", password);
 
-    var entity = new HttpEntity<MultiValueMap<String, String>>(parameters, headers);
-    return restTemplate.postForObject(
-        KEYCLOAK_TOKEN_ENDPOINT,
-        entity,
-        TokenResponse.class
-    ).accessToken();
+    var response = restClient.post()
+        .uri(KEYCLOAK_TOKEN_ENDPOINT)
+        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        .body(parameters)
+        .retrieve()
+        .body(TokenResponse.class);
+
+    return response != null ? response.accessToken() : null;
   }
 
   @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)

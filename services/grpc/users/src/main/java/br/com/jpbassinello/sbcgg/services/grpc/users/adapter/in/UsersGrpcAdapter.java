@@ -14,13 +14,13 @@ import br.com.jpbassinello.sbcgg.services.grpc.users.application.services.Manage
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.services.VerifyUserUseCase;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import net.devh.boot.grpc.server.service.GrpcService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@GrpcService
+@Service
 @RequiredArgsConstructor
 class UsersGrpcAdapter extends UsersServiceGrpc.UsersServiceImplBase {
 

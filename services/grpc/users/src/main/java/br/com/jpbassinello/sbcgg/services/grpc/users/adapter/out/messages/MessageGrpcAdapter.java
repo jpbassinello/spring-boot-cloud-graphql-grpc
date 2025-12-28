@@ -10,7 +10,6 @@ import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SendMe
 import br.com.jpbassinello.sbcgg.spring.TimeNow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.ParametersAreNonnullByDefault;

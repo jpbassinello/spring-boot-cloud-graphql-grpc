@@ -1,15 +1,13 @@
 spring:
   application:
     name: messages-service
+  grpc:
+    client:
+      channels:
+        users:
+          negotiation-type: PLAINTEXT
 
 service:
   messages:
     max-retries: 5
     next-attempt-wait-duration: 30s
-
-grpc:
-  client:
-    users:
-      enable-keep-alive: true
-      keep-alive-without-calls: true
-      negotiation-type: plaintext

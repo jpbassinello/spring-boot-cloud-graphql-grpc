@@ -1,4 +1,4 @@
-package br.com.jpbassinello.sbcgg.services.grpc.users.adapter.out.messages;
+package br.com.jpbassinello.sbcgg.graphql.gateway.adapter.out.message;
 
 import br.com.jpbassinello.sbcgg.grpc.interfaces.messages.MessagesServiceGrpc;
 import org.springframework.context.annotation.Bean;

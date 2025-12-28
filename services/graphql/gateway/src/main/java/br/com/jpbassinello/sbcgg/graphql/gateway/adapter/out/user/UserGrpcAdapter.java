@@ -15,7 +15,7 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.users.SearchUsersRequest;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UsersServiceGrpc;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.VerifyContactMethodRequest;
 import jakarta.annotation.Nullable;
-import net.devh.boot.grpc.client.inject.GrpcClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -25,12 +25,12 @@ import java.util.UUID;
 
 @Component
 @ParametersAreNonnullByDefault
+@RequiredArgsConstructor
 class UserGrpcAdapter implements LoadUserPort, RegisterUserPort, VerifyUserContactMethodPort {
 
   private static final UserGrpcMapper USER_GRPC_MAPPER = UserGrpcMapper.INSTANCE;
 
-  @GrpcClient("users")
-  private UsersServiceGrpc.UsersServiceBlockingStub usersGrpc;
+  private final UsersServiceGrpc.UsersServiceBlockingStub usersGrpc;
 
   @Override
   public Optional<User> loadUserById(UUID id) {

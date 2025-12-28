@@ -32,14 +32,14 @@ include(":tests:e2e")
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            version("spring-security", "6.5.7")
-            version("spring-cloud", "2025.0.1")
+            version("spring-security", "7.0.2")
+            version("spring-cloud", "2025.1.0")
             version("opentelemetry", "2.23.0")
 
             // gRPC
             version("grpc", "1.77.0")
             version("protobuf", "4.33.2")
-            version("devh-grpc-spring-boot-starter", "3.1.0.RELEASE")
+            version("spring-grpc", "1.0.0")
 
             // Other dependencies
             version("keycloak", "25.0.3")
@@ -48,7 +48,7 @@ dependencyResolutionManagement {
             version("shedlock", "6.10.0")
 
             // Plugins
-            plugin("spring-boot", "org.springframework.boot").version("3.5.9")
+            plugin("spring-boot", "org.springframework.boot").version("4.0.1")
             plugin("spotbugs", "com.github.spotbugs").version("6.4.8")
             plugin("protobuf", "com.google.protobuf").version("0.9.6")
             plugin("buf", "com.parmet.buf").version("0.8.5")

@@ -1,14 +1,10 @@
 spring:
   application:
     name: graphql-gateway
-
-grpc:
-  client:
-    users:
-      enable-keep-alive: true
-      keep-alive-without-calls: true
-      negotiation-type: plaintext
-    messages:
-      enable-keep-alive: true
-      keep-alive-without-calls: true
-      negotiation-type: plaintext
+  grpc:
+    client:
+      channels:
+        users:
+          negotiation-type: PLAINTEXT
+        messages:
+          negotiation-type: PLAINTEXT
