@@ -7,21 +7,19 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserRole;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UsersServiceGrpc;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SendMessagePort;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SyncIdentityPort;
-import tools.jackson.core.JacksonException;
-import tools.jackson.core.type.TypeReference;
-import tools.jackson.databind.ObjectMapper;
+import br.com.jpbassinello.sbcgg.services.grpc.users.application.services.BaseServiceIT;
 import io.grpc.Metadata;
 import io.grpc.StatusRuntimeException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashSet;
 import java.util.List;
@@ -36,14 +34,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 })
 @ActiveProfiles("test")
 @DirtiesContext
-class UsersGrpcAdapterIT {
-
-  @Container
-  @ServiceConnection
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18.1-alpine3.23")
-      .withDatabaseName("messages")
-      .withUsername("postgres")
-      .withPassword("postgres");
+class UsersGrpcAdapterIT extends BaseServiceIT {
 
   @MockitoBean
   private SyncIdentityPort syncIdentityPort;

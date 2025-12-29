@@ -47,14 +47,14 @@ class MessageGrpcAdapterTest {
 
     assertThat(response)
         .usingRecursiveComparison()
-            .isEqualTo(
-                new UserMessagePage(
-                    List.of(
-                        br.com.jpbassinello.sbcgg.graphql.gateway.domain.types.Message.builder().recipient("email1@email.com").build(),
-                        br.com.jpbassinello.sbcgg.graphql.gateway.domain.types.Message.builder().recipient("+5519991038010").build()
-                    ), true
-                )
-            );
+        .isEqualTo(
+            new UserMessagePage(
+                List.of(
+                    br.com.jpbassinello.sbcgg.graphql.gateway.domain.types.Message.builder().recipient("email1@email.com").build(),
+                    br.com.jpbassinello.sbcgg.graphql.gateway.domain.types.Message.builder().recipient("+5519991038010").build()
+                ), true
+            )
+        );
   }
 
 }

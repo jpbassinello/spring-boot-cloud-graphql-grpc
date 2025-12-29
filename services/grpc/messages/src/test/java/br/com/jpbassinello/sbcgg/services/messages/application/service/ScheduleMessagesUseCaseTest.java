@@ -2,10 +2,8 @@ package br.com.jpbassinello.sbcgg.services.messages.application.service;
 
 import br.com.jpbassinello.sbcgg.exception.BadRequestException;
 import br.com.jpbassinello.sbcgg.services.messages.application.port.out.LoadMessagePort;
-import br.com.jpbassinello.sbcgg.services.messages.application.port.out.LoadUserPort;
 import br.com.jpbassinello.sbcgg.services.messages.application.port.out.PersistMessagePort;
 import br.com.jpbassinello.sbcgg.services.messages.domain.entities.Message;
-import br.com.jpbassinello.sbcgg.services.messages.domain.entities.User;
 import br.com.jpbassinello.sbcgg.services.messages.domain.enums.MessageChannel;
 import br.com.jpbassinello.sbcgg.services.messages.domain.enums.MessageTemplate;
 import jakarta.validation.Validation;

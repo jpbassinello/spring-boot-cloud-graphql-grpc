@@ -90,7 +90,7 @@ class UserGrpcAdapter implements LoadUserPort, RegisterUserPort, VerifyUserConta
             .build()
     );
 
-    return  new UserPage(
+    return new UserPage(
         response.getUsersList().stream().map(USER_GRPC_MAPPER::mapToType).toList(),
         response.getHasNext()
     );

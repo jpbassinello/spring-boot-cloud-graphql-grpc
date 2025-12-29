@@ -1,6 +1,5 @@
 package br.com.jpbassinello.sbcgg.services.messages.application.service;
 
-import br.com.jpbassinello.sbcgg.exception.ResourceNotFoundException;
 import br.com.jpbassinello.sbcgg.services.messages.application.port.out.LoadMessagePort;
 import br.com.jpbassinello.sbcgg.services.messages.application.port.out.LoadUserPort;
 import br.com.jpbassinello.sbcgg.services.messages.application.port.out.PersistMessagePort;
@@ -14,7 +13,6 @@ import br.com.jpbassinello.sbcgg.services.messages.domain.enums.MessageTemplate;
 import br.com.jpbassinello.sbcgg.spring.TimeNow;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

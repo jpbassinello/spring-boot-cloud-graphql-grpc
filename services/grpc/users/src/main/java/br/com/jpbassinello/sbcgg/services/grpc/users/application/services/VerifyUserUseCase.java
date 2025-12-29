@@ -12,7 +12,6 @@ import br.com.jpbassinello.sbcgg.services.grpc.users.domain.enums.UserVerificati
 import br.com.jpbassinello.sbcgg.spring.TimeNow;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.security.SecureRandom;
 import java.time.Duration;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 

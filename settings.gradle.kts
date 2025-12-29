@@ -35,17 +35,18 @@ dependencyResolutionManagement {
             version("spring-security", "7.0.2")
             version("spring-cloud", "2025.1.0")
             version("opentelemetry", "2.23.0")
-
-            // gRPC
-            version("grpc", "1.77.0")
-            version("protobuf", "4.33.2")
             version("spring-grpc", "1.0.0")
+
+            // ideally matching proto version from spring-grpc
+            version("protoc-protobuf", "4.33.2")
+            version("protoc-grpc", "1.77.1")
 
             // Other dependencies
             version("keycloak", "25.0.3")
             version("mapstruct", "1.6.3")
             version("spi-protobuf-mapstruct", "1.49.0")
             version("shedlock", "6.10.0")
+            version("testcontainers", "1.21.0")
 
             // Plugins
             plugin("spring-boot", "org.springframework.boot").version("4.0.1")

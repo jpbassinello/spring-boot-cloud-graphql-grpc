@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 class VerifyUserUseCaseTest {
 
   private static final UUID USER_ID = UUID.randomUUID();
-  private static final User USER =  User.builder()
+  private static final User USER = User.builder()
       .id(USER_ID)
       .firstName("João")
       .lastName("Bassinello")
@@ -97,7 +97,7 @@ class VerifyUserUseCaseTest {
   @Test
   void verifyUser() {
 
-    var now =ZonedDateTime.now();
+    var now = ZonedDateTime.now();
     when(timeNow.get()).thenReturn(now);
 
     when(verifyUser.isValid(USER_ID, "1234", UserVerificationCodeType.EMAIL, now))

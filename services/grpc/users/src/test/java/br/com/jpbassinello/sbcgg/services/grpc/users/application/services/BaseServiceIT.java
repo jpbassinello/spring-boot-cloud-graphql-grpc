@@ -13,7 +13,7 @@ import org.testcontainers.junit.jupiter.Container;
 @DataJpaTest(excludeAutoConfiguration = {TestDatabaseAutoConfiguration.class})
 @ContextConfiguration(classes = {ValidationAutoConfiguration.class, PersistenceConfig.class}) // enabling validation
 @ActiveProfiles("test")
-abstract class BaseServiceIT {
+public abstract class BaseServiceIT {
 
   @Container
   @ServiceConnection

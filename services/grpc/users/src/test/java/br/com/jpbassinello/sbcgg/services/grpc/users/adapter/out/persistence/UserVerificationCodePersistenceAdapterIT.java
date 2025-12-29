@@ -1,5 +1,6 @@
 package br.com.jpbassinello.sbcgg.services.grpc.users.adapter.out.persistence;
 
+import br.com.jpbassinello.sbcgg.services.grpc.users.application.services.BaseServiceIT;
 import br.com.jpbassinello.sbcgg.services.grpc.users.config.PersistenceConfig;
 import br.com.jpbassinello.sbcgg.services.grpc.users.domain.entities.User;
 import br.com.jpbassinello.sbcgg.services.grpc.users.domain.entities.UserVerificationCode;
@@ -9,11 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.TestDatabaseAutoConfiguration;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -23,14 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest(excludeAutoConfiguration = {TestDatabaseAutoConfiguration.class})
 @ContextConfiguration(classes = {PersistenceConfig.class})
 @ActiveProfiles("test")
-class UserVerificationCodePersistenceAdapterIT {
-
-  @Container
-  @ServiceConnection
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18.1-alpine3.23")
-      .withDatabaseName("users")
-      .withUsername("postgres")
-      .withPassword("postgres");
+class UserVerificationCodePersistenceAdapterIT extends BaseServiceIT {
 
   @Autowired
   private UserRepository userRepository;

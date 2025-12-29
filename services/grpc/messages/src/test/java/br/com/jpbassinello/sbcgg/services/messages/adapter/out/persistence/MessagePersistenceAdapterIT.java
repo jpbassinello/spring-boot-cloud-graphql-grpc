@@ -10,12 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.TestDatabaseAutoConfiguration;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -29,15 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest(excludeAutoConfiguration = {TestDatabaseAutoConfiguration.class})
 @ContextConfiguration(classes = {PersistenceConfig.class})
 @ActiveProfiles("test")
-@Testcontainers
+@ImportTestcontainers(PostgresContainer.class)
 class MessagePersistenceAdapterIT {
-
-  @Container
-  @ServiceConnection
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18.1-alpine3.23")
-      .withDatabaseName("messages")
-      .withUsername("postgres")
-      .withPassword("postgres");
 
   @Autowired
   private MessageRepository repository;

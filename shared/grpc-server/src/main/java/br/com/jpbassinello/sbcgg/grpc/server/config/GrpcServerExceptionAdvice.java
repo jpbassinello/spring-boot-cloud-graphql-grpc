@@ -4,8 +4,6 @@ import br.com.jpbassinello.sbcgg.exception.BadRequestException;
 import br.com.jpbassinello.sbcgg.exception.InternalServerErrorException;
 import br.com.jpbassinello.sbcgg.exception.ResourceNotFoundException;
 import br.com.jpbassinello.sbcgg.exception.TimedOutException;
-import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
 import io.grpc.Metadata;
 import io.grpc.Status;
 import io.grpc.StatusException;
@@ -16,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.grpc.server.exception.GrpcExceptionHandler;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 

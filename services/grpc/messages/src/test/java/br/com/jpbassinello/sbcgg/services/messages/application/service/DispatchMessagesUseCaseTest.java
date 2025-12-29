@@ -1,7 +1,6 @@
 package br.com.jpbassinello.sbcgg.services.messages.application.service;
 
 import br.com.jpbassinello.sbcgg.services.messages.application.port.out.LoadMessagePort;
-import br.com.jpbassinello.sbcgg.services.messages.domain.entities.Message;
 import br.com.jpbassinello.sbcgg.spring.TimeNow;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
