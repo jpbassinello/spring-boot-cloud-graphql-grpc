@@ -37,8 +37,8 @@ dependencyResolutionManagement {
             version("opentelemetry", "2.23.0")
             version("spring-grpc", "1.0.0")
 
-            // ideally matching proto version from spring-grpc
-            version("protoc-protobuf", "4.33.2")
+            // matching proto version from spring-grpc
+            version("protoc-protobuf", "4.33.1")
             version("protoc-grpc", "1.77.1")
 
             // Other dependencies

@@ -1,15 +1,15 @@
-package br.com.jpbassinello.sbcgg.services.messages.adapter.out.persistence;
+package br.com.jpbassinello.sbcgg.services.grpc.users.adapter;
 
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-interface PostgresContainer {
+public interface PostgresContainer {
 
   @Container
   @ServiceConnection
   PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18.1-alpine3.23")
-      .withDatabaseName("messages")
+      .withDatabaseName("users")
       .withUsername("postgres")
       .withPassword("postgres");
 

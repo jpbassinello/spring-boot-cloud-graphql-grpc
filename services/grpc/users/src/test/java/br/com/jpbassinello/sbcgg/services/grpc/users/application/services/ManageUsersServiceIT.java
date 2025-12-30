@@ -1,11 +1,18 @@
 package br.com.jpbassinello.sbcgg.services.grpc.users.application.services;
 
+import br.com.jpbassinello.sbcgg.services.grpc.users.adapter.PostgresContainer;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.LoadUserPort;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SyncIdentityPort;
+import br.com.jpbassinello.sbcgg.services.grpc.users.config.PersistenceConfig;
 import br.com.jpbassinello.sbcgg.services.grpc.users.domain.enums.Role;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.TestDatabaseAutoConfiguration;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
+import org.springframework.boot.validation.autoconfigure.ValidationAutoConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -19,12 +26,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-@ContextConfiguration(
-    classes = {
-        ManageUsersUseCase.class
-    }
+@DataJpaTest(excludeAutoConfiguration = {TestDatabaseAutoConfiguration.class})
+@ContextConfiguration(classes = {
+    ValidationAutoConfiguration.class,
+    PersistenceConfig.class,
+    ManageUsersUseCase.class}
 )
-class ManageUsersServiceIT extends BaseServiceIT {
+@ActiveProfiles("test")
+@ImportTestcontainers(PostgresContainer.class)
+class ManageUsersServiceIT {
 
   @MockitoBean
   private SyncIdentityPort syncIdentityPort;

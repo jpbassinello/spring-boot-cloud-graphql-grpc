@@ -1,6 +1,6 @@
 package br.com.jpbassinello.sbcgg.services.grpc.users.adapter.out.persistence;
 
-import br.com.jpbassinello.sbcgg.services.grpc.users.application.services.BaseServiceIT;
+import br.com.jpbassinello.sbcgg.services.grpc.users.adapter.PostgresContainer;
 import br.com.jpbassinello.sbcgg.services.grpc.users.config.PersistenceConfig;
 import br.com.jpbassinello.sbcgg.services.grpc.users.domain.entities.User;
 import br.com.jpbassinello.sbcgg.services.grpc.users.domain.entities.UserVerificationCode;
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.TestDatabaseAutoConfiguration;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -21,7 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest(excludeAutoConfiguration = {TestDatabaseAutoConfiguration.class})
 @ContextConfiguration(classes = {PersistenceConfig.class})
 @ActiveProfiles("test")
-class UserVerificationCodePersistenceAdapterIT extends BaseServiceIT {
+@ImportTestcontainers(PostgresContainer.class)
+class UserVerificationCodePersistenceAdapterIT {
 
   @Autowired
   private UserRepository userRepository;

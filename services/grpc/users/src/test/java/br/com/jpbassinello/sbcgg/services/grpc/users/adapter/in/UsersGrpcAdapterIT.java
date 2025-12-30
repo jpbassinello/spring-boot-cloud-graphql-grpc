@@ -5,6 +5,7 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.users.RegisterUserRequest;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserInput;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserRole;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UsersServiceGrpc;
+import br.com.jpbassinello.sbcgg.services.grpc.users.adapter.PostgresContainer;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SendMessagePort;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SyncIdentityPort;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.services.BaseServiceIT;
@@ -12,7 +13,12 @@ import io.grpc.Metadata;
 import io.grpc.StatusRuntimeException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.grpc.test.autoconfigure.AutoConfigureInProcessTransport;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
+import org.springframework.context.annotation.Bean;
+import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
@@ -29,12 +35,11 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@TestPropertySource(properties = {
-    "spring.grpc.server.port=9191"
-})
 @ActiveProfiles("test")
 @DirtiesContext
-class UsersGrpcAdapterIT extends BaseServiceIT {
+@AutoConfigureInProcessTransport
+@ImportTestcontainers(PostgresContainer.class)
+class UsersGrpcAdapterIT {
 
   @MockitoBean
   private SyncIdentityPort syncIdentityPort;
@@ -45,16 +50,11 @@ class UsersGrpcAdapterIT extends BaseServiceIT {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private UsersServiceGrpc.UsersServiceBlockingStub getGrpcStub() {
-    var channel = io.grpc.ManagedChannelBuilder.forAddress("localhost", 9191)
-        .usePlaintext()
-        .build();
-    return UsersServiceGrpc.newBlockingStub(channel);
-  }
+  @Autowired
+  private UsersServiceGrpc.UsersServiceBlockingStub grpcStub;
 
   @Test
   void loadUserExpectingNotFound() {
-    var grpcStub = getGrpcStub();
     var userId = UUID.randomUUID();
     var request = LoadUserRequest.newBuilder()
         .setId(userId.toString())
@@ -72,7 +72,6 @@ class UsersGrpcAdapterIT extends BaseServiceIT {
 
   @Test
   void registerAdminExpectingConstraintViolations() {
-    var grpcStub = getGrpcStub();
     var request = RegisterUserRequest.newBuilder()
         .setInput(
             UserInput.newBuilder()
@@ -100,5 +99,15 @@ class UsersGrpcAdapterIT extends BaseServiceIT {
             return false;
           }
         });
+  }
+
+  @TestConfiguration
+  static class Config {
+
+    @Bean
+    UsersServiceGrpc.UsersServiceBlockingStub grpcStub(GrpcChannelFactory channels) {
+      return UsersServiceGrpc.newBlockingStub(channels.createChannel("local"));
+    }
+
   }
 }
