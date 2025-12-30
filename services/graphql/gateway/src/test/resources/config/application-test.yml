@@ -15,9 +15,9 @@ spring:
     client:
       channels:
         users:
-          address: "static://localhost:8091"
+          address: "dns:///localhost:8091"
         messages:
-          address: "static://localhost:8191"
+          address: "dns:///localhost:8191"
 
 otel:
   sdk:

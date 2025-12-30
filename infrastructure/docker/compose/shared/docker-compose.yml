@@ -20,7 +20,7 @@ services:
 
   # Identity and Access Management
   keycloak:
-    image: quay.io/keycloak/keycloak:25.0.6
+    image: quay.io/keycloak/keycloak:26.4.7
     container_name: sbcgg-keycloak
     ports:
       - "127.0.0.1:9090:8080" # https://github.com/keycloak/keycloak/issues/42739
@@ -39,7 +39,18 @@ services:
       KC_HEALTH_ENABLED: true
     command: [ "start-dev", "--import-realm" ]
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000;echo -e \"GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n\" >&3;grep \"HTTP/1.1 200 OK\" <&3"]
+      test: # https://gist.github.com/sarath-soman/5d9aec06953bbd0990c648605d4dba07?permalink_comment_id=5821829#gistcomment-5821829
+        [
+          "CMD-SHELL",
+          "exec 3<>/dev/tcp/localhost/9000; \
+                echo -en 'GET /health/ready' >&3; \
+                # Give the server a moment to respond, then search for 'UP'
+                if timeout 3 cat <&3 | grep -m 1 'UP'; then \
+                  exec 3<&-; exec 3>&-; exit 0; \
+                else \
+                  exec 3<&-; exec 3>&-; exit 1; \
+                fi"
+        ]
       interval: 10s
       timeout: 10s
       retries: 5

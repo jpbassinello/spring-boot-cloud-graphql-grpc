@@ -20,7 +20,7 @@ spring:
     client:
       channels:
         messages:
-          address: "static://messages-service:8191"
+          address: "discovery:///messages-service"
 
 keycloak:
   server-url: http://keycloak:8080

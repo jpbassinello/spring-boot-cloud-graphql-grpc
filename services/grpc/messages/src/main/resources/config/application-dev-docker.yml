@@ -24,7 +24,7 @@ spring:
     client:
       channels:
         users:
-          address: "static://users-service:8091"
+          address: "discovery:///users-service"
 
 otel:
   exporter:

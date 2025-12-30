@@ -42,11 +42,11 @@ dependencyResolutionManagement {
             version("protoc-grpc", "1.77.1")
 
             // Other dependencies
-            version("keycloak", "25.0.3")
+            version("keycloak", "26.0.7")
             version("mapstruct", "1.6.3")
             version("spi-protobuf-mapstruct", "1.49.0")
-            version("shedlock", "6.10.0")
-            version("testcontainers", "1.21.0")
+            version("shedlock", "7.5.0")
+            version("testcontainers", "2.0.3")
 
             // Plugins
             plugin("spring-boot", "org.springframework.boot").version("4.0.1")

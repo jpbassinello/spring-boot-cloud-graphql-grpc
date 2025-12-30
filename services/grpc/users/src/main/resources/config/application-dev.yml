@@ -20,7 +20,7 @@ spring:
     client:
       channels:
         messages:
-          address: "static://localhost:8191"
+          address: "dns:///localhost:8191"
 
 keycloak:
   server-url: http://localhost:9090

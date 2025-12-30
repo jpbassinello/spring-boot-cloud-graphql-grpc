@@ -24,4 +24,4 @@ spring:
     client:
       channels:
         users:
-          address: "static://localhost:8091"
+          address: "dns:///localhost:8091"
