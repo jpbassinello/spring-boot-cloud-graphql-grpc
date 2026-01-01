@@ -3,8 +3,8 @@
 > A production-ready, enterprise-grade microservices platform built with Spring Boot, gRPC, and GraphQL
 
 [![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.java.net/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![gRPC](https://img.shields.io/badge/gRPC-1.77.0-blue.svg)](https://grpc.io/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Spring gRPC](https://img.shields.io/badge/Spring%20gRPC-1.0.0-blue.svg)](https://docs.spring.io/spring-grpc/reference/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ## Table of Contents
@@ -44,8 +44,7 @@ different approaches for the project. Feel free to contribute to sbcgg.
 ## Overview
 
 SBCGG (Spring Boot Cloud GraphQL gRPC) is a modern, cloud-native microservices platform that demonstrates
-enterprise-grade architecture patterns and best practices. Built with **Spring Boot 3.5.8** and **Spring Cloud 2025.0.0
-**, it provides a scalable, resilient foundation for distributed systems.
+enterprise-grade architecture patterns and best practices. Built with **Spring Boot 4.0.1** and **Spring Cloud 2025.1.0**, it provides a scalable, resilient foundation for distributed systems.
 
 ### Industry Adoption
 
@@ -144,18 +143,18 @@ principles:
 
 ### Core Framework
 
-- [Spring Boot](https://spring.io/projects/spring-boot) 3.5.8 - Application framework
-- [Spring Cloud](https://spring.io/projects/spring-cloud) 2025.0.0 - Microservices toolkit
-- [Spring Security](https://spring.io/projects/spring-security) 6.5.7 - Security framework
+- [Spring Boot](https://spring.io/projects/spring-boot) 4.0.1 - Application framework
+- [Spring Cloud](https://spring.io/projects/spring-cloud) 2025.1.0 - Microservices toolkit
+- [Spring Security](https://spring.io/projects/spring-security) 7.0.2 - Security framework
 - [Java](https://openjdk.java.net/) 25 (LTS) - Programming language
 
 ### Communication & Infrastructure
 
-- [gRPC](https://grpc.io/) 1.77.0 - High-performance RPC framework
-- [Protocol Buffers](https://developers.google.com/protocol-buffers) 4.33.2 - Serialization format
+- [Spring gRPC](https://docs.spring.io/spring-grpc/reference/) 1.0.0 - High-performance RPC framework
+- [Protocol Buffers](https://developers.google.com/protocol-buffers) 4.33.1 - Serialization format
 - [GraphQL Java](https://www.graphql-java.com/) - GraphQL implementation
 - [Spring Cloud Consul](https://docs.spring.io/spring-cloud-consul/reference/) - Service discovery and configuration
-- [HashiCorp Consul](https://www.consul.io/) 1.22.1 - Service mesh, discovery, and configuration
+- [HashiCorp Consul](https://www.consul.io/) 1.22.2 - Service mesh, discovery, and configuration
 
 ### Data & Persistence
 
@@ -167,8 +166,8 @@ principles:
 
 ### Observability & Monitoring
 
-- [OpenTelemetry](https://opentelemetry.io/) 2.22.0 - Distributed tracing and logging
-- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.11.18 - Loki (logs), Grafana (
+- [OpenTelemetry](https://opentelemetry.io/) 2.23.0 - Distributed tracing and logging
+- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.13.0 - Loki (logs), Grafana (
   visualization), Tempo (traces), Mimir (metrics)
 - [Micrometer](https://micrometer.io/) - Application metrics
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html) -
@@ -176,19 +175,18 @@ principles:
 
 ### Security & Authentication
 
-- [Keycloak](https://www.keycloak.org/) 25.0.3 - Identity and access management
+- [Keycloak](https://www.keycloak.org/) 26.4.7 - Identity and access management
 
 ### Developer Tools
 
 - [MapStruct](https://mapstruct.org/) 1.6.3 - Type-safe bean mapping
 - [Lombok](https://projectlombok.org/) - Boilerplate reduction
-- [ShedLock](https://github.com/lukas-krecan/ShedLock) 6.10.0 - Distributed lock
-- [UUID Creator](https://github.com/f4b6a3/uuid-creator) 6.1.1 - UUID generation
+- [ShedLock](https://github.com/lukas-krecan/ShedLock) 7.5.0 - Distributed lock
 
 ### Build & Quality
 
-- [Gradle](https://gradle.org/) 9.1.0 - Build automation
-- [Checkstyle](https://checkstyle.org/) 11.1.0 - Code style enforcement
+- [Gradle](https://gradle.org/) 9.2.1 - Build automation
+- [Checkstyle](https://checkstyle.org/) - Code style enforcement
 - [SpotBugs](https://spotbugs.github.io/) - Static analysis
 - [JaCoCo](https://www.jacoco.org/jacoco/) - Code coverage
 
@@ -207,9 +205,9 @@ principles:
 Before you begin, ensure you have the following installed:
 
 - **Java 25 (LTS)** - [Download](https://adoptium.net/)
-- **Gradle 9.1.0** (wrapper included in the project)
+- **Gradle 9.2.1** (wrapper included in the project)
 - **Docker & Docker Compose** (optional, for running dependencies)
-- **PostgreSQL 17+** (if not using Docker)
+- **PostgreSQL 18+** (if not using Docker)
 - **Redis 8+** (if not using Docker)
 
 ### Building the Project

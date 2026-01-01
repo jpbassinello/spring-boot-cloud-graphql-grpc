@@ -84,23 +84,23 @@ The project uses **Gradle Version Catalogs** (defined in `settings.gradle.kts`) 
 
 ```kotlin
 // Version Catalog Structure
-libs.versions.spring.security = "6.5.7"
-libs.versions.spring.cloud = "2025.0.1"
-libs.versions.grpc = "1.77.0"
-libs.versions.protobuf = "4.33.2"
-libs.plugins.spring.boot = "3.5.9"
+libs.versions.spring.security = "7.0.2"
+libs.versions.spring.cloud = "2025.1.0"
+libs.versions.spring.grpc = "1.0.0"
+libs.versions.protoc.protobuf = "4.33.1"
+libs.plugins.spring.boot = "4.0.1"
 ```
 
 ### Key Dependencies
 
 | Category | Library | Version  | Purpose |
 |----------|---------|----------|---------|
-| Framework | Spring Boot | 3.5.9    | Application framework |
-| Framework | Spring Cloud | 2025.0.1 | Microservices toolkit |
+| Framework | Spring Boot | 4.0.1    | Application framework |
+| Framework | Spring Cloud | 2025.1.0 | Microservices toolkit |
 | Service Discovery | Consul | 1.22.2   | Service discovery & configuration |
-| Security | Spring Security | 6.5.7    | Security framework |
-| Security | Keycloak | 25.0.3   | Identity & access management |
-| RPC | gRPC | 1.77.0   | High-performance RPC |
+| Security | Spring Security | 7.0.2    | Security framework |
+| Security | Keycloak | 26.4.7   | Identity & access management |
+| RPC | Spring gRPC | 1.0.0    | High-performance RPC |
 | API | GraphQL Java | latest   | GraphQL implementation |
 | Database | PostgreSQL | 18.1     | Relational database |
 | Cache | Redis | 8.4.0    | Distributed cache |
@@ -324,7 +324,7 @@ This starts:
 - **PostgreSQL 18.1** - Database
 - **Redis 8.4.0** - Distributed cache
 - **Consul 1.22.2** - Service discovery and configuration
-- **Keycloak 25.0.3** - Authentication/Authorization
+- **Keycloak 26.4.7** - Authentication/Authorization
 - **Grafana LGTM 0.13.0** - Observability stack (Loki, Grafana, Tempo, Mimir)
 
 **Note**: Consul automatically loads service configurations from YAML files during initialization via the `init.sh` script.
@@ -989,9 +989,10 @@ org.gradle.configureondemand=true # On-demand configuration
 ## Additional Resources
 
 - [README.md](README.md) - Public project documentation
-- [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/3.5.9/reference/html/)
+- [Spring Boot Documentation](https://docs.spring.io/spring-boot/)
 - [Spring Cloud Documentation](https://spring.io/projects/spring-cloud)
 - [Spring Cloud Consul Documentation](https://docs.spring.io/spring-cloud-consul/reference/)
+- [Spring gRPC Documentation](https://docs.spring.io/spring-grpc/reference/)
 - [Consul Documentation](https://developer.hashicorp.com/consul/docs)
 - [gRPC Java Documentation](https://grpc.io/docs/languages/java/)
 - [GraphQL Java Documentation](https://www.graphql-java.com/documentation/getting-started)
