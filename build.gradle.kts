@@ -36,7 +36,6 @@ subprojects {
         implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
         implementation(platform("org.springframework.security:spring-security-bom:${rootProject.libs.versions.spring.security.get()}"))
         implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${rootProject.libs.versions.spring.cloud.get()}"))
-        implementation(platform("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:${rootProject.libs.versions.opentelemetry.get()}"))
         implementation(platform("org.springframework.grpc:spring-grpc-dependencies:${rootProject.libs.versions.spring.grpc.get()}"))
         implementation(platform("org.testcontainers:testcontainers-bom:${rootProject.libs.versions.testcontainers.get()}"))
         implementation("com.github.spotbugs:spotbugs-annotations:4.9.8")

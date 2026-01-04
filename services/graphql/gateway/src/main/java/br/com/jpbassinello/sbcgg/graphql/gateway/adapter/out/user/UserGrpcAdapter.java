@@ -16,6 +16,7 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UsersServiceGrpc;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.VerifyContactMethodRequest;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -30,13 +31,21 @@ class UserGrpcAdapter implements LoadUserPort, RegisterUserPort, VerifyUserConta
 
   private static final UserGrpcMapper USER_GRPC_MAPPER = UserGrpcMapper.INSTANCE;
 
-  private final UsersServiceGrpc.UsersServiceBlockingStub usersGrpc;
+  private final GrpcChannelFactory channels;
+  private UsersServiceGrpc.UsersServiceBlockingStub usersGrpc;
+
+  private synchronized UsersServiceGrpc.UsersServiceBlockingStub getUsersGrpc() {
+    if (usersGrpc == null) {
+      usersGrpc = UsersServiceGrpc.newBlockingStub(channels.createChannel("users"));
+    }
+    return usersGrpc;
+  }
 
   @Override
   public Optional<User> loadUserById(UUID id) {
 
     return Optional.of(
-            usersGrpc.loadUser(LoadUserRequest.newBuilder().setId(id.toString()).build())
+            getUsersGrpc().loadUser(LoadUserRequest.newBuilder().setId(id.toString()).build())
         ).filter(LoadUserResponse::hasUser)
         .map(LoadUserResponse::getUser)
         .map(USER_GRPC_MAPPER::mapToType);
@@ -45,7 +54,7 @@ class UserGrpcAdapter implements LoadUserPort, RegisterUserPort, VerifyUserConta
   @Override
   public Optional<User> loadUserByEmail(String email) {
     return Optional.of(
-            usersGrpc.loadUser(LoadUserRequest.newBuilder().setEmail(email).build())
+            getUsersGrpc().loadUser(LoadUserRequest.newBuilder().setEmail(email).build())
         ).filter(LoadUserResponse::hasUser)
         .map(LoadUserResponse::getUser)
         .map(USER_GRPC_MAPPER::mapToType);
@@ -58,7 +67,7 @@ class UserGrpcAdapter implements LoadUserPort, RegisterUserPort, VerifyUserConta
         .addAllRoles(roles.stream().map(USER_GRPC_MAPPER::mapToProto).toList())
         .build();
 
-    var response = usersGrpc.registerUser(
+    var response = getUsersGrpc().registerUser(
         RegisterUserRequest.newBuilder()
             .setInput(userInput)
             .build()
@@ -71,7 +80,7 @@ class UserGrpcAdapter implements LoadUserPort, RegisterUserPort, VerifyUserConta
   public void verifyUserContactMethod(UUID userId, String code, UserContactMethod userContactMethod) {
     var method = USER_GRPC_MAPPER.mapToProto(userContactMethod);
 
-    usersGrpc.verifyContactMethod(
+    getUsersGrpc().verifyContactMethod(
         VerifyContactMethodRequest.newBuilder()
             .setUserId(userId.toString())
             .setMethod(method)
@@ -82,7 +91,7 @@ class UserGrpcAdapter implements LoadUserPort, RegisterUserPort, VerifyUserConta
 
   @Override
   public UserPage search(@Nullable String terms, int page, int pageSize) {
-    var response = usersGrpc.searchUsers(
+    var response = getUsersGrpc().searchUsers(
         SearchUsersRequest.newBuilder()
             .setTerms(Optional.ofNullable(terms).orElse(""))
             .setPage(page)

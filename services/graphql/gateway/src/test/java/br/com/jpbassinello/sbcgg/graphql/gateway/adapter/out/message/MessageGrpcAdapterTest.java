@@ -4,11 +4,13 @@ import br.com.jpbassinello.sbcgg.graphql.gateway.domain.types.UserMessagePage;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.messages.MessagesServiceGrpc;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.messages.SearchMessagesRequest;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.messages.SearchMessagesResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.grpc.client.GrpcChannelFactory;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,9 +25,16 @@ class MessageGrpcAdapterTest {
 
   @Mock
   private MessagesServiceGrpc.MessagesServiceBlockingStub stub;
+  @Mock
+  private GrpcChannelFactory channels;
 
-  @InjectMocks
   private MessageGrpcAdapter adapter;
+
+  @BeforeEach
+  void setUp() {
+    adapter = new MessageGrpcAdapter(channels);
+    ReflectionTestUtils.setField(adapter, "messagesGrpc", stub);
+  }
 
   @Test
   void searchMessages() {

@@ -5,6 +5,7 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UsersServiceGrpc;
 import br.com.jpbassinello.sbcgg.services.messages.application.port.out.LoadUserPort;
 import br.com.jpbassinello.sbcgg.services.messages.domain.entities.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -16,11 +17,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 class UserGrpcAdapter implements LoadUserPort {
 
-  private final UsersServiceGrpc.UsersServiceBlockingStub usersGrpc;
+  private final GrpcChannelFactory channels;
+  private UsersServiceGrpc.UsersServiceBlockingStub usersGrpc;
+
+  private synchronized UsersServiceGrpc.UsersServiceBlockingStub getUsersGrpc() {
+    if (usersGrpc == null) {
+      usersGrpc = UsersServiceGrpc.newBlockingStub(channels.createChannel("users"));
+    }
+    return usersGrpc;
+  }
 
   @Override
   public Optional<User> loadUserById(UUID userId) {
-    var response = usersGrpc.loadUser(
+    var response = getUsersGrpc().loadUser(
         LoadUserRequest.newBuilder().setId(userId.toString()).build()
     );
 

@@ -29,8 +29,3 @@ spring:
           address: "discovery:///users-service"
         messages:
           address: "discovery:///messages-service"
-
-otel:
-  exporter:
-    otlp:
-      endpoint: http://lgtm:4318

@@ -24,8 +24,3 @@ spring:
 
 keycloak:
   server-url: http://keycloak:8080
-
-otel:
-  exporter:
-    otlp:
-      endpoint: http://lgtm:4318
