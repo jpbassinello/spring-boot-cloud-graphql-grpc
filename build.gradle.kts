@@ -44,7 +44,7 @@ subprojects {
         annotationProcessor("no.entur.mapstruct.spi:protobuf-spi-impl:${rootProject.libs.versions.spi.protobuf.mapstruct.get()}")
 
         // JUnit platform launcher for all test executions
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.2")
     }
 
     tasks.withType<Test> {

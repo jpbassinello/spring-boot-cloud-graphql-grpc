@@ -23,16 +23,19 @@ spring:
         health-check-critical-timeout: 30s
 
 management:
-  opentelemetry:
-    logging:
-      export:
-        otlp:
-          endpoint: http://lgtm:4318
-    tracing:
-      export:
-        otlp:
-          endpoint: http://lgtm:4318
+  tracing:
+    sampling:
+      probability: 1.0
   otlp:
     metrics:
       export:
-        url: http://lgtm:4318
+        url: http://lgtm:4318/v1/metrics
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://lgtm:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: http://lgtm:4318/v1/logs

@@ -35,11 +35,11 @@ dependencyResolutionManagement {
             version("spring-security", "7.0.2")
             version("spring-cloud", "2025.1.0")
             version("opentelemetry", "2.23.0")
-            version("spring-grpc", "1.0.0")
+            version("spring-grpc", "1.0.1")
 
             // matching proto version from spring-grpc
-            version("protoc-protobuf", "4.33.1")
-            version("protoc-grpc", "1.77.1")
+            version("protoc-protobuf", "4.33.2")
+            version("protoc-grpc", "1.78.0")
 
             // Other dependencies
             version("keycloak", "26.0.7")
