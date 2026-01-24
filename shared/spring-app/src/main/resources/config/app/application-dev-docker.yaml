@@ -29,13 +29,16 @@ management:
   otlp:
     metrics:
       export:
+        enabled: true
         url: http://lgtm:4318/v1/metrics
   opentelemetry:
     tracing:
       export:
         otlp:
+          enabled: true
           endpoint: http://lgtm:4318/v1/traces
     logging:
       export:
         otlp:
+          enabled: true
           endpoint: http://lgtm:4318/v1/logs

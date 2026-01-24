@@ -6,4 +6,5 @@ spring:
 management:
   otlp:
     metrics:
-      enabled: false
+      export:
+        enabled: false

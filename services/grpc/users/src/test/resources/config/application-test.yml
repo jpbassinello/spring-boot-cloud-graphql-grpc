@@ -3,13 +3,13 @@ spring:
     consul:
       enabled: false
 
-otel:
-  sdk:
-    disabled: true
-
 management:
   metrics:
     use-global-registry: false
+  otlp:
+    metrics:
+      export:
+        enabled: false
 
 keycloak:
   active: false

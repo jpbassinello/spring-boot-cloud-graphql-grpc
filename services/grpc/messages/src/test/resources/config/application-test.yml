@@ -11,10 +11,10 @@ spring:
         inProcess:
           address: "in-process:test"
 
-otel:
-  sdk:
-    disabled: true
-
 management:
   metrics:
     use-global-registry: false
+  otlp:
+    metrics:
+      export:
+        enabled: false

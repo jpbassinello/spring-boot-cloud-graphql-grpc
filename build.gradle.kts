@@ -12,7 +12,7 @@ plugins {
 }
 
 allprojects {
-    version = "0.0.1-SNAPSHOT"
+    version = "0.1.0-SNAPSHOT"
 
     repositories {
         mavenCentral()

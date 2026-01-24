@@ -20,7 +20,7 @@ services:
 
   # Identity and Access Management
   keycloak:
-    image: quay.io/keycloak/keycloak:26.4.7
+    image: quay.io/keycloak/keycloak:26.5.2
     container_name: sbcgg-keycloak
     ports:
       - "127.0.0.1:9090:8080" # https://github.com/keycloak/keycloak/issues/42739
