@@ -5,7 +5,7 @@ import br.com.jpbassinello.sbcgg.graphql.gateway.domain.types.UserMessagePage;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.messages.MessagesServiceGrpc;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.messages.SearchMessagesRequest;
 import lombok.RequiredArgsConstructor;
-import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -16,12 +16,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 class MessageGrpcAdapter implements LoadMessagePort {
 
-  @GrpcClient("messages")
+  private final GrpcChannelFactory channels;
   private MessagesServiceGrpc.MessagesServiceBlockingStub messagesGrpc;
+
+  private synchronized MessagesServiceGrpc.MessagesServiceBlockingStub getMessagesGrpc() {
+    if (messagesGrpc == null) {
+      messagesGrpc = MessagesServiceGrpc.newBlockingStub(channels.createChannel("messages"));
+    }
+    return messagesGrpc;
+  }
 
   @Override
   public UserMessagePage searchMessages(UUID userId, int page) {
-    var response = messagesGrpc.searchMessages(
+    var response = getMessagesGrpc().searchMessages(
         SearchMessagesRequest.newBuilder()
             .setUserId(userId.toString())
             .setPage(page)

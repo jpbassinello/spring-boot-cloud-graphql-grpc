@@ -25,5 +25,5 @@ interface MessageRepository extends JpaRepository<Message, UUID> {
 
   @Query("SELECT m.id FROM Message m WHERE m.status = :status and m.nextAttemptAt <= :attemptAtBefore")
   @MustBeClosed
-  Stream<UUID> findAllByStatusAndNextAttemptAtBefore(@Param("status") MessageStatus status,@Param("attemptAtBefore")  ZonedDateTime attemptAtBefore);
+  Stream<UUID> findAllByStatusAndNextAttemptAtBefore(@Param("status") MessageStatus status, @Param("attemptAtBefore") ZonedDateTime attemptAtBefore);
 }

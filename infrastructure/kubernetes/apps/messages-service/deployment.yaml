@@ -22,76 +22,106 @@ spec:
         app.kubernetes.io/component: microservice
         version: v1
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: messages-service
+                topologyKey: kubernetes.io/hostname
       initContainers:
-      - name: wait-for-dependencies
-        image: busybox:1.36
-        command:
-        - sh
-        - -c
-        - |
-          echo "Waiting for PostgreSQL..."
-          until nc -z postgresql.sbcgg.svc.cluster.local 5432; do sleep 2; done
-          echo "Waiting for Consul..."
-          until nc -z consul.sbcgg.svc.cluster.local 8500; do sleep 2; done
-          echo "All dependencies are ready!"
+        - name: wait-for-dependencies
+          image: busybox:1.37
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for PostgreSQL..."
+              until nc -z postgresql.sbcgg.svc.cluster.local 5432; do sleep 2; done
+              echo "Waiting for Consul..."
+              until nc -z consul.sbcgg.svc.cluster.local 8500; do sleep 2; done
+              echo "All dependencies are ready!"
       containers:
-      - name: messages-service
-        image: sbcgg/messages:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8080
-          name: http
-          protocol: TCP
-        - containerPort: 9090
-          name: grpc
-          protocol: TCP
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          value: "dev-docker"
-        - name: SPRING_DATASOURCE_URL
-          value: "jdbc:postgresql://postgresql.sbcgg.svc.cluster.local:5432/messages?cachePrepStmts=true&useServerPrepStmts=true"
-        - name: SPRING_DATA_REDIS_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: sbcgg-config
-              key: REDIS_HOST
-        - name: SPRING_CLOUD_CONSUL_HOST
-          valueFrom:
-            configMapKeyRef:
-              name: sbcgg-config
-              key: CONSUL_HOST
-        - name: KEYCLOAK_SERVER_URL
-          valueFrom:
-            configMapKeyRef:
-              name: sbcgg-config
-              key: KEYCLOAK_URL
-        - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          valueFrom:
-            configMapKeyRef:
-              name: sbcgg-config
-              key: OTEL_EXPORTER_OTLP_ENDPOINT
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "250m"
-          limits:
-            memory: "1Gi"
-            cpu: "1000m"
-        livenessProbe:
-          httpGet:
-            path: /actuator/health/liveness
-            port: 8080
-            scheme: HTTP
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /actuator/health/readiness
-            port: 8080
-            scheme: HTTP
-          initialDelaySeconds: 30
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+        - name: messages-service
+          image: sbcgg/messages:latest
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 9090
+              name: grpc
+              protocol: TCP
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "dev-docker"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgresql.sbcgg.svc.cluster.local:5432/messages?cachePrepStmts=true&useServerPrepStmts=true"
+            - name: SPRING_DATA_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: sbcgg-config
+                  key: REDIS_HOST
+            - name: SPRING_CLOUD_CONSUL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: sbcgg-config
+                  key: CONSUL_HOST
+            - name: KEYCLOAK_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: sbcgg-config
+                  key: KEYCLOAK_URL
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: sbcgg-config
+                  key: OTEL_EXPORTER_OTLP_ENDPOINT
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+              scheme: HTTP
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+              scheme: HTTP
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3

@@ -20,36 +20,36 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "USER_VERIFICATION_CODE")
+@Table(name = "user_verification_code")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class UserVerificationCode extends BaseEntity {
 
   @NotNull
-  @Column(name = "USER_ID")
+  @Column(name = "user_id")
   private UUID userId;
 
   // phone number, email address
   @NotEmpty
-  @Column(name = "SOURCE")
+  @Column(name = "source")
   private String source;
 
   @NotEmpty
   @Size(max = 6)
-  @Column(name = "CODE")
+  @Column(name = "code")
   private String code;
 
   @NotNull
   @Enumerated(EnumType.STRING)
-  @Column(name = "TYPE")
+  @Column(name = "type")
   private UserVerificationCodeType type;
 
   @NotNull
-  @Column(name = "VALID_UNTIL")
+  @Column(name = "valid_until")
   private ZonedDateTime validUntil;
 
-  @Column(name = "CONFIRMED_AT")
+  @Column(name = "confirmed_at")
   @Setter
   private ZonedDateTime confirmedAt;
 }

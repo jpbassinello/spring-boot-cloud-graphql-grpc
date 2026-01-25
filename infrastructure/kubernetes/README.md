@@ -1,6 +1,7 @@
 # Kubernetes Deployment Guide
 
-This directory contains Kubernetes manifests for deploying the SBCGG (Spring Boot Cloud GraphQL gRPC) microservices platform to a Kubernetes cluster.
+This directory contains Kubernetes manifests for deploying the SBCGG (Spring Boot Cloud GraphQL gRPC) microservices
+platform to a Kubernetes cluster.
 
 ## Table of Contents
 
@@ -31,8 +32,9 @@ The Kubernetes deployment includes:
 Before deploying, ensure you have:
 
 1. **Kubernetes Cluster** (v1.28+)
-   - Local: [Minikube](https://minikube.sigs.k8s.io/), [Kind](https://kind.sigs.k8s.io/), or [Docker Desktop](https://www.docker.com/products/docker-desktop)
-   - Cloud: GKE, EKS, AKS, or other managed Kubernetes service
+    - Local: [Minikube](https://minikube.sigs.k8s.io/), [Kind](https://kind.sigs.k8s.io/),
+      or [Docker Desktop](https://www.docker.com/products/docker-desktop)
+    - Cloud: GKE, EKS, AKS, or other managed Kubernetes service
 
 2. **kubectl** (v1.28+)
    ```bash
@@ -63,7 +65,7 @@ Before deploying, ensure you have:
    ```
 
 6. **Docker Images**
-   - Build and push your Docker images to a registry:
+    - Build and push your Docker images to a registry:
    ```bash
    # Build images
    ./gradlew build docker
@@ -107,6 +109,7 @@ kubectl create secret generic sbcgg-secrets \
 ### 3. Update Image References (not required when running local)
 
 Edit deployment files to use your registry:
+
 - `apps/users-service/deployment.yaml`
 - `apps/messages-service/deployment.yaml`
 - `apps/gateway/deployment.yaml`
@@ -149,6 +152,7 @@ Add to your `/etc/hosts` (or `C:\Windows\System32\drivers\etc\hosts` on Windows)
 ```
 
 For Minikube, use the Minikube IP:
+
 ```bash
 minikube ip  # Use this IP instead of 127.0.0.1
 ```
@@ -191,11 +195,13 @@ kubernetes/
 Configuration is managed through ConfigMaps and Secrets:
 
 **ConfigMap** (`config/configmap.yaml`):
+
 - Database hosts and ports
 - Service endpoints
 - Non-sensitive configuration
 
 **Secrets** (`config/secrets.yaml`):
+
 - Database passwords
 - API keys
 - JWT secrets
@@ -251,6 +257,7 @@ kubectl logs -n sbcgg -l app=gateway --tail=100 -f
 ### Local Development
 
 Access services via ingress:
+
 - **GraphQL API**: http://sbcgg.local/graphql
 - **GraphiQL**: http://sbcgg.local/graphiql
 - **Grafana**: http://grafana.sbcgg.local
@@ -280,6 +287,7 @@ kubectl port-forward -n sbcgg svc/keycloak 9090:8080
 Access Grafana at http://grafana.sbcgg.local
 
 The LGTM stack provides:
+
 - **Loki**: Log aggregation
 - **Grafana**: Visualization dashboards
 - **Tempo**: Distributed tracing
@@ -338,6 +346,7 @@ targetMemoryUtilizationPercentage: 80
 ```
 
 View HPA status:
+
 ```bash
 kubectl get hpa -n sbcgg
 kubectl describe hpa users-service-hpa -n sbcgg
@@ -385,6 +394,7 @@ kubectl create secret generic sbcgg-secrets \
 - **Consul**: Run 3+ replicas for HA
 
 Example Pod Disruption Budget:
+
 ```yaml
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -596,6 +606,7 @@ kubectl delete -k .
 ## Support
 
 For issues or questions:
+
 - Check the main [CLAUDE.md](../../CLAUDE.md) for development guidelines
 - Review [README.md](../../README.md) for project architecture
 - Open an issue in the project repository

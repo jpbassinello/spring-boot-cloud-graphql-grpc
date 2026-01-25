@@ -1,9 +1,10 @@
 package br.com.jpbassinello.sbcgg.grpc.client.config;
 
-import org.springframework.context.annotation.ComponentScan;
+import br.com.jpbassinello.sbcgg.grpc.client.discovery.DiscoveryClientGrpcConfig;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
-@ComponentScan // loading all configurations from this package
+@Import({DiscoveryClientGrpcConfig.class})
 public class GrpcClientConfig {
 }

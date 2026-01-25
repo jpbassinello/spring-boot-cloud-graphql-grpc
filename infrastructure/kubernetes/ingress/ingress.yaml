@@ -22,67 +22,67 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  # GraphQL Gateway
-  - host: sbcgg.local
-    http:
-      paths:
-      - path: /graphql
-        pathType: Prefix
-        backend:
-          service:
-            name: gateway
-            port:
-              number: 8080
-      - path: /graphiql
-        pathType: Prefix
-        backend:
-          service:
-            name: gateway
-            port:
-              number: 8080
-      - path: /actuator
-        pathType: Prefix
-        backend:
-          service:
-            name: gateway
-            port:
-              number: 8080
+    # GraphQL Gateway
+    - host: sbcgg.local
+      http:
+        paths:
+          - path: /graphql
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 8080
+          - path: /graphiql
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 8080
+          - path: /actuator
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 8080
 
-  # Grafana (Observability)
-  - host: grafana.sbcgg.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: lgtm
-            port:
-              number: 3000
+    # Grafana (Observability)
+    - host: grafana.sbcgg.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lgtm
+                port:
+                  number: 3000
 
-  # Consul UI
-  - host: consul.sbcgg.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: consul
-            port:
-              number: 8500
+    # Consul UI
+    - host: consul.sbcgg.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: consul
+                port:
+                  number: 8500
 
-  # Keycloak Admin Console
-  - host: keycloak.sbcgg.local
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: keycloak
-            port:
-              number: 8080
+    # Keycloak Admin Console
+    - host: keycloak.sbcgg.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080
 
 ---
 # TLS Ingress (for production with cert-manager)
@@ -104,57 +104,57 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - sbcgg.example.com
-    - grafana.sbcgg.example.com
-    - consul.sbcgg.example.com
-    - keycloak.sbcgg.example.com
-    secretName: sbcgg-tls-secret
+    - hosts:
+        - sbcgg.example.com
+        - grafana.sbcgg.example.com
+        - consul.sbcgg.example.com
+        - keycloak.sbcgg.example.com
+      secretName: sbcgg-tls-secret
   rules:
-  - host: sbcgg.example.com
-    http:
-      paths:
-      - path: /graphql
-        pathType: Prefix
-        backend:
-          service:
-            name: gateway
-            port:
-              number: 8080
-      - path: /graphiql
-        pathType: Prefix
-        backend:
-          service:
-            name: gateway
-            port:
-              number: 8080
-  - host: grafana.sbcgg.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: lgtm
-            port:
-              number: 3000
-  - host: consul.sbcgg.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: consul
-            port:
-              number: 8500
-  - host: keycloak.sbcgg.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: keycloak
-            port:
-              number: 8080
+    - host: sbcgg.example.com
+      http:
+        paths:
+          - path: /graphql
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 8080
+          - path: /graphiql
+            pathType: Prefix
+            backend:
+              service:
+                name: gateway
+                port:
+                  number: 8080
+    - host: grafana.sbcgg.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lgtm
+                port:
+                  number: 3000
+    - host: consul.sbcgg.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: consul
+                port:
+                  number: 8500
+    - host: keycloak.sbcgg.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080

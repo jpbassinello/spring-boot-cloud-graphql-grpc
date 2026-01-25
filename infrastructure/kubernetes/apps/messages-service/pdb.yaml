@@ -1,0 +1,15 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: messages-service-pdb
+  namespace: sbcgg
+  labels:
+    app: messages-service
+    app.kubernetes.io/name: messages-service
+    app.kubernetes.io/component: microservice
+    app.kubernetes.io/part-of: sbcgg-platform
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: messages-service

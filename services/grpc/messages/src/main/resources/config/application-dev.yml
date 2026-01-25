@@ -18,10 +18,10 @@ spring:
       - "optional:classpath:config/jpa/application.yaml"
       - "optional:classpath:config/app/application.yaml"
       - "optional:classpath:config/app/application-dev.yaml"
-
-grpc:
-  server:
-    port: 8191
-  client:
-    users:
-      address: "dns:///localhost:8091"
+  grpc:
+    server:
+      port: 8191
+    client:
+      channels:
+        users:
+          address: "dns:///localhost:8091"

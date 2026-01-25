@@ -3,6 +3,8 @@ spring:
     consul:
       enabled: false
 
-otel:
-  sdk:
-    disabled: true
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: false

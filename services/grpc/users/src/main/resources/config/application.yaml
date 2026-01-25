@@ -1,13 +1,11 @@
 spring:
   application:
     name: users-service
-
-grpc:
-  client:
-    messages:
-      enable-keep-alive: true
-      keep-alive-without-calls: true
-      negotiation-type: plaintext
+  grpc:
+    client:
+      channels:
+        messages:
+          negotiation-type: PLAINTEXT
 
 keycloak:
   active: true

@@ -14,14 +14,14 @@ spring:
       - "optional:classpath:config/jpa/application.yaml"
       - "optional:classpath:config/app/application.yaml"
       - "optional:classpath:config/app/application-dev.yaml"
+  grpc:
+    server:
+      port: 8091
+    client:
+      channels:
+        messages:
+          address: "dns:///localhost:8191"
 
 keycloak:
   server-url: http://localhost:9090
   password: keycloak
-
-grpc:
-  server:
-    port: 8091
-  client:
-    messages:
-      address: "dns:///localhost:8191"

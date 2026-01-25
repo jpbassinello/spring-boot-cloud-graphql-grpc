@@ -10,11 +10,13 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserInput;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserRole;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UsersServiceGrpc;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.VerifyContactMethodRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.grpc.client.GrpcChannelFactory;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,9 +32,16 @@ class UserGrpcAdapterTest {
 
   @Mock
   private UsersServiceGrpc.UsersServiceBlockingStub usersGrpc;
+  @Mock
+  private GrpcChannelFactory channels;
 
-  @InjectMocks
   private UserGrpcAdapter adapter;
+
+  @BeforeEach
+  void setUp() {
+    adapter = new UserGrpcAdapter(channels);
+    ReflectionTestUtils.setField(adapter, "usersGrpc", usersGrpc);
+  }
 
   @Test
   void register() {

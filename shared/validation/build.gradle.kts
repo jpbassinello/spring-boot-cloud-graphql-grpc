@@ -3,6 +3,6 @@ dependencies {
     api(project(":shared:exception"))
     api("org.springframework.boot:spring-boot-starter-validation")
 
-    api("com.googlecode.libphonenumber:libphonenumber:9.0.17")
+    api("com.googlecode.libphonenumber:libphonenumber:9.0.22")
     api("org.apache.commons:commons-lang3")
 }

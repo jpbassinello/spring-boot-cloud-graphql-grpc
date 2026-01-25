@@ -2,11 +2,19 @@ spring:
   cloud:
     consul:
       enabled: false
-
-otel:
-  sdk:
-    disabled: true
+  grpc:
+    server:
+      inprocess:
+        name: test
+    client:
+      channels:
+        inProcess:
+          address: "in-process:test"
 
 management:
   metrics:
     use-global-registry: false
+  otlp:
+    metrics:
+      export:
+        enabled: false

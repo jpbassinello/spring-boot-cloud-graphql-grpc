@@ -5,7 +5,8 @@ subprojects {
         api(project(":shared:proto-mapping"))
 
         testImplementation("org.springframework.boot:spring-boot-testcontainers")
-        testImplementation("org.testcontainers:junit-jupiter")
-        testImplementation("org.testcontainers:postgresql")
+        testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
+        testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+        testImplementation("org.testcontainers:testcontainers-postgresql")
     }
 }

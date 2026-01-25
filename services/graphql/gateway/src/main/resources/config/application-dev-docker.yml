@@ -22,15 +22,10 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://keycloak:8080/realms/sbcgg/protocol/openid-connect/certs
-
-otel:
-  exporter:
-    otlp:
-      endpoint: http://lgtm:4318
-
-grpc:
-  client:
-    users:
-      address: "discovery:///users-service"
-    messages:
-      address: "discovery:///messages-service"
+  grpc:
+    client:
+      channels:
+        users:
+          address: "discovery:///users-service"
+        messages:
+          address: "discovery:///messages-service"

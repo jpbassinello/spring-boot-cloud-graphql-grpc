@@ -1,6 +1,6 @@
 package br.com.jpbassinello.sbcgg.graphql.gateway.config;
 
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
+import org.springframework.boot.graphql.autoconfigure.GraphQlProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

@@ -1,6 +1,7 @@
 package br.com.jpbassinello.sbcgg.services.messages;
 
 import br.com.jpbassinello.sbcgg.cache.config.RedisConfig;
+import br.com.jpbassinello.sbcgg.grpc.client.config.GrpcClientConfig;
 import br.com.jpbassinello.sbcgg.grpc.server.config.GrpcServerConfig;
 import br.com.jpbassinello.sbcgg.services.messages.config.MessageServiceConfigProperties;
 import br.com.jpbassinello.sbcgg.shedlock.config.ShedLockConfig;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @Import({
+    GrpcClientConfig.class,
     GrpcServerConfig.class,
     RedisConfig.class,
     ShedLockConfig.class,

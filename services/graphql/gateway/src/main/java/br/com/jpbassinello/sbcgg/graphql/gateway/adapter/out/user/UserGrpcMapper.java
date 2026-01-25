@@ -25,6 +25,6 @@ interface UserGrpcMapper {
   @Mapping(target = "roles", ignore = true)
   br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserInput mapToProto(RegisterUserInput userInput);
 
- UserContactMethod mapToProto(br.com.jpbassinello.sbcgg.graphql.gateway.domain.enums.UserContactMethod method);
+  UserContactMethod mapToProto(br.com.jpbassinello.sbcgg.graphql.gateway.domain.enums.UserContactMethod method);
 
 }

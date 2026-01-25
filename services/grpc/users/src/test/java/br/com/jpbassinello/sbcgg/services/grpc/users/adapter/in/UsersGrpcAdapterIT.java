@@ -5,28 +5,25 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.users.RegisterUserRequest;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserInput;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserRole;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UsersServiceGrpc;
+import br.com.jpbassinello.sbcgg.services.grpc.users.adapter.PostgresContainer;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SendMessagePort;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SyncIdentityPort;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.grpc.Metadata;
 import io.grpc.StatusRuntimeException;
-import net.devh.boot.grpc.client.autoconfigure.GrpcClientAutoConfiguration;
-import net.devh.boot.grpc.client.inject.GrpcClient;
-import net.devh.boot.grpc.server.autoconfigure.GrpcAdviceAutoConfiguration;
-import net.devh.boot.grpc.server.autoconfigure.GrpcServerAutoConfiguration;
-import net.devh.boot.grpc.server.autoconfigure.GrpcServerFactoryAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.grpc.test.autoconfigure.AutoConfigureInProcessTransport;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.testcontainers.context.ImportTestcontainers;
+import org.springframework.context.annotation.Bean;
+import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashSet;
 import java.util.List;
@@ -36,25 +33,11 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@ImportAutoConfiguration({
-    GrpcAdviceAutoConfiguration.class,
-    GrpcServerAutoConfiguration.class,
-    GrpcServerFactoryAutoConfiguration.class,
-    GrpcClientAutoConfiguration.class
-})
 @ActiveProfiles("test")
 @DirtiesContext
+@AutoConfigureInProcessTransport
+@ImportTestcontainers(PostgresContainer.class)
 class UsersGrpcAdapterIT {
-
-  @Container
-  @ServiceConnection
-  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:18.1-alpine3.23")
-      .withDatabaseName("messages")
-      .withUsername("postgres")
-      .withPassword("postgres");
-
-  @GrpcClient("inProcess")
-  private UsersServiceGrpc.UsersServiceBlockingStub grpcStub;
 
   @MockitoBean
   private SyncIdentityPort syncIdentityPort;
@@ -64,6 +47,9 @@ class UsersGrpcAdapterIT {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @Autowired
+  private UsersServiceGrpc.UsersServiceBlockingStub grpcStub;
 
   @Test
   void loadUserExpectingNotFound() {
@@ -107,9 +93,19 @@ class UsersGrpcAdapterIT {
                 new TypeReference<>() {});
             return new HashSet<>(violations)
                 .equals(Set.of("user.lastName.NotEmpty", "user.email.NotEmpty", "user.password.NotEmpty", "user.mobilePhoneNumber.NotEmpty"));
-          } catch (JsonProcessingException e) {
+          } catch (JacksonException e) {
             return false;
           }
         });
+  }
+
+  @TestConfiguration
+  static class Config {
+
+    @Bean
+    UsersServiceGrpc.UsersServiceBlockingStub grpcStub(GrpcChannelFactory channels) {
+      return UsersServiceGrpc.newBlockingStub(channels.createChannel("local"));
+    }
+
   }
 }

@@ -19,10 +19,10 @@ spring:
   devtools:
     livereload:
       port: 35732
-
-grpc:
-  client:
-    users:
-      address: "dns:///localhost:8091"
-    messages:
-      address: "dns:///localhost:8191"
+  grpc:
+    client:
+      channels:
+        users:
+          address: "dns:///localhost:8091"
+        messages:
+          address: "dns:///localhost:8191"

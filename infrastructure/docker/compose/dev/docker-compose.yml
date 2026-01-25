@@ -4,9 +4,10 @@ include:
 services:
   # service discovery
   consul:
-    image: hashicorp/consul:1.22.2
+    image: hashicorp/consul:1.22.3
     command: "agent -server -bootstrap-expect=1 -client=0.0.0.0 -ui -data-dir=/consul/data"
     container_name: sbcgg-consul
+    restart: unless-stopped
     volumes:
       - ../configs/consul/yaml:/tmp/yaml:Z
       - ../configs/consul/init.sh:/tmp/init-consul.sh:Z
@@ -19,12 +20,20 @@ services:
       - "8500:8500"
     post_start:
       - command: [ "/bin/sh", "/tmp/init-consul.sh" ]
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
 
   # https://grafana.com/docs/opentelemetry/docker-lgtm/
   # This project is the easiest way to set up an OpenTelemetry backend with an OpenTelemetry Collector, Grafana, Loki, Mimir, and Tempo for self-managed development, demo, and testing environments
   lgtm:
     image: grafana/otel-lgtm:0.13.0
     container_name: sbcgg-lgtm
+    restart: unless-stopped
     ports:
       - '4317:4317'
       - '4318:4318'
@@ -34,10 +43,18 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
 
   users:
     image: sbcgg/users:latest
     container_name: sbcgg-users
+    restart: unless-stopped
     environment:
       - SPRING_PROFILES_ACTIVE=dev-docker
     depends_on:
@@ -50,15 +67,23 @@ services:
       lgtm:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc", "--port", "8080", "--path", "/actuator/health"]
+      test: [ "CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc", "--port", "8080", "--path", "/actuator/health" ]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 256M
 
   messages:
     image: sbcgg/messages:latest
     container_name: sbcgg-messages
+    restart: unless-stopped
     environment:
       - SPRING_PROFILES_ACTIVE=dev-docker
     depends_on:
@@ -71,15 +96,23 @@ services:
       lgtm:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc", "--port", "8080", "--path", "/actuator/health"]
+      test: [ "CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc", "--port", "8080", "--path", "/actuator/health" ]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 256M
 
   gateway:
     image: sbcgg/gateway:latest
     container_name: sbcgg-gateway
+    restart: unless-stopped
     environment:
       - SPRING_PROFILES_ACTIVE=dev-docker
     ports:
@@ -94,8 +127,15 @@ services:
       lgtm:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc", "--port", "8080", "--path", "/actuator/health"]
+      test: [ "CMD", "/layers/paketo-buildpacks_health-checker/thc/bin/thc", "--port", "8080", "--path", "/actuator/health" ]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 256M

@@ -10,7 +10,7 @@ import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SendMe
 import br.com.jpbassinello.sbcgg.spring.TimeNow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.grpc.client.GrpcChannelFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -25,7 +25,15 @@ import java.util.stream.Stream;
 class MessageGrpcAdapter implements SendMessagePort {
 
   private final TimeNow timeNow;
-  private final MessagesServiceGrpc.MessagesServiceBlockingStub messagesGrpc;
+  private final GrpcChannelFactory channels;
+  private MessagesServiceGrpc.MessagesServiceBlockingStub messagesGrpc;
+
+  private synchronized MessagesServiceGrpc.MessagesServiceBlockingStub getMessagesGrpc() {
+    if (messagesGrpc == null) {
+      messagesGrpc = MessagesServiceGrpc.newBlockingStub(channels.createChannel("messages"));
+    }
+    return messagesGrpc;
+  }
 
   @Override
   public void sendVerificationCodeMessage(UUID userId, String code) {
@@ -33,7 +41,7 @@ class MessageGrpcAdapter implements SendMessagePort {
     // making sure we allow one of this each minute only for a user
     var nowTruncatedToMinutes = now.truncatedTo(ChronoUnit.MINUTES);
 
-    messagesGrpc.sendMessage(
+    getMessagesGrpc().sendMessage(
         SendMessageRequest.newBuilder()
             .setInput(
                 SendMessageInput.newBuilder()
@@ -59,7 +67,7 @@ class MessageGrpcAdapter implements SendMessagePort {
     // making sure we allow one of this each minute only for a user
     var nowTruncatedToMinutes = now.truncatedTo(ChronoUnit.MINUTES);
 
-    messagesGrpc.sendMessage(
+    getMessagesGrpc().sendMessage(
         SendMessageRequest.newBuilder()
             .setInput(
                 SendMessageInput.newBuilder()
@@ -85,7 +93,7 @@ class MessageGrpcAdapter implements SendMessagePort {
     // making sure we allow one of this each minute only for a user
     var nowTruncatedToMinutes = now.truncatedTo(ChronoUnit.MINUTES);
 
-    messagesGrpc.sendMessage(
+    getMessagesGrpc().sendMessage(
         SendMessageRequest.newBuilder()
             .setInput(
                 SendMessageInput.newBuilder()
@@ -115,7 +123,7 @@ class MessageGrpcAdapter implements SendMessagePort {
         );
 
     Stream.of(MessageChannel.MESSAGE_CHANNEL_EMAIL, MessageChannel.MESSAGE_CHANNEL_SMS)
-        .forEach(channel -> messagesGrpc.sendMessage(
+        .forEach(channel -> getMessagesGrpc().sendMessage(
             SendMessageRequest.newBuilder()
                 .setInput(
                     inputBuilder

@@ -8,11 +8,13 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.messages.SendMessageRequest;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.messages.SendMessageResponse;
 import br.com.jpbassinello.sbcgg.spring.TimeNow;
 import com.google.protobuf.Timestamp;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.grpc.client.GrpcChannelFactory;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -30,10 +32,17 @@ class MessageGrpcAdapterTest {
   @Mock
   private MessagesServiceGrpc.MessagesServiceBlockingStub stub;
   @Mock
+  private GrpcChannelFactory channels;
+  @Mock
   private TimeNow timeNow;
 
-  @InjectMocks
   private MessageGrpcAdapter adapter;
+
+  @BeforeEach
+  void setUp() {
+    adapter = new MessageGrpcAdapter(timeNow, channels);
+    ReflectionTestUtils.setField(adapter, "messagesGrpc", stub);
+  }
 
   @Test
   void sendCodeVerificationMessage() {

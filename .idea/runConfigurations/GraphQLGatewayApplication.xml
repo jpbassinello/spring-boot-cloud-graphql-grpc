@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="GraphQLGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <option name="ACTIVE_PROFILES" value="dev" />
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <module name="sbcgg.services.graphql.gateway.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="br.com.jpbassinello.sbcgg.graphql.gateway.GraphQLGatewayApplication" />

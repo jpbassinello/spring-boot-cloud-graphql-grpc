@@ -4,4 +4,4 @@ kind: Kustomization
 namespace: sbcgg
 
 resources:
-- namespace.yaml
+  - namespace.yaml

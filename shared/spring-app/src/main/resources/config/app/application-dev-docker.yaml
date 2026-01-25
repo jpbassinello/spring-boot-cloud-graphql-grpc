@@ -21,3 +21,26 @@ spring:
         health-check-interval: 15s
         health-check-timeout: 10s
         health-check-critical-timeout: 30s
+        metadata:
+          grpc-port: ${spring.grpc.server.port:9090}
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    metrics:
+      export:
+        enabled: true
+        url: http://lgtm:4318/v1/metrics
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          enabled: true
+          endpoint: http://lgtm:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          enabled: true
+          endpoint: http://lgtm:4318/v1/logs

@@ -49,6 +49,20 @@ class SendMessageUseCaseTest {
   private TimeNow timeNow;
   private SendMessageUseCase service;
 
+  private static Message buildPendingMessage(UUID userId, MessageChannel channel, ZonedDateTime now) {
+    return Message.builder()
+        .userId(userId)
+        .channel(channel)
+        .template(MessageTemplate.OPEN_BODY)
+        .status(MessageStatus.PENDING)
+        .idempotenceKey("idempotenceKey")
+        .registeredAt(now)
+        .scheduledAt(now)
+        .variables(Map.of("body", "this is a body for a message!"))
+        .nextAttemptAt(now)
+        .build();
+  }
+
   @BeforeEach
   void init() {
     when(sendEmailPort.getMessageType()).thenCallRealMethod();
@@ -128,20 +142,6 @@ class SendMessageUseCaseTest {
     var expected = buildPendingMessage(userId, MessageChannel.EMAIL, now);
     expected.setStatus(MessageStatus.CANCELLED_MAX_RETRY_ATTEMPTS);
     verify(persistMessagePort).save(message);
-  }
-
-  private static Message buildPendingMessage(UUID userId, MessageChannel channel, ZonedDateTime now) {
-    return Message.builder()
-        .userId(userId)
-        .channel(channel)
-        .template(MessageTemplate.OPEN_BODY)
-        .status(MessageStatus.PENDING)
-        .idempotenceKey("idempotenceKey")
-        .registeredAt(now)
-        .scheduledAt(now)
-        .variables(Map.of("body", "this is a body for a message!"))
-        .nextAttemptAt(now)
-        .build();
   }
 
   private UUID mockLoadUser() {
