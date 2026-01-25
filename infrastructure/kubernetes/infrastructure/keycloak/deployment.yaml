@@ -80,6 +80,26 @@ spec:
               value: "false"
             - name: KC_HTTP_ENABLED
               value: "true"
+            # Tracing - OpenTelemetry
+            - name: KC_TRACING_ENABLED
+              value: "true"
+            - name: KC_TRACING_ENDPOINT
+              value: "http://lgtm.sbcgg.svc.cluster.local:4318/v1/traces"
+            - name: KC_TRACING_PROTOCOL
+              value: "http/protobuf"
+            - name: KC_TRACING_SAMPLER_TYPE
+              value: "parentbased_traceidratio"
+            - name: KC_TRACING_SAMPLER_RATIO
+              value: "1.0"
+            - name: KC_TRACING_SERVICE_NAME
+              value: "keycloak"
+            # Logging - JSON format for Loki
+            - name: KC_LOG
+              value: "console"
+            - name: KC_LOG_CONSOLE_OUTPUT
+              value: "json"
+            - name: KC_LOG_LEVEL
+              value: "INFO"
           volumeMounts:
             - name: realm-config
               mountPath: /opt/keycloak/data/import

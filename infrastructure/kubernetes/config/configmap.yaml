@@ -26,8 +26,10 @@ data:
   KEYCLOAK_REALM: "sbcgg"
   KEYCLOAK_CLIENT: "sbcgg"
 
-  # LGTM (Observability) configuration
-  OTEL_EXPORTER_OTLP_ENDPOINT: "http://lgtm.sbcgg.svc.cluster.local:4318"
+  # LGTM (Observability) configuration - Spring Boot 4 OTLP properties
+  MANAGEMENT_OTLP_METRICS_EXPORT_URL: "http://lgtm.sbcgg.svc.cluster.local:4318/v1/metrics"
+  MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT: "http://lgtm.sbcgg.svc.cluster.local:4318/v1/traces"
+  MANAGEMENT_OPENTELEMETRY_LOGGING_EXPORT_OTLP_ENDPOINT: "http://lgtm.sbcgg.svc.cluster.local:4318/v1/logs"
 
   # Spring profiles
   SPRING_PROFILES_ACTIVE: "kubernetes"

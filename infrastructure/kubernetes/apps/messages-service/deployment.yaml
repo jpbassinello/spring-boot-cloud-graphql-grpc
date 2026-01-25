@@ -88,11 +88,21 @@ spec:
                 configMapKeyRef:
                   name: sbcgg-config
                   key: KEYCLOAK_URL
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            - name: MANAGEMENT_OTLP_METRICS_EXPORT_URL
               valueFrom:
                 configMapKeyRef:
                   name: sbcgg-config
-                  key: OTEL_EXPORTER_OTLP_ENDPOINT
+                  key: MANAGEMENT_OTLP_METRICS_EXPORT_URL
+            - name: MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: sbcgg-config
+                  key: MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT
+            - name: MANAGEMENT_OPENTELEMETRY_LOGGING_EXPORT_OTLP_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: sbcgg-config
+                  key: MANAGEMENT_OPENTELEMETRY_LOGGING_EXPORT_OTLP_ENDPOINT
           resources:
             requests:
               memory: "512Mi"

@@ -27,6 +27,7 @@ resources:
 - infrastructure/keycloak/configmap.yaml
 - infrastructure/keycloak/deployment.yaml
 - infrastructure/keycloak/service.yaml
+- infrastructure/lgtm/configmap.yaml
 - infrastructure/lgtm/deployment.yaml
 - infrastructure/lgtm/service.yaml
 - apps/users-service/deployment.yaml

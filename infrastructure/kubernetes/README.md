@@ -68,17 +68,7 @@ Before deploying, ensure you have:
     - Build and push your Docker images to a registry:
    ```bash
    # Build images
-   ./gradlew build docker
-
-   # Tag images for your registry
-   docker tag sbcgg/users:latest your-registry/sbcgg/users:latest
-   docker tag sbcgg/messages:latest your-registry/sbcgg/messages:latest
-   docker tag sbcgg/gateway:latest your-registry/sbcgg/gateway:latest
-
-   # Push to registry
-   docker push your-registry/sbcgg/users:latest
-   docker push your-registry/sbcgg/messages:latest
-   docker push your-registry/sbcgg/gateway:latest
+   ./gradlew clean build bootBuildImage --info
    ```
 
 ## Quick Start
