@@ -3,8 +3,8 @@
 > A production-ready, enterprise-grade microservices platform built with Spring Boot, gRPC, and GraphQL
 
 [![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.java.net/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Spring gRPC](https://img.shields.io/badge/Spring%20gRPC-1.0.0-blue.svg)](https://docs.spring.io/spring-grpc/reference/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.2-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Spring gRPC](https://img.shields.io/badge/Spring%20gRPC-1.0.1-blue.svg)](https://docs.spring.io/spring-grpc/reference/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ## Table of Contents
@@ -44,7 +44,7 @@ different approaches for the project. Feel free to contribute to sbcgg.
 ## Overview
 
 SBCGG (Spring Boot Cloud GraphQL gRPC) is a modern, cloud-native microservices platform that demonstrates
-enterprise-grade architecture patterns and best practices. Built with **Spring Boot 4.0.1** and **Spring Cloud 2025.1.0**, it provides a scalable, resilient foundation for distributed systems.
+enterprise-grade architecture patterns and best practices. Built with **Spring Boot 4.0.2** and **Spring Cloud 2025.1.0**, it provides a scalable, resilient foundation for distributed systems.
 
 ### Industry Adoption
 
@@ -143,18 +143,18 @@ principles:
 
 ### Core Framework
 
-- [Spring Boot](https://spring.io/projects/spring-boot) 4.0.1 - Application framework
+- [Spring Boot](https://spring.io/projects/spring-boot) 4.0.2 - Application framework
 - [Spring Cloud](https://spring.io/projects/spring-cloud) 2025.1.0 - Microservices toolkit
 - [Spring Security](https://spring.io/projects/spring-security) 7.0.2 - Security framework
 - [Java](https://openjdk.java.net/) 25 (LTS) - Programming language
 
 ### Communication & Infrastructure
 
-- [Spring gRPC](https://docs.spring.io/spring-grpc/reference/) 1.0.0 - High-performance RPC framework
-- [Protocol Buffers](https://developers.google.com/protocol-buffers) 4.33.1 - Serialization format
+- [Spring gRPC](https://docs.spring.io/spring-grpc/reference/) 1.0.1 - High-performance RPC framework
+- [Protocol Buffers](https://developers.google.com/protocol-buffers) 4.33.2 - Serialization format
 - [GraphQL Java](https://www.graphql-java.com/) - GraphQL implementation
 - [Spring Cloud Consul](https://docs.spring.io/spring-cloud-consul/reference/) - Service discovery and configuration
-- [HashiCorp Consul](https://www.consul.io/) 1.22.2 - Service mesh, discovery, and configuration
+- [HashiCorp Consul](https://www.consul.io/) 1.22.3 - Service mesh, discovery, and configuration
 
 ### Data & Persistence
 
@@ -175,7 +175,7 @@ principles:
 
 ### Security & Authentication
 
-- [Keycloak](https://www.keycloak.org/) 26.4.7 - Identity and access management
+- [Keycloak](https://www.keycloak.org/) 26.5.2 - Identity and access management
 
 ### Developer Tools
 
@@ -326,6 +326,9 @@ sbcgg/
 │   ├── util/               # General utilities
 │   └── validation/         # Validation utilities
 │
+├── tests/                    # Test modules
+│   └── e2e/                 # End-to-end tests
+│
 ├── infrastructure/           # Infrastructure setup
 │   └── docker/
 │       └── compose/
@@ -349,6 +352,7 @@ sbcgg/
     - **grpc**: gRPC microservices (users, messages)
     - **graphql**: GraphQL API gateway
 - **shared**: Reusable libraries shared across services
+- **tests**: Test modules (e2e tests)
 - **infrastructure**: Docker Compose configurations, Consul configs, and infrastructure setup
 
 ### Hexagonal Architecture Structure (per service)

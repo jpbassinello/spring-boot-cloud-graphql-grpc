@@ -86,21 +86,21 @@ The project uses **Gradle Version Catalogs** (defined in `settings.gradle.kts`) 
 // Version Catalog Structure
 libs.versions.spring.security = "7.0.2"
 libs.versions.spring.cloud = "2025.1.0"
-libs.versions.spring.grpc = "1.0.0"
-libs.versions.protoc.protobuf = "4.33.1"
-libs.plugins.spring.boot = "4.0.1"
+libs.versions.spring.grpc = "1.0.1"
+libs.versions.protoc.protobuf = "4.33.2"
+libs.plugins.spring.boot = "4.0.2"
 ```
 
 ### Key Dependencies
 
 | Category | Library | Version  | Purpose |
 |----------|---------|----------|---------|
-| Framework | Spring Boot | 4.0.1    | Application framework |
+| Framework | Spring Boot | 4.0.2    | Application framework |
 | Framework | Spring Cloud | 2025.1.0 | Microservices toolkit |
-| Service Discovery | Consul | 1.22.2   | Service discovery & configuration |
+| Service Discovery | Consul | 1.22.3   | Service discovery & configuration |
 | Security | Spring Security | 7.0.2    | Security framework |
-| Security | Keycloak | 26.4.7   | Identity & access management |
-| RPC | Spring gRPC | 1.0.0    | High-performance RPC |
+| Security | Keycloak | 26.5.2   | Identity & access management |
+| RPC | Spring gRPC | 1.0.1    | High-performance RPC |
 | API | GraphQL Java | latest   | GraphQL implementation |
 | Database | PostgreSQL | 18.1     | Relational database |
 | Cache | Redis | 8.4.0    | Distributed cache |
@@ -126,18 +126,21 @@ sbcgg/
 │       ├── messages/        # Messages service
 │       └── users/           # Users service
 │
-└── shared/                   # Shared libraries
-    ├── exception/           # Exception handling
-    ├── grpc-client/         # gRPC client utilities
-    ├── grpc-server/         # gRPC server utilities
-    ├── mapping/             # Object mapping
-    ├── proto-mapping/       # Protobuf mapping
-    ├── spring-app/          # Spring base config
-    ├── spring-cache/        # Cache config (Redis)
-    ├── spring-jpa/          # JPA/database config
-    ├── spring-shedlock/     # Distributed locking
-    ├── util/                # General utilities
-    └── validation/          # Validation utilities
+├── shared/                   # Shared libraries
+│   ├── exception/           # Exception handling
+│   ├── grpc-client/         # gRPC client utilities
+│   ├── grpc-server/         # gRPC server utilities
+│   ├── mapping/             # Object mapping
+│   ├── proto-mapping/       # Protobuf mapping
+│   ├── spring-app/          # Spring base config
+│   ├── spring-cache/        # Cache config (Redis)
+│   ├── spring-jpa/          # JPA/database config
+│   ├── spring-shedlock/     # Distributed locking
+│   ├── util/                # General utilities
+│   └── validation/          # Validation utilities
+│
+└── tests/                    # Test modules
+    └── e2e/                 # End-to-end tests
 ```
 
 ### Hexagonal Architecture (Per Service)
@@ -323,8 +326,8 @@ cd -
 This starts:
 - **PostgreSQL 18.1** - Database
 - **Redis 8.4.0** - Distributed cache
-- **Consul 1.22.2** - Service discovery and configuration
-- **Keycloak 26.4.7** - Authentication/Authorization
+- **Consul 1.22.3** - Service discovery and configuration
+- **Keycloak 26.5.2** - Authentication/Authorization
 - **Grafana LGTM 0.13.0** - Observability stack (Loki, Grafana, Tempo, Mimir)
 
 **Note**: Consul automatically loads service configurations from YAML files during initialization via the `init.sh` script.
