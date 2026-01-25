@@ -26,8 +26,9 @@ subprojects {
     apply(plugin = "com.github.spotbugs")
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_25
-        targetCompatibility = JavaVersion.VERSION_25
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(25))
+        }
     }
 
     dependencies {
@@ -47,12 +48,13 @@ subprojects {
         testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.2")
     }
 
-    tasks.withType<Test> {
+    tasks.withType<Test>().configureEach {
         useJUnitPlatform()
+        maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
         jvmArgs("-XX:+EnableDynamicAgentLoading")
     }
 
-    tasks.withType<JavaCompile> {
+    tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
         options.compilerArgs.add("-parameters")
     }

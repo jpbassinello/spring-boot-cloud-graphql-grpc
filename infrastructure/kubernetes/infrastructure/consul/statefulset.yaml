@@ -23,117 +23,117 @@ spec:
     spec:
       terminationGracePeriodSeconds: 10
       containers:
-      - name: consul
-        image: hashicorp/consul:1.22.2
-        command:
-        - consul
-        - agent
-        - -server
-        - -bootstrap-expect=1
-        - -client=0.0.0.0
-        - -ui
-        - -data-dir=/consul/data
-        - -bind=0.0.0.0
-        ports:
-        - containerPort: 8500
-          name: http
-          protocol: TCP
-        - containerPort: 8600
-          name: dns
-          protocol: TCP
-        - containerPort: 8600
-          name: dns-udp
-          protocol: UDP
-        - containerPort: 8301
-          name: serflan-tcp
-          protocol: TCP
-        - containerPort: 8301
-          name: serflan-udp
-          protocol: UDP
-        - containerPort: 8302
-          name: serfwan-tcp
-          protocol: TCP
-        - containerPort: 8302
-          name: serfwan-udp
-          protocol: UDP
-        - containerPort: 8300
-          name: server
-          protocol: TCP
-        env:
-        - name: POD_IP
-          valueFrom:
-            fieldRef:
-              fieldPath: status.podIP
-        - name: NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        volumeMounts:
-        - name: consul-data
-          mountPath: /consul/data
-        - name: consul-config
-          mountPath: /tmp/yaml
-          readOnly: true
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          exec:
-            command:
+        - name: consul
+          image: hashicorp/consul:1.22.3
+          command:
             - consul
-            - members
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            path: /v1/status/leader
-            port: 8500
-            scheme: HTTP
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
-      - name: consul-init
-        image: hashicorp/consul:1.22.2
-        command:
-        - /bin/sh
-        - -c
-        - |
-          echo "Waiting for Consul to be ready..."
-          until consul members; do
-            sleep 2
-          done
-          echo "Consul is ready. Initializing KV pairs..."
-          consul kv put config/users-service,dev-docker/data @/tmp/yaml/users-service.yaml
-          consul kv put config/messages-service,dev-docker/data @/tmp/yaml/messages-service.yaml
-          echo "Configuration loaded. Keeping container alive..."
-          tail -f /dev/null
-        volumeMounts:
+            - agent
+            - -server
+            - -bootstrap-expect=1
+            - -client=0.0.0.0
+            - -ui
+            - -data-dir=/consul/data
+            - -bind=0.0.0.0
+          ports:
+            - containerPort: 8500
+              name: http
+              protocol: TCP
+            - containerPort: 8600
+              name: dns
+              protocol: TCP
+            - containerPort: 8600
+              name: dns-udp
+              protocol: UDP
+            - containerPort: 8301
+              name: serflan-tcp
+              protocol: TCP
+            - containerPort: 8301
+              name: serflan-udp
+              protocol: UDP
+            - containerPort: 8302
+              name: serfwan-tcp
+              protocol: TCP
+            - containerPort: 8302
+              name: serfwan-udp
+              protocol: UDP
+            - containerPort: 8300
+              name: server
+              protocol: TCP
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          volumeMounts:
+            - name: consul-data
+              mountPath: /consul/data
+            - name: consul-config
+              mountPath: /tmp/yaml
+              readOnly: true
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            exec:
+              command:
+                - consul
+                - members
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /v1/status/leader
+              port: 8500
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+        - name: consul-init
+          image: hashicorp/consul:1.22.3
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for Consul to be ready..."
+              until consul members; do
+                sleep 2
+              done
+              echo "Consul is ready. Initializing KV pairs..."
+              consul kv put config/users-service,dev-docker/data @/tmp/yaml/users-service.yaml
+              consul kv put config/messages-service,dev-docker/data @/tmp/yaml/messages-service.yaml
+              echo "Configuration loaded. Keeping container alive..."
+              tail -f /dev/null
+          volumeMounts:
+            - name: consul-config
+              mountPath: /tmp/yaml
+              readOnly: true
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      volumes:
         - name: consul-config
-          mountPath: /tmp/yaml
-          readOnly: true
+          configMap:
+            name: consul-config
+  volumeClaimTemplates:
+    - metadata:
+        name: consul-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
-            memory: "64Mi"
-            cpu: "50m"
-          limits:
-            memory: "128Mi"
-            cpu: "100m"
-      volumes:
-      - name: consul-config
-        configMap:
-          name: consul-config
-  volumeClaimTemplates:
-  - metadata:
-      name: consul-data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: 5Gi
+            storage: 5Gi

@@ -18,14 +18,14 @@ exporters:
   debug:
     verbosity: detailed
 service:
-  extensions: [health_check]
+  extensions: [ health_check ]
   pipelines:
     metrics:
-      receivers: [otlp, prometheus]
-      exporters: [debug]
+      receivers: [ otlp, prometheus ]
+      exporters: [ debug ]
     traces:
-      receivers: [otlp]
-      exporters: [debug]
+      receivers: [ otlp ]
+      exporters: [ debug ]
     logs:
-      receivers: [otlp]
-      exporters: [debug]
+      receivers: [ otlp ]
+      exporters: [ debug ]

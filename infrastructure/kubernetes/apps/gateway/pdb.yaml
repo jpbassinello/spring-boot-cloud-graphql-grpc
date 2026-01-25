@@ -1,7 +1,7 @@
-apiVersion: v1
-kind: Service
+apiVersion: policy/v1
+kind: PodDisruptionBudget
 metadata:
-  name: gateway
+  name: gateway-pdb
   namespace: sbcgg
   labels:
     app: gateway
@@ -9,11 +9,7 @@ metadata:
     app.kubernetes.io/component: api-gateway
     app.kubernetes.io/part-of: sbcgg-platform
 spec:
-  type: ClusterIP
-  ports:
-    - port: 8080
-      targetPort: 8080
-      protocol: TCP
-      name: http
+  minAvailable: 1
   selector:
-    app: gateway
+    matchLabels:
+      app: gateway

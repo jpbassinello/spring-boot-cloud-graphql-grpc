@@ -11,17 +11,17 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 8500
-    targetPort: 8500
-    protocol: TCP
-    name: http
-  - port: 8600
-    targetPort: 8600
-    protocol: TCP
-    name: dns-tcp
-  - port: 8600
-    targetPort: 8600
-    protocol: UDP
-    name: dns-udp
+    - port: 8500
+      targetPort: 8500
+      protocol: TCP
+      name: http
+    - port: 8600
+      targetPort: 8600
+      protocol: TCP
+      name: dns-tcp
+    - port: 8600
+      targetPort: 8600
+      protocol: UDP
+      name: dns-udp
   selector:
     app: consul

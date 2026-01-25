@@ -4,6 +4,7 @@ services:
   postgres:
     image: postgres:18.1-alpine3.23
     container_name: sbcgg-postgres
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 5s
@@ -17,11 +18,19 @@ services:
       TZ: "UTC"
     volumes:
       - ../configs/postgres:/docker-entrypoint-initdb.d:z
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+        reservations:
+          memory: 256M
 
   # Identity and Access Management
   keycloak:
     image: quay.io/keycloak/keycloak:26.5.2
     container_name: sbcgg-keycloak
+    restart: unless-stopped
     ports:
       - "127.0.0.1:9090:8080" # https://github.com/keycloak/keycloak/issues/42739
     depends_on:
@@ -57,16 +66,31 @@ services:
       start_period: 15s
     volumes:
       - ../configs/keycloak/realm.json:/opt/keycloak/data/import/realm.json:ro
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
 
   # shared cache, rate limiting, pub/sub, ...
   redis:
     image: redis:8.4.0-alpine3.22
     command: redis-server --requirepass redis --loglevel warning
     container_name: sbcgg-redis
+    restart: unless-stopped
     healthcheck:
-      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      test: [ "CMD", "redis-cli", "-a", "redis", "ping" ]
       interval: 5s
       timeout: 5s
       retries: 5
     ports:
       - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.5'
+        reservations:
+          memory: 64M
