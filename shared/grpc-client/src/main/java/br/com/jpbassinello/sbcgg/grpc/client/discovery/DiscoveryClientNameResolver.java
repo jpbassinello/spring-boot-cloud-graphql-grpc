@@ -68,10 +68,30 @@ class DiscoveryClientNameResolver extends NameResolver {
   }
 
   private EquivalentAddressGroup toAddressGroup(ServiceInstance instance) {
-    var port = instance.getPort();
     var host = instance.getHost();
+    var port = getGrpcPort(instance);
     log.trace("Creating address group for {}:{}", host, port);
     return new EquivalentAddressGroup(new InetSocketAddress(host, port));
+  }
+
+  private int getGrpcPort(ServiceInstance instance) {
+    // Check for gRPC port in metadata (preferred)
+    var metadata = instance.getMetadata();
+    if (metadata != null) {
+      var grpcPort = metadata.get("grpc-port");
+      if (grpcPort != null && !grpcPort.isEmpty()) {
+        try {
+          return Integer.parseInt(grpcPort);
+        } catch (NumberFormatException e) {
+          log.warn("Invalid grpc-port metadata value '{}' for service {}, using HTTP port",
+              grpcPort, serviceName);
+        }
+      }
+    }
+    // Fallback to HTTP port (will fail for gRPC calls but maintains backward compatibility)
+    log.warn("No grpc-port metadata found for service {}, using HTTP port {} which may not work for gRPC",
+        serviceName, instance.getPort());
+    return instance.getPort();
   }
 
   @Override

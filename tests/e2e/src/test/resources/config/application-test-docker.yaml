@@ -1,0 +1,4 @@
+test:
+  e2e:
+    graphql-gateway-url: http://localhost:8080/graphql
+    keycloak-url: http://localhost:9090

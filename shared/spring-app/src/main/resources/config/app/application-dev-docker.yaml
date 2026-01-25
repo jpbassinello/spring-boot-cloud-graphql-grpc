@@ -21,6 +21,8 @@ spring:
         health-check-interval: 15s
         health-check-timeout: 10s
         health-check-critical-timeout: 30s
+        metadata:
+          grpc-port: ${spring.grpc.server.port:9090}
 
 management:
   tracing:
