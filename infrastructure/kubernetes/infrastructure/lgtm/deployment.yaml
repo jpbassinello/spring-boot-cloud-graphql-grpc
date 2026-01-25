@@ -70,12 +70,6 @@ spec:
           volumeMounts:
             - name: lgtm-data
               mountPath: /data
-            - name: otel-config
-              mountPath: /otel-lgtm/otelcol-config.yaml
-              subPath: otelcol-config.yaml
       volumes:
         - name: lgtm-data
           emptyDir: { }
-        - name: otel-config
-          configMap:
-            name: lgtm-otel-config
