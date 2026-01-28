@@ -31,8 +31,8 @@
 
 ## Motivation
 
-As a developer, we understand the value of having an active community in our day-by-day activities. Given something back
-to the community has always been part of my career plans and this project was built with this mentality.
+As a developer, we understand the value of active communities in our day-by-day activities. Given something back
+to the developers out there has always been part of my career plans and this project was built with this mentality.
 
 The main idea of this project, even before I decided to publish it publicly, was to help with my own studies. Every time
 I had an interest in a different technology or library, I tried to include it in this repository. For example, as a
@@ -44,7 +44,21 @@ different approaches for the project. Feel free to contribute to sbcgg.
 ## Overview
 
 SBCGG (Spring Boot Cloud GraphQL gRPC) is a modern, cloud-native microservices platform that demonstrates
-enterprise-grade architecture patterns and best practices. Built with **Spring Boot 4.0.2** and **Spring Cloud 2025.1.0**, it provides a scalable, resilient foundation for distributed systems.
+enterprise-grade architecture patterns and best practices. Built with **Spring Boot 4.0.2** and **Spring Cloud 2025.1.0
+**, it provides a scalable, resilient foundation for distributed systems.
+
+### Cloud Agnostic
+
+SBCGG is designed to be **cloud agnostic**, meaning it can run on any cloud provider (AWS, GCP, Azure) or on-premises
+infrastructure without vendor lock-in. The platform achieves this through:
+
+- **Kubernetes-native deployment**: Standard Kubernetes manifests that work across any certified Kubernetes distribution
+- **Open-source infrastructure**: Using vendor-neutral technologies like PostgreSQL, Redis, Consul, and Keycloak
+- **No proprietary cloud services**: All components are replaceable open-source alternatives to cloud-specific services
+- **Container-based architecture**: Docker images that run consistently across any container runtime
+
+This approach gives you the flexibility to migrate between cloud providers, adopt hybrid or multi-cloud strategies, or
+run entirely on-premises while maintaining the same application code and deployment configurations.
 
 ### Industry Adoption
 
@@ -295,6 +309,56 @@ Services will use the `dev-docker` profile, which enables:
 
 3. **GraphQL Gateway**
    Access GraphQL playground at: `http://localhost:8080/graphiql`
+
+#### Option 3: Kubernetes Deployment (Cloud Agnostic)
+
+Deploy to any Kubernetes cluster (Minikube, Kind, Docker Desktop, GKE, EKS, AKS, or on-premises).
+
+1. **Prerequisites**
+   ```bash
+   # Ensure kubectl is installed
+   kubectl version --client
+
+   # For local development, enable ingress addon (Minikube example)
+   minikube addons enable ingress
+   minikube addons enable metrics-server
+   ```
+
+2. **Build Docker images**
+   ```bash
+   ./gradlew clean build bootBuildImage --info
+   ```
+
+3. **Deploy to Kubernetes**
+   ```bash
+   cd infrastructure/kubernetes
+
+   # Deploy all resources using kustomize
+   kubectl apply -k .
+
+   # Watch pods come up
+   kubectl get pods -n sbcgg -w
+   ```
+
+4. **Configure local DNS** (for local development)
+
+   Add to `/etc/hosts`:
+   ```
+   127.0.0.1 sbcgg.local
+   127.0.0.1 grafana.sbcgg.local
+   127.0.0.1 consul.sbcgg.local
+   127.0.0.1 keycloak.sbcgg.local
+   ```
+
+5. **Access services**
+    - GraphQL API: `http://sbcgg.local/graphql`
+    - GraphiQL: `http://sbcgg.local/graphiql`
+    - Grafana: `http://grafana.sbcgg.local`
+    - Consul UI: `http://consul.sbcgg.local`
+    - Keycloak: `http://keycloak.sbcgg.local`
+
+For detailed Kubernetes deployment instructions, including production considerations, scaling, and troubleshooting, see
+the [Kubernetes README](infrastructure/kubernetes/README.md).
 
 ## Project Structure
 
