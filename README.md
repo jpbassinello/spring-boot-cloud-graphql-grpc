@@ -615,6 +615,10 @@ Micrometer collects metrics for:
 - [API Documentation](#) - GraphQL schema and gRPC service definitions
 - [Architecture Decision Records](#) - Design decisions and rationale
 
+### Blog Posts
+
+- [Introducing SBCGG](posts/1-About-SBCGG.md) - The story behind this project and why it was built
+
 ### Additional Resources
 
 - [How to add Checkstyle and FindBugs plugins in a Gradle-based project](https://medium.com/@raveensr/how-to-add-checkstyle-and-findbugs-plugins-in-a-gradle-based-project-51759aa843be)
