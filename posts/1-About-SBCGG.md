@@ -33,6 +33,10 @@ But the project kept evolving:
 - **REST to gRPC**: For inter-service communication, I replaced REST with gRPC.
 - **GraphQL Gateway**: The API gateway now exposes a GraphQL interface to clients.
 
+Here's what the current architecture looks like:
+
+![SBCGG Architecture](images/sbcgg-architecture.png)
+
 ## Why GraphQL + gRPC?
 
 These two technologies are game changers. Many large-scale companies have adopted them for their core systems:
