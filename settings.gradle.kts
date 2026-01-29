@@ -46,7 +46,7 @@ dependencyResolutionManagement {
             version("keycloak", "26.0.8")
             version("mapstruct", "1.6.3")
             version("spi-protobuf-mapstruct", "1.49.0")
-            version("shedlock", "7.5.0")
+            version("shedlock", "7.6.0")
             version("testcontainers", "2.0.3")
 
             // Plugins
@@ -54,7 +54,7 @@ dependencyResolutionManagement {
             plugin("spotbugs", "com.github.spotbugs").version("6.4.8")
             plugin("protobuf", "com.google.protobuf").version("0.9.6")
             plugin("buf", "com.parmet.buf").version("0.8.5")
-            plugin("lombok", "io.freefair.lombok").version("9.1.0")
+            plugin("lombok", "io.freefair.lombok").version("9.2.0")
         }
     }
 }
