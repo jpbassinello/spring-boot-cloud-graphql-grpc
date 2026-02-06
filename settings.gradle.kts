@@ -33,9 +33,9 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             version("spring-security", "7.0.2")
-            version("spring-cloud", "2025.1.0")
+            version("spring-cloud", "2025.1.1")
             version("opentelemetry", "2.23.0")
-            version("spring-grpc", "1.0.1")
+            version("spring-grpc", "1.0.2")
 
             // matching proto version from spring-grpc
             // https://repo1.maven.org/maven2/org/springframework/grpc/spring-grpc-dependencies/1.0.1/spring-grpc-dependencies-1.0.1.pom
