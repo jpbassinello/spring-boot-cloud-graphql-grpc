@@ -31,7 +31,7 @@ services:
   # https://grafana.com/docs/opentelemetry/docker-lgtm/
   # This project is the easiest way to set up an OpenTelemetry backend with an OpenTelemetry Collector, Grafana, Loki, Mimir, and Tempo for self-managed development, demo, and testing environments
   lgtm:
-    image: grafana/otel-lgtm:0.13.0
+    image: grafana/otel-lgtm:0.17.1
     container_name: sbcgg-lgtm
     restart: unless-stopped
     ports:

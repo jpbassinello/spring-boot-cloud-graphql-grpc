@@ -176,12 +176,12 @@ principles:
 - [PostgreSQL](https://www.postgresql.org/) 18.1 - Relational database
 - [HikariCP](https://github.com/brettwooldridge/HikariCP) - JDBC connection pool
 - [Flyway](https://flywaydb.org/) - Database migration tool
-- [Redis](https://redis.io/) 8.4.0 - Distributed cache
+- [Redis](https://redis.io/) 8.6.0 - Distributed cache
 
 ### Observability & Monitoring
 
 - [OpenTelemetry](https://opentelemetry.io/) 2.23.0 - Distributed tracing and logging
-- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.13.0 - Loki (logs), Grafana (
+- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.17.1 - Loki (logs), Grafana (
   visualization), Tempo (traces), Mimir (metrics)
 - [Micrometer](https://micrometer.io/) - Application metrics
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html) -
@@ -189,7 +189,7 @@ principles:
 
 ### Security & Authentication
 
-- [Keycloak](https://www.keycloak.org/) 26.5.2 - Identity and access management
+- [Keycloak](https://www.keycloak.org/) 26.5.3 - Identity and access management
 
 ### Developer Tools
 

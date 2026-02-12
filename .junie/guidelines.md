@@ -1,6 +1,7 @@
 # SBCGG Development Guidelines
 
-This document provides essential information for developers and AI assistants working on the SBCGG (Spring Boot Cloud GraphQL gRPC) project. For general project information and public-facing documentation, see [README.md](README.md).
+This document provides essential information for developers and AI assistants working on the SBCGG (Spring Boot Cloud
+GraphQL gRPC) project. For general project information and public-facing documentation, see [README.md](README.md).
 
 ## Table of Contents
 
@@ -58,22 +59,26 @@ This document provides essential information for developers and AI assistants wo
 ### Building the Project
 
 #### Full Build
+
 ```bash
 ./gradlew build
 ```
 
 #### Module-Specific Build
+
 ```bash
 ./gradlew :shared:util:build
 ./gradlew :services:grpc:users:build
 ```
 
 #### Skip Tests
+
 ```bash
 ./gradlew build -x test
 ```
 
 #### Clean Build
+
 ```bash
 ./gradlew clean build
 ```
@@ -93,20 +98,20 @@ libs.plugins.spring.boot = "4.0.2"
 
 ### Key Dependencies
 
-| Category | Library | Version  | Purpose |
-|----------|---------|----------|---------|
-| Framework | Spring Boot | 4.0.2    | Application framework |
-| Framework | Spring Cloud | 2025.1.0 | Microservices toolkit |
-| Service Discovery | Consul | 1.22.3   | Service discovery & configuration |
-| Security | Spring Security | 7.0.2    | Security framework |
-| Security | Keycloak | 26.5.2   | Identity & access management |
-| RPC | Spring gRPC | 1.0.1    | High-performance RPC |
-| API | GraphQL Java | latest   | GraphQL implementation |
-| Database | PostgreSQL | 18.1     | Relational database |
-| Cache | Redis | 8.4.0    | Distributed cache |
-| Mapping | MapStruct | 1.6.3    | Bean mapping |
-| Observability | OpenTelemetry | 2.23.0   | Distributed tracing & logging |
-| Observability | Grafana LGTM | 0.13.0   | Loki, Grafana, Tempo, Mimir |
+| Category          | Library         | Version  | Purpose                           |
+|-------------------|-----------------|----------|-----------------------------------|
+| Framework         | Spring Boot     | 4.0.2    | Application framework             |
+| Framework         | Spring Cloud    | 2025.1.0 | Microservices toolkit             |
+| Service Discovery | Consul          | 1.22.3   | Service discovery & configuration |
+| Security          | Spring Security | 7.0.2    | Security framework                |
+| Security          | Keycloak        | 26.5.3   | Identity & access management      |
+| RPC               | Spring gRPC     | 1.0.1    | High-performance RPC              |
+| API               | GraphQL Java    | latest   | GraphQL implementation            |
+| Database          | PostgreSQL      | 18.1     | Relational database               |
+| Cache             | Redis           | 8.6.0    | Distributed cache                 |
+| Mapping           | MapStruct       | 1.6.3    | Bean mapping                      |
+| Observability     | OpenTelemetry   | 2.23.0   | Distributed tracing & logging     |
+| Observability     | Grafana LGTM    | 0.17.1   | Loki, Grafana, Tempo, Mimir       |
 
 ## Project Structure
 
@@ -181,10 +186,10 @@ service/
 
 The project uses **two types of tests**:
 
-| Type | Pattern | Purpose | Speed | Dependencies |
-|------|---------|---------|-------|--------------|
-| Unit Tests | `*Test.java` | Test individual components | Fast | None (mocked) |
-| Integration Tests | `*IT.java` | Test with real dependencies | Slower | Spring context, DB, etc. |
+| Type              | Pattern      | Purpose                     | Speed  | Dependencies             |
+|-------------------|--------------|-----------------------------|--------|--------------------------|
+| Unit Tests        | `*Test.java` | Test individual components  | Fast   | None (mocked)            |
+| Integration Tests | `*IT.java`   | Test with real dependencies | Slower | Spring context, DB, etc. |
 
 ### Running Tests
 
@@ -208,50 +213,53 @@ The project uses **two types of tests**:
 ### Writing Unit Tests
 
 **Template:**
+
 ```java
 package br.com.jpbassinello.sbcgg.feature;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("Feature Name Tests")
 class FeatureTest {
 
-    @Test
-    @DisplayName("should perform expected behavior when given valid input")
-    void shouldPerformExpectedBehavior() {
-        // Arrange
-        var input = "test";
-        var sut = new Feature();
+  @Test
+  @DisplayName("should perform expected behavior when given valid input")
+  void shouldPerformExpectedBehavior() {
+    // Arrange
+    var input = "test";
+    var sut = new Feature();
 
-        // Act
-        var result = sut.process(input);
+    // Act
+    var result = sut.process(input);
 
-        // Assert
-        assertThat(result)
-            .isNotNull()
-            .isEqualTo("expected");
-    }
+    // Assert
+    assertThat(result)
+        .isNotNull()
+        .isEqualTo("expected");
+  }
 
-    @Test
-    @DisplayName("should throw exception when given invalid input")
-    void shouldThrowExceptionWhenInvalid() {
-        // Arrange
-        var sut = new Feature();
+  @Test
+  @DisplayName("should throw exception when given invalid input")
+  void shouldThrowExceptionWhenInvalid() {
+    // Arrange
+    var sut = new Feature();
 
-        // Act & Assert
-        assertThatThrownBy(() -> sut.process(null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("Input cannot be null");
-    }
+    // Act & Assert
+    assertThatThrownBy(() -> sut.process(null))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Input cannot be null");
+  }
 }
 ```
 
 ### Writing Integration Tests
 
 **Template:**
+
 ```java
 package br.com.jpbassinello.sbcgg.feature;
 
@@ -260,40 +268,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ActiveProfiles;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
-@ContextConfiguration(classes = { FeatureService.class })
+@ContextConfiguration(classes = {FeatureService.class})
 @ActiveProfiles("test")
 class FeatureServiceIT extends BaseServiceIT {
 
-    @MockBean
-    private ExternalDependency externalDependency;
+  @MockBean
+  private ExternalDependency externalDependency;
 
-    @Autowired
-    private FeatureService service;
+  @Autowired
+  private FeatureService service;
 
-    @Test
-    void shouldCallExternalDependency() {
-        // Arrange
-        when(externalDependency.fetch(any())).thenReturn("mocked");
-        var input = new ServiceInput("test");
+  @Test
+  void shouldCallExternalDependency() {
+    // Arrange
+    when(externalDependency.fetch(any())).thenReturn("mocked");
+    var input = new ServiceInput("test");
 
-        // Act
-        var result = service.process(input);
+    // Act
+    var result = service.process(input);
 
-        // Assert
-        assertThat(result.getValue()).isEqualTo("processed");
-        verify(externalDependency).fetch("test");
-    }
+    // Assert
+    assertThat(result.getValue()).isEqualTo("processed");
+    verify(externalDependency).fetch("test");
+  }
 }
 ```
 
 ### Testing Best Practices
 
 ✅ **Do:**
+
 - Use **Arrange-Act-Assert** pattern consistently
 - Write **descriptive test names** that explain the scenario
 - Use `@DisplayName` for complex test descriptions
@@ -305,6 +315,7 @@ class FeatureServiceIT extends BaseServiceIT {
 - Prefer full object asserting with `usingRecursiveComparison()`
 
 ❌ **Don't:**
+
 - Share state between tests
 - Use hard-coded sleep/wait statements
 - Test implementation details
@@ -318,30 +329,36 @@ class FeatureServiceIT extends BaseServiceIT {
 **Important**: Services must be started in order due to dependencies.
 
 **Step 1: Start Infrastructure**
+
 ```bash
 cd infrastructure/docker/compose/dev
 docker-compose up -d
 cd -
 ```
-This starts:
-- **PostgreSQL 18.1** - Database
-- **Redis 8.4.0** - Distributed cache
-- **Consul 1.22.3** - Service discovery and configuration
-- **Keycloak 26.5.2** - Authentication/Authorization
-- **Grafana LGTM 0.13.0** - Observability stack (Loki, Grafana, Tempo, Mimir)
 
-**Note**: Consul automatically loads service configurations from YAML files during initialization via the `init.sh` script.
+This starts:
+
+- **PostgreSQL 18.1** - Database
+- **Redis 8.6.0** - Distributed cache
+- **Consul 1.22.3** - Service discovery and configuration
+- **Keycloak 26.5.3** - Authentication/Authorization
+- **Grafana LGTM 0.17.1** - Observability stack (Loki, Grafana, Tempo, Mimir)
+
+**Note**: Consul automatically loads service configurations from YAML files during initialization via the `init.sh`
+script.
 
 **Step 2: Verify Consul**
 Consul starts automatically via Docker Compose. Verify it's running at http://localhost:8500
 
 Check that configurations are loaded:
+
 ```bash
 # Verify Consul KV store has configuration
 curl http://localhost:8500/v1/kv/config/users-service,dev/data
 ```
 
 **Step 3: Start Microservices**
+
 ```bash
 # Terminal 1
 ./gradlew :services:grpc:users:bootRun
@@ -350,9 +367,11 @@ curl http://localhost:8500/v1/kv/config/users-service,dev/data
 ./gradlew :services:grpc:messages:bootRun
 ```
 
-**Note**: When running locally (with `dev` profile), services do not connect to Consul by default. Consul integration is enabled only with the `dev-docker` profile.
+**Note**: When running locally (with `dev` profile), services do not connect to Consul by default. Consul integration is
+enabled only with the `dev-docker` profile.
 
 **Step 4: Start API Gateway**
+
 ```bash
 ./gradlew :services:graphql:gateway:bootRun
 ```
@@ -364,16 +383,19 @@ Consul provides both service discovery and centralized configuration management 
 **Configuration Storage**: Configuration files are stored in `infrastructure/docker/compose/configs/consul/yaml/`
 
 **Configuration Files**:
+
 - `users-service.yaml` - Users service configuration
 - `messages-service.yaml` - Messages service configuration
 
 **How It Works**:
+
 1. During Docker Compose startup, Consul runs the `init.sh` script
 2. The script loads YAML files into Consul's KV store using keys like `config/{service-name},{profile}/data`
 3. Services connect to Consul and retrieve their configuration on startup
 
 **Service Configuration**:
 Services enable Consul config in `shared/spring-app/src/main/resources/config/app/application-dev-docker.yaml`:
+
 ```yaml
 spring:
   cloud:
@@ -390,6 +412,7 @@ spring:
 ```
 
 **Accessing Configuration**:
+
 ```bash
 # Get configuration from Consul KV store
 curl http://localhost:8500/v1/kv/config/users-service,dev/data
@@ -402,18 +425,21 @@ open http://localhost:8500
 ```
 
 **Profile Behavior**:
+
 - **dev profile** (local development): Consul is disabled, services use local configuration files
 - **dev-docker profile** (Docker Compose): Consul is enabled, services retrieve configuration from Consul KV store
 
 ### Adding a New Microservice
 
 **Step 1: Create gRPC Interface**
+
 ```bash
 # Create proto file in grpc-interfaces/<service-name>/
 # Example: grpc-interfaces/orders/src/main/proto/orders.proto
 ```
 
 **Step 2: Define Protocol Buffer Schema**
+
 ```protobuf
 syntax = "proto3";
 package br.com.jpbassinello.sbcgg.orders;
@@ -433,11 +459,13 @@ message CreateOrderResponse {
 ```
 
 **Step 3: Create Service Module**
+
 ```bash
 mkdir -p services/grpc/orders/src/main/java/br/com/jpbassinello/sbcgg/orders
 ```
 
 **Step 4: Implement Hexagonal Structure**
+
 ```
 services/grpc/orders/
 ├── domain/
@@ -461,6 +489,7 @@ services/grpc/orders/
 ```
 
 **Step 5: Add Dependencies**
+
 ```kotlin
 // services/grpc/orders/build.gradle.kts
 dependencies {
@@ -471,6 +500,7 @@ dependencies {
 ```
 
 **Step 6: Add Configuration**
+
 ```yaml
 # services/grpc/orders/src/main/resources/application.yml
 spring:
@@ -489,6 +519,7 @@ grpc:
 ```
 
 **Step 7: Write Tests**
+
 - Create unit tests for domain and application layers
 - Create integration tests for adapters
 
@@ -531,6 +562,7 @@ dependencies {
 ```
 
 **Common Violations:**
+
 - Line length > 100 characters
 - Missing JavaDoc for public methods
 - Incorrect import order
@@ -557,6 +589,7 @@ open build/reports/jacoco/test/html/index.html
 ```
 
 **Coverage Goals:**
+
 - **Unit Tests**: > 80% coverage
 - **Integration Tests**: > 60% coverage
 - **Overall**: > 70% coverage
@@ -564,6 +597,7 @@ open build/reports/jacoco/test/html/index.html
 ### Code Quality Best Practices
 
 ✅ **Do:**
+
 - Keep methods **short** (< 20 lines ideally)
 - Use **meaningful names** for variables and methods
 - Write **JavaDoc** for public APIs
@@ -573,6 +607,7 @@ open build/reports/jacoco/test/html/index.html
 - Log at appropriate levels (TRACE, DEBUG, INFO, WARN, ERROR)
 
 ❌ **Don't:**
+
 - Use magic numbers (define constants)
 - Catch generic exceptions without handling
 - Use `System.out.println` (use SLF4J)
@@ -600,12 +635,12 @@ Adapter (In) → Port (In) → Service → Port (Out) ← Adapter (Out)
 
 ### Communication Patterns
 
-| Pattern | Use Case | Example |
-|---------|----------|---------|
-| **gRPC** | Service-to-service sync | Users → Messages |
-| **GraphQL** | Client-facing API | Mobile/Web → Gateway |
-| **REST** | Simple CRUD, external APIs | Admin endpoints |
-| **Events** | Async communication | Order created → Inventory |
+| Pattern     | Use Case                   | Example                   |
+|-------------|----------------------------|---------------------------|
+| **gRPC**    | Service-to-service sync    | Users → Messages          |
+| **GraphQL** | Client-facing API          | Mobile/Web → Gateway      |
+| **REST**    | Simple CRUD, external APIs | Admin endpoints           |
+| **Events**  | Async communication        | Order created → Inventory |
 
 ## Common Tasks
 
@@ -614,6 +649,7 @@ Adapter (In) → Port (In) → Service → Port (Out) ← Adapter (Out)
 **Adding Configuration for a New Service**:
 
 1. Create a configuration file in `infrastructure/docker/compose/configs/consul/yaml/`
+
 ```yaml
 # infrastructure/docker/compose/configs/consul/yaml/orders-service.yaml
 spring:
@@ -625,6 +661,7 @@ keycloak:
 ```
 
 2. Update the init script to load the new configuration:
+
 ```bash
 # Edit infrastructure/docker/compose/configs/consul/init.sh
 consul kv put config/orders-service,dev/data @/tmp/yaml/orders-service.yaml
@@ -632,6 +669,7 @@ consul kv put config/orders-service,dev-docker/data @/tmp/yaml/orders-service.ya
 ```
 
 3. Restart Consul container to load the new configuration:
+
 ```bash
 docker restart sbcgg-consul
 ```
@@ -640,6 +678,7 @@ docker restart sbcgg-consul
 
 1. Edit configuration files in `infrastructure/docker/compose/configs/consul/yaml/`
 2. Update Consul KV store manually or restart Consul container:
+
 ```bash
 # Option 1: Update manually
 consul kv put config/users-service,dev/data @infrastructure/docker/compose/configs/consul/yaml/users-service.yaml
@@ -647,16 +686,20 @@ consul kv put config/users-service,dev/data @infrastructure/docker/compose/confi
 # Option 2: Restart Consul (reloads all configs via init script)
 docker restart sbcgg-consul
 ```
+
 3. Restart affected services to pick up new configuration
 
 **Configuration Structure**:
 
 Services use a layered configuration approach:
+
 1. **Shared configuration**: `shared/spring-app/src/main/resources/config/app/` - Common settings for all services
 2. **Service configuration**: `services/{service}/src/main/resources/config/` - Service-specific settings
-3. **Consul KV store**: `infrastructure/docker/compose/configs/consul/yaml/` - Environment-specific secrets and overrides
+3. **Consul KV store**: `infrastructure/docker/compose/configs/consul/yaml/` - Environment-specific secrets and
+   overrides
 
 **Testing Configuration**:
+
 ```bash
 # View configuration from Consul KV store
 curl http://localhost:8500/v1/kv/config/users-service,dev/data?raw
@@ -669,6 +712,7 @@ curl http://localhost:8090/actuator/env | jq '.propertySources[] | select(.name 
 ```
 
 **Best Practices**:
+
 - ✅ Store **sensitive data** in Consul KV store (passwords, tokens)
 - ✅ Use **profiles** for different environments (dev, dev-docker, prod)
 - ✅ Keep **non-sensitive defaults** in service configuration files
@@ -701,43 +745,45 @@ CREATE TABLE users (
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_users_username ON users (username);
 ```
 
 ### Configuring Redis Cache
 
 ```java
+
 @Configuration
 @EnableCaching
 public class CacheConfig {
 
-    @Bean
-    public RedisCacheConfiguration cacheConfiguration() {
-        return RedisCacheConfiguration.defaultCacheConfig()
-            .entryTtl(Duration.ofMinutes(10))
-            .serializeValuesWith(
-                RedisSerializationContext.SerializationPair
-                    .fromSerializer(new GenericJackson2JsonRedisSerializer())
-            );
-    }
+  @Bean
+  public RedisCacheConfiguration cacheConfiguration() {
+    return RedisCacheConfiguration.defaultCacheConfig()
+        .entryTtl(Duration.ofMinutes(10))
+        .serializeValuesWith(
+            RedisSerializationContext.SerializationPair
+                .fromSerializer(new GenericJackson2JsonRedisSerializer())
+        );
+  }
 }
 ```
 
 ### Adding Distributed Locks (ShedLock)
 
 ```java
+
 @Component
 public class ScheduledTasks {
 
-    @Scheduled(cron = "0 */15 * * * *")
-    @SchedulerLock(
-        name = "processOrders",
-        lockAtMostFor = "10m",
-        lockAtLeastFor = "5m"
-    )
-    public void processOrders() {
-        // This will only run on one instance
-    }
+  @Scheduled(cron = "0 */15 * * * *")
+  @SchedulerLock(
+      name = "processOrders",
+      lockAtMostFor = "10m",
+      lockAtLeastFor = "5m"
+  )
+  public void processOrders() {
+    // This will only run on one instance
+  }
 }
 ```
 
@@ -756,9 +802,11 @@ The project uses Grafana's LGTM stack (Loki, Grafana, Tempo, Mimir) for comprehe
 
 **OpenTelemetry Configuration**
 
-Logs are automatically sent to the LGTM stack via the OpenTelemetry appender configured in `shared/spring-app/src/main/resources/logback-spring.xml`:
+Logs are automatically sent to the LGTM stack via the OpenTelemetry appender configured in
+`shared/spring-app/src/main/resources/logback-spring.xml`:
 
 ```xml
+
 <appender name="OpenTelemetry"
           class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
     <captureCodeAttributes>true</captureCodeAttributes>
@@ -778,6 +826,7 @@ Logs are automatically sent to the LGTM stack via the OpenTelemetry appender con
 5. Logs are automatically correlated with traces via trace IDs
 
 **Best Practices**:
+
 - Use SLF4J for logging in your code
 - Use MDC (Mapped Diagnostic Context) to add contextual information
 - Use appropriate log levels (TRACE, DEBUG, INFO, WARN, ERROR)
@@ -789,6 +838,7 @@ Logs are automatically sent to the LGTM stack via the OpenTelemetry appender con
 ### Build Issues
 
 **Problem:** `OutOfMemoryError` during build
+
 ```bash
 # Solution: Increase Gradle heap size
 export GRADLE_OPTS="-Xmx4g"
@@ -796,6 +846,7 @@ export GRADLE_OPTS="-Xmx4g"
 ```
 
 **Problem:** Proto compilation fails
+
 ```bash
 # Solution: Clean and rebuild proto modules
 ./gradlew :grpc-interfaces:clean :grpc-interfaces:build
@@ -804,6 +855,7 @@ export GRADLE_OPTS="-Xmx4g"
 ### Runtime Issues
 
 **Problem:** Service fails to start with Consul connection errors (dev-docker profile)
+
 ```bash
 # Solution: Ensure Consul is running
 docker ps | grep consul
@@ -819,6 +871,7 @@ curl http://localhost:8500/v1/agent/self
 ```
 
 **Problem:** Service not getting configuration from Consul (dev-docker profile)
+
 ```bash
 # 1. Verify configuration exists in Consul KV store
 curl http://localhost:8500/v1/kv/config/users-service,dev-docker/data?raw
@@ -842,6 +895,7 @@ spring:
 ```
 
 **Problem:** Service not registering with Consul (dev-docker profile)
+
 ```bash
 # Note: Service discovery is only enabled in dev-docker profile
 # Check if Consul is running
@@ -874,6 +928,7 @@ spring:
 ```
 
 **Problem:** Consul container not starting
+
 ```bash
 # Check Consul logs
 docker logs sbcgg-consul
@@ -886,6 +941,7 @@ curl http://localhost:8500/v1/agent/self
 ```
 
 **Problem:** Database connection fails
+
 ```bash
 # Check PostgreSQL is running
 docker ps | grep postgres
@@ -895,6 +951,7 @@ docker logs sbcgg-postgres
 ```
 
 **Problem:** Redis connection fails
+
 ```bash
 # Verify Redis is accessible
 redis-cli -a redis ping
@@ -912,6 +969,7 @@ spring:
 ```
 
 **Problem:** Grafana/LGTM not accessible
+
 ```bash
 # Check if LGTM container is running
 docker ps | grep lgtm
@@ -927,6 +985,7 @@ curl http://localhost:3100
 ```
 
 **Problem:** Logs not appearing in Grafana/Loki
+
 ```bash
 # 1. Verify OpenTelemetry appender is configured in logback-spring.xml
 # 2. Check that 'dev' profile is active (OpenTelemetry only enabled in dev profile)
@@ -940,14 +999,16 @@ curl http://localhost:4318/v1/logs
 ### Test Issues
 
 **Problem:** Integration tests fail with "Cannot load context"
+
 ```java
 // Solution: Add @ActiveProfiles("test")
 @SpringBootTest
 @ActiveProfiles("test")
-class MyServiceIT { }
+class MyServiceIT {}
 ```
 
 **Problem:** Tests pass locally but fail in CI
+
 ```bash
 # Solution: Ensure test isolation
 # - Don't share state between tests
@@ -969,6 +1030,7 @@ org.gradle.configureondemand=true # On-demand configuration
 ```
 
 **Verify cache effectiveness:**
+
 ```bash
 ./gradlew clean build --scan
 # Opens build scan in browser showing cache hits

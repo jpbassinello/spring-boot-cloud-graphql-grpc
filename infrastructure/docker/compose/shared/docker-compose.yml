@@ -28,7 +28,7 @@ services:
 
   # Identity and Access Management
   keycloak:
-    image: quay.io/keycloak/keycloak:26.5.2
+    image: quay.io/keycloak/keycloak:26.5.3
     container_name: sbcgg-keycloak
     restart: unless-stopped
     ports:
@@ -76,7 +76,7 @@ services:
 
   # shared cache, rate limiting, pub/sub, ...
   redis:
-    image: redis:8.4.0-alpine3.22
+    image: redis:8.6.0-alpine3.23
     command: redis-server --requirepass redis --loglevel warning
     container_name: sbcgg-redis
     restart: unless-stopped
