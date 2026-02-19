@@ -34,7 +34,7 @@ dependencyResolutionManagement {
         create("libs") {
             version("spring-security", "7.0.2")
             version("spring-cloud", "2025.1.1")
-            version("opentelemetry", "2.23.0")
+            version("opentelemetry", "2.25.0")
             version("spring-grpc", "1.0.2")
 
             // matching proto version from spring-grpc
@@ -45,7 +45,7 @@ dependencyResolutionManagement {
             // Other dependencies
             version("keycloak", "26.0.8")
             version("mapstruct", "1.6.3")
-            version("spi-protobuf-mapstruct", "1.49.0")
+            version("spi-protobuf-mapstruct", "1.52.0")
             version("shedlock", "7.6.0")
             version("testcontainers", "2.0.3")
 
@@ -53,7 +53,7 @@ dependencyResolutionManagement {
             plugin("spring-boot", "org.springframework.boot").version("4.0.2")
             plugin("spotbugs", "com.github.spotbugs").version("6.4.8")
             plugin("protobuf", "com.google.protobuf").version("0.9.6")
-            plugin("buf", "com.parmet.buf").version("0.8.5")
+            plugin("buf", "build.buf").version("0.8.5")
             plugin("lombok", "io.freefair.lombok").version("9.2.0")
         }
     }

@@ -2,7 +2,7 @@ services:
 
   # the core database engine
   postgres:
-    image: postgres:18.1-alpine3.23
+    image: postgres:18.2-alpine3.23
     container_name: sbcgg-postgres
     restart: unless-stopped
     healthcheck:

@@ -90,8 +90,8 @@ The project uses **Gradle Version Catalogs** (defined in `settings.gradle.kts`) 
 ```kotlin
 // Version Catalog Structure
 libs.versions.spring.security = "7.0.2"
-libs.versions.spring.cloud = "2025.1.0"
-libs.versions.spring.grpc = "1.0.1"
+libs.versions.spring.cloud = "2025.1.1"
+libs.versions.spring.grpc = "1.0.2"
 libs.versions.protoc.protobuf = "4.33.2"
 libs.plugins.spring.boot = "4.0.2"
 ```
@@ -101,17 +101,17 @@ libs.plugins.spring.boot = "4.0.2"
 | Category          | Library         | Version  | Purpose                           |
 |-------------------|-----------------|----------|-----------------------------------|
 | Framework         | Spring Boot     | 4.0.2    | Application framework             |
-| Framework         | Spring Cloud    | 2025.1.0 | Microservices toolkit             |
+| Framework         | Spring Cloud    | 2025.1.1 | Microservices toolkit             |
 | Service Discovery | Consul          | 1.22.3   | Service discovery & configuration |
 | Security          | Spring Security | 7.0.2    | Security framework                |
 | Security          | Keycloak        | 26.5.3   | Identity & access management      |
-| RPC               | Spring gRPC     | 1.0.1    | High-performance RPC              |
+| RPC               | Spring gRPC     | 1.0.2    | High-performance RPC              |
 | API               | GraphQL Java    | latest   | GraphQL implementation            |
-| Database          | PostgreSQL      | 18.1     | Relational database               |
+| Database          | PostgreSQL      | 18.2     | Relational database               |
 | Cache             | Redis           | 8.6.0    | Distributed cache                 |
 | Mapping           | MapStruct       | 1.6.3    | Bean mapping                      |
-| Observability     | OpenTelemetry   | 2.23.0   | Distributed tracing & logging     |
-| Observability     | Grafana LGTM    | 0.17.1   | Loki, Grafana, Tempo, Mimir       |
+| Observability     | OpenTelemetry   | 2.25.0   | Distributed tracing & logging     |
+| Observability     | Grafana LGTM    | 0.18.1   | Loki, Grafana, Tempo, Mimir       |
 
 ## Project Structure
 

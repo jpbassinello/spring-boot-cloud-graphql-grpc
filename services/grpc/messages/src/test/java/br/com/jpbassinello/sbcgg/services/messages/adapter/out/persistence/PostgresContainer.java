@@ -8,7 +8,7 @@ interface PostgresContainer {
 
   @Container
   @ServiceConnection
-  PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18.1-alpine3.23")
+  PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18.2-alpine3.23")
       .withDatabaseName("messages")
       .withUsername("postgres")
       .withPassword("postgres");
