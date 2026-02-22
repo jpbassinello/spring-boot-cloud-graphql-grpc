@@ -5,7 +5,7 @@ import br.com.jpbassinello.sbcgg.grpc.interfaces.users.RegisterUserRequest;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserInput;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UserRole;
 import br.com.jpbassinello.sbcgg.grpc.interfaces.users.UsersServiceGrpc;
-import br.com.jpbassinello.sbcgg.services.grpc.users.adapter.PostgresContainer;
+import br.com.jpbassinello.sbcgg.jpa.test.PostgresContainer;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SendMessagePort;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SyncIdentityPort;
 import io.grpc.Metadata;

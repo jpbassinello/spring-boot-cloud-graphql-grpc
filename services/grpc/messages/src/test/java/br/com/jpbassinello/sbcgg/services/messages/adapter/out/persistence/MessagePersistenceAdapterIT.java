@@ -1,6 +1,7 @@
 package br.com.jpbassinello.sbcgg.services.messages.adapter.out.persistence;
 
 import br.com.jpbassinello.sbcgg.jpa.domain.entities.SimplePage;
+import br.com.jpbassinello.sbcgg.jpa.test.PostgresContainer;
 import br.com.jpbassinello.sbcgg.services.messages.config.PersistenceConfig;
 import br.com.jpbassinello.sbcgg.services.messages.domain.entities.Message;
 import br.com.jpbassinello.sbcgg.services.messages.domain.enums.MessageChannel;

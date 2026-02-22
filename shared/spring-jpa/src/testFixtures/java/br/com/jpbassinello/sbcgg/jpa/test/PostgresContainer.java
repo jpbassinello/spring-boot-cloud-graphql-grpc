@@ -1,4 +1,4 @@
-package br.com.jpbassinello.sbcgg.services.grpc.users.adapter;
+package br.com.jpbassinello.sbcgg.jpa.test;
 
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.testcontainers.junit.jupiter.Container;
@@ -9,7 +9,7 @@ public interface PostgresContainer {
   @Container
   @ServiceConnection
   PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:18.2-alpine3.23")
-      .withDatabaseName("users")
+      .withDatabaseName("test")
       .withUsername("postgres")
       .withPassword("postgres");
 

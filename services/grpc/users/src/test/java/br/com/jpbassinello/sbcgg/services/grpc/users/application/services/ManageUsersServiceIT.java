@@ -1,6 +1,6 @@
 package br.com.jpbassinello.sbcgg.services.grpc.users.application.services;
 
-import br.com.jpbassinello.sbcgg.services.grpc.users.adapter.PostgresContainer;
+import br.com.jpbassinello.sbcgg.jpa.test.PostgresContainer;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.LoadUserPort;
 import br.com.jpbassinello.sbcgg.services.grpc.users.application.port.out.SyncIdentityPort;
 import br.com.jpbassinello.sbcgg.services.grpc.users.config.PersistenceConfig;

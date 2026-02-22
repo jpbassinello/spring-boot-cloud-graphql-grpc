@@ -1,6 +1,6 @@
 package br.com.jpbassinello.sbcgg.services.grpc.users.adapter.out.persistence;
 
-import br.com.jpbassinello.sbcgg.services.grpc.users.adapter.PostgresContainer;
+import br.com.jpbassinello.sbcgg.jpa.test.PostgresContainer;
 import br.com.jpbassinello.sbcgg.services.grpc.users.config.PersistenceConfig;
 import br.com.jpbassinello.sbcgg.services.grpc.users.domain.entities.User;
 import br.com.jpbassinello.sbcgg.services.grpc.users.domain.enums.Role;
