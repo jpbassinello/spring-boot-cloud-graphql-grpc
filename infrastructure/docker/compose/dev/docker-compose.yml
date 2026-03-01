@@ -4,7 +4,7 @@ include:
 services:
   # service discovery
   consul:
-    image: hashicorp/consul:1.22.3
+    image: hashicorp/consul:1.22.5
     command: "agent -server -bootstrap-expect=1 -client=0.0.0.0 -ui -data-dir=/consul/data"
     container_name: sbcgg-consul
     restart: unless-stopped
@@ -31,7 +31,7 @@ services:
   # https://grafana.com/docs/opentelemetry/docker-lgtm/
   # This project is the easiest way to set up an OpenTelemetry backend with an OpenTelemetry Collector, Grafana, Loki, Mimir, and Tempo for self-managed development, demo, and testing environments
   lgtm:
-    image: grafana/otel-lgtm:0.18.1
+    image: grafana/otel-lgtm:0.19.1
     container_name: sbcgg-lgtm
     restart: unless-stopped
     ports:

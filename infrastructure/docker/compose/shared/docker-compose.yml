@@ -2,7 +2,7 @@ services:
 
   # the core database engine
   postgres:
-    image: postgres:18.2-alpine3.23
+    image: postgres:18.3-alpine3.23
     container_name: sbcgg-postgres
     restart: unless-stopped
     healthcheck:
@@ -28,7 +28,7 @@ services:
 
   # Identity and Access Management
   keycloak:
-    image: quay.io/keycloak/keycloak:26.5.3
+    image: quay.io/keycloak/keycloak:26.5.4
     container_name: sbcgg-keycloak
     restart: unless-stopped
     ports:
@@ -76,7 +76,7 @@ services:
 
   # shared cache, rate limiting, pub/sub, ...
   redis:
-    image: redis:8.6.0-alpine3.23
+    image: redis:8.6.1-alpine3.23
     command: redis-server --requirepass redis --loglevel warning
     container_name: sbcgg-redis
     restart: unless-stopped

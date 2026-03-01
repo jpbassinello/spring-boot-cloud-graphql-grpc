@@ -22,7 +22,7 @@ spec:
     spec:
       initContainers:
         - name: wait-for-postgres
-          image: busybox:1.37
+          image: busybox:1.37.0
           command:
             - sh
             - -c
@@ -34,7 +34,7 @@ spec:
               echo "PostgreSQL is ready!"
       containers:
         - name: keycloak
-          image: quay.io/keycloak/keycloak:26.5.2
+          image: quay.io/keycloak/keycloak:26.5.4
           args:
             - start-dev
             - --import-realm

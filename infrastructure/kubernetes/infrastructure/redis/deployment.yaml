@@ -32,7 +32,7 @@ spec:
             runAsUser: 999
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
-          image: redis:8.4.0-alpine3.22
+          image: redis:8.6.1-alpine3.23
           command:
             - redis-server
             - --requirepass
