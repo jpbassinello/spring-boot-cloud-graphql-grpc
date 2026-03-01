@@ -1,6 +1,7 @@
 # gRPC in SBCGG: Spring gRPC, Service Discovery, and Type-Safe Mapping
 
-This is the second post in the SBCGG series. If you haven't read the first one, check it out: [Introducing SBCGG](1-About-SBCGG.md).
+This is the second post in the SBCGG series. If you haven't read the first one, check it
+out: [Introducing SBCGG](1-About-SBCGG.md).
 
 **GitHub**: https://github.com/jpbassinello/spring-boot-cloud-graphql-grpc
 
@@ -8,11 +9,16 @@ This is the second post in the SBCGG series. If you haven't read the first one, 
 
 ## Spring gRPC: A Game Changer
 
-For a long time, using gRPC in Spring Boot required third-party libraries or a lot of manual wiring. The Spring team finally released **Spring gRPC** (currently at version 1.0.2), bringing first-class gRPC support to the Spring ecosystem. This means gRPC channels, stubs, and servers are now configured the same way we configure everything else in Spring: through application properties, auto-configuration, and dependency injection.
+For a long time, using gRPC in Spring Boot required third-party libraries or a lot of manual wiring. The Spring team
+finally released **Spring gRPC** (currently at version 1.0.2), bringing first-class gRPC support to the Spring
+ecosystem. This means gRPC channels, stubs, and servers are now configured the same way we configure everything else in
+Spring: through application properties, auto-configuration, and dependency injection.
 
-In SBCGG, the Spring gRPC integration is straightforward. On the **server side**, a gRPC service is just a Spring-managed bean that extends the generated base class:
+In SBCGG, the Spring gRPC integration is straightforward. On the **server side**, a gRPC service is just a
+Spring-managed bean that extends the generated base class:
 
 ```java
+
 @Service
 @RequiredArgsConstructor
 class UsersGrpcAdapter extends UsersServiceGrpc.UsersServiceImplBase {
@@ -37,9 +43,11 @@ class UsersGrpcAdapter extends UsersServiceGrpc.UsersServiceImplBase {
 }
 ```
 
-On the **client side**, Spring gRPC provides a `GrpcChannelFactory` that creates channels based on named configurations. The GraphQL gateway uses it to call gRPC services:
+On the **client side**, Spring gRPC provides a `GrpcChannelFactory` that creates channels based on named configurations.
+The GraphQL gateway uses it to call gRPC services:
 
 ```java
+
 @Component
 @RequiredArgsConstructor
 class UserGrpcAdapter implements LoadUserPort, RegisterUserPort {
@@ -77,13 +85,17 @@ spring:
           address: "dns:///localhost:8091"
 ```
 
-This is clean, simple, and feels like Spring. But what happens when services run in a dynamic environment where addresses aren't static?
+This is clean, simple, and feels like Spring. But what happens when services run in a dynamic environment where
+addresses aren't static?
 
 ## Bridging gRPC with Service Discovery: DiscoveryClientNameResolver
 
-In a containerized or cloud environment, services register themselves with a **service registry** (SBCGG uses Consul) and discover each other at runtime. Spring Cloud handles this beautifully for HTTP-based communication, but gRPC has its own name resolution mechanism. The challenge is: **how do we make gRPC channels resolve service names through Consul?**
+In a containerized or cloud environment, services register themselves with a **service registry** (SBCGG uses Consul)
+and discover each other at runtime. Spring Cloud handles this beautifully for HTTP-based communication, but gRPC has its
+own name resolution mechanism. The challenge is: **how do we make gRPC channels resolve service names through Consul?**
 
-SBCGG solves this with a custom `DiscoveryClientNameResolver` that plugs Spring Cloud's `DiscoveryClient` into gRPC's `NameResolver` API.
+SBCGG solves this with a custom `DiscoveryClientNameResolver` that plugs Spring Cloud's `DiscoveryClient` into gRPC's
+`NameResolver` API.
 
 ### How It Works
 
@@ -134,7 +146,9 @@ class DiscoveryClientNameResolver extends NameResolver {
 }
 ```
 
-A key detail here: services typically run HTTP and gRPC on **different ports**. Consul registers the HTTP port by default, so the resolver looks for a `grpc-port` key in the service metadata. Each service publishes this metadata in its Consul registration:
+A key detail here: services typically run HTTP and gRPC on **different ports**. Consul registers the HTTP port by
+default, so the resolver looks for a `grpc-port` key in the service metadata. Each service publishes this metadata in
+its Consul registration:
 
 ```yaml
 spring:
@@ -166,6 +180,7 @@ class DiscoveryClientNameResolverProvider extends NameResolverProvider {
 **3. The Auto-Configuration** ties it all together, activating only when Consul discovery is enabled:
 
 ```java
+
 @Configuration
 @ConditionalOnProperty(value = "spring.cloud.consul.discovery.enabled", havingValue = "true")
 public class DiscoveryClientGrpcConfig {
@@ -191,15 +206,20 @@ spring:
           address: "discovery:///messages-service"
 ```
 
-The beauty of this approach is that **no client code changes**. The same `GrpcChannelFactory` and blocking stubs work identically in both local development (`dns:///localhost:8091`) and containerized environments (`discovery:///users-service`). The resolution strategy is entirely driven by configuration.
+The beauty of this approach is that **no client code changes**. The same `GrpcChannelFactory` and blocking stubs work
+identically in both local development (`dns:///localhost:8091`) and containerized environments (
+`discovery:///users-service`). The resolution strategy is entirely driven by configuration.
 
 ## Centralized Error Handling: GrpcServerExceptionAdvice
 
-One thing that was always painful in gRPC was exception handling. Without a centralized mechanism, every RPC method needed its own try-catch boilerplate, and error responses were inconsistent across services.
+One thing that was always painful in gRPC was exception handling. Without a centralized mechanism, every RPC method
+needed its own try-catch boilerplate, and error responses were inconsistent across services.
 
-Spring gRPC introduces the `GrpcExceptionHandler` interface, which works similarly to Spring MVC's `@ControllerAdvice`. SBCGG implements it in a shared module so all gRPC services get consistent error handling for free:
+Spring gRPC introduces the `GrpcExceptionHandler` interface, which works similarly to Spring MVC's `@ControllerAdvice`.
+SBCGG implements it in a shared module so all gRPC services get consistent error handling for free:
 
 ```java
+
 @Component
 @RequiredArgsConstructor
 public class GrpcServerExceptionAdvice implements GrpcExceptionHandler {
@@ -210,12 +230,12 @@ public class GrpcServerExceptionAdvice implements GrpcExceptionHandler {
   public StatusException handleException(Throwable ex) {
     return switch (ex) {
       case ConstraintViolationException cve -> handleConstraintViolation(cve);
-      case ResourceNotFoundException rnf    -> handleNotFound(rnf);
-      case BadRequestException bre          -> handleBadRequest(bre);
-      case TimedOutException toe            -> handleTimeout(toe);
+      case ResourceNotFoundException rnf -> handleNotFound(rnf);
+      case BadRequestException bre -> handleBadRequest(bre);
+      case TimedOutException toe -> handleTimeout(toe);
       case InternalServerErrorException ise -> handleInternalError(ise);
-      case RuntimeException re              -> handleUnexpected(re);
-      default                               -> handleUnexpected(ex);
+      case RuntimeException re -> handleUnexpected(re);
+      default -> handleUnexpected(ex);
     };
   }
 }
@@ -223,16 +243,17 @@ public class GrpcServerExceptionAdvice implements GrpcExceptionHandler {
 
 Each exception type maps to a gRPC status code:
 
-| Exception                      | gRPC Status        | Use Case                       |
-|--------------------------------|--------------------|--------------------------------|
-| `ConstraintViolationException` | `INVALID_ARGUMENT` | Bean validation failures       |
-| `ResourceNotFoundException`    | `NOT_FOUND`        | Entity not found by ID         |
-| `BadRequestException`          | `INVALID_ARGUMENT` | Business rule violations       |
-| `TimedOutException`            | `DEADLINE_EXCEEDED` | Timeout on external calls     |
-| `InternalServerErrorException` | `INTERNAL`         | Known internal failures        |
-| Any other exception            | `INTERNAL`         | Unexpected errors              |
+| Exception                      | gRPC Status         | Use Case                  |
+|--------------------------------|---------------------|---------------------------|
+| `ConstraintViolationException` | `INVALID_ARGUMENT`  | Bean validation failures  |
+| `ResourceNotFoundException`    | `NOT_FOUND`         | Entity not found by ID    |
+| `BadRequestException`          | `INVALID_ARGUMENT`  | Business rule violations  |
+| `TimedOutException`            | `DEADLINE_EXCEEDED` | Timeout on external calls |
+| `InternalServerErrorException` | `INTERNAL`          | Known internal failures   |
+| Any other exception            | `INTERNAL`          | Unexpected errors         |
 
-The handler also enriches error responses with **gRPC metadata**. For example, a `ResourceNotFoundException` includes the resource type and ID:
+The handler also enriches error responses with **gRPC metadata**. For example, a `ResourceNotFoundException` includes
+the resource type and ID:
 
 ```java
 private StatusException handleResourceNotFoundException(ResourceNotFoundException e) {
@@ -248,27 +269,35 @@ Validation errors serialize the violation list as JSON in the metadata, so clien
 ```java
 metadata.put(
     Metadata.Key.of("violations", Metadata.ASCII_STRING_MARSHALLER),
-    objectMapper.writeValueAsString(violations)
+    objectMapper.
+
+writeValueAsString(violations)
 );
 ```
 
-Because this lives in the `shared:grpc-server` module, every gRPC service in the project inherits this behavior by simply adding the dependency. No per-service configuration needed.
+Because this lives in the `shared:grpc-server` module, every gRPC service in the project inherits this behavior by
+simply adding the dependency. No per-service configuration needed.
 
 ## MapStruct + Protobuf: Type-Safe Mapping Across Boundaries
 
-A microservices architecture with gRPC and GraphQL means dealing with **multiple representations of the same data**. In SBCGG, a "User" exists as:
+A microservices architecture with gRPC and GraphQL means dealing with **multiple representations of the same data**. In
+SBCGG, a "User" exists as:
 
 1. A **JPA entity** (domain layer, persisted in PostgreSQL)
 2. A **Protobuf message** (gRPC transport layer)
 3. A **GraphQL type** (API layer, served to clients)
 
-Manually writing conversion code between these types is tedious and error-prone. This is where **MapStruct** shines, and specifically, the [mapstruct-spi-protobuf](https://github.com/entur/mapstruct-spi-protobuf) library by Entur.
+Manually writing conversion code between these types is tedious and error-prone. This is where **MapStruct** shines, and
+specifically, the [mapstruct-spi-protobuf](https://github.com/entur/mapstruct-spi-protobuf) library by Entur.
 
 ### The Problem with Protobuf and MapStruct
 
-Protobuf-generated Java classes don't follow JavaBean conventions. They use **builders** instead of setters, have `addAll` methods for repeated fields, and `has` methods for optional fields. Out of the box, MapStruct doesn't know how to handle these patterns.
+Protobuf-generated Java classes don't follow JavaBean conventions. They use **builders** instead of setters, have
+`addAll` methods for repeated fields, and `has` methods for optional fields. Out of the box, MapStruct doesn't know how
+to handle these patterns.
 
-The `protobuf-spi-impl` SPI plugin teaches MapStruct how to work with Protobuf types. It's registered as an annotation processor alongside MapStruct:
+The `protobuf-spi-impl` SPI plugin teaches MapStruct how to work with Protobuf types. It's registered as an annotation
+processor alongside MapStruct:
 
 ```kotlin
 // build.gradle.kts
@@ -276,13 +305,16 @@ annotationProcessor("org.mapstruct:mapstruct-processor:${rootProject.libs.versio
 annotationProcessor("no.entur.mapstruct.spi:protobuf-spi-impl:${rootProject.libs.versions.spi.protobuf.mapstruct.get()}")
 ```
 
-That's it. No runtime dependency, no additional configuration. At compile time, MapStruct now understands how to generate code that uses Protobuf builders, handles repeated fields with `addAll`, and respects the Protobuf naming conventions.
+That's it. No runtime dependency, no additional configuration. At compile time, MapStruct now understands how to
+generate code that uses Protobuf builders, handles repeated fields with `addAll`, and respects the Protobuf naming
+conventions.
 
 ### Shared MapStruct Configuration
 
 SBCGG defines a shared configuration for all Protobuf mappers:
 
 ```java
+
 @MapperConfig(
     uses = {BaseProtobufMapper.class},
     imports = {BaseProtobufMapper.class},
@@ -294,9 +326,12 @@ public interface ProtobufMapstructConfig {
 ```
 
 Key settings:
-- **`ADDER_PREFERRED`**: Uses Protobuf's `addAll` methods for repeated fields instead of trying to call setters on immutable lists.
+
+- **`ADDER_PREFERRED`**: Uses Protobuf's `addAll` methods for repeated fields instead of trying to call setters on
+  immutable lists.
 - **`ReportingPolicy.ERROR`**: Fails compilation if any target field is unmapped, catching mapping issues at build time.
-- **`NullValueCheckStrategy.ALWAYS`**: Generates null checks, important because Protobuf fields are never null (they return defaults).
+- **`NullValueCheckStrategy.ALWAYS`**: Generates null checks, important because Protobuf fields are never null (they
+  return defaults).
 
 A `BaseProtobufMapper` provides common conversions, like `Timestamp` to `ZonedDateTime`:
 
@@ -319,9 +354,11 @@ public class BaseProtobufMapper extends BaseMapper {
 
 ### Mapping in Action
 
-With this setup, individual mappers are extremely concise. Here's the mapper in the **Users gRPC service** that converts between JPA entities and Protobuf messages:
+With this setup, individual mappers are extremely concise. Here's the mapper in the **Users gRPC service** that converts
+between JPA entities and Protobuf messages:
 
 ```java
+
 @Mapper(config = ProtobufMapstructConfig.class)
 interface UserGrpcMapper {
 
@@ -338,6 +375,7 @@ interface UserGrpcMapper {
 And here's the mapper in the **GraphQL gateway** that converts between Protobuf messages and GraphQL types:
 
 ```java
+
 @Mapper(config = ProtobufMapstructConfig.class)
 interface UserGrpcMapper {
 
@@ -354,7 +392,8 @@ interface UserGrpcMapper {
 }
 ```
 
-The `@Mapping(target = "messages", ignore = true)` annotation tells MapStruct to skip the `messages` field, which is loaded separately through a GraphQL resolver (a topic for another post).
+The `@Mapping(target = "messages", ignore = true)` annotation tells MapStruct to skip the `messages` field, which is
+loaded separately through a GraphQL resolver (a topic for another post).
 
 The entire mapping chain looks like this:
 
@@ -366,7 +405,9 @@ GraphQL Input → [MapStruct] → Protobuf Request → [gRPC] → Protobuf Messa
 GraphQL Type ← [MapStruct] ← Protobuf Response ← [gRPC] ← Protobuf Message ← [MapStruct] ← JPA Entity
 ```
 
-All mapping code is **generated at compile time**. No reflection, no runtime overhead, and if a field is added to the proto definition but not mapped, the build fails. This is exactly the kind of safety net you want in a microservices project.
+All mapping code is **generated at compile time**. No reflection, no runtime overhead, and if a field is added to the
+proto definition but not mapped, the build fails. This is exactly the kind of safety net you want in a microservices
+project.
 
 ## Putting It All Together
 
@@ -376,16 +417,20 @@ Here's the complete flow when a client queries a user through the GraphQL gatewa
 2. **UserGrpcAdapter** (gateway) creates a Protobuf request and calls the gRPC stub
 3. **Spring gRPC** resolves the channel address (`dns:///` locally, `discovery:///` in Docker)
 4. If using `discovery:///`, the **DiscoveryClientNameResolver** queries Consul for the users-service instances
-5. **UsersGrpcAdapter** (server) receives the request, calls the use case, and maps the JPA entity to a Protobuf response
+5. **UsersGrpcAdapter** (server) receives the request, calls the use case, and maps the JPA entity to a Protobuf
+   response
 6. If an error occurs, the **GrpcServerExceptionAdvice** maps it to the appropriate gRPC status code with metadata
 7. Back in the gateway, the response is mapped from Protobuf to a GraphQL type using **MapStruct**
 8. The GraphQL framework returns the response to the client
 
-Every step in this chain benefits from compile-time type safety, Spring's auto-configuration, and the clean separation of concerns provided by hexagonal architecture.
+Every step in this chain benefits from compile-time type safety, Spring's auto-configuration, and the clean separation
+of concerns provided by hexagonal architecture.
 
 ## Credits
 
-Special thanks to the **Entur** team for the [mapstruct-spi-protobuf](https://github.com/entur/mapstruct-spi-protobuf) library. It's one of those small dependencies that makes a huge difference in developer experience when working with Protobuf and MapStruct together.
+Special thanks to the **Entur** team for the [mapstruct-spi-protobuf](https://github.com/entur/mapstruct-spi-protobuf)
+library. It's one of those small dependencies that makes a huge difference in developer experience when working with
+Protobuf and MapStruct together.
 
 ---
 

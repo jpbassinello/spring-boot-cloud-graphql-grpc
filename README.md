@@ -618,6 +618,9 @@ Micrometer collects metrics for:
 ### Blog Posts
 
 - [Introducing SBCGG](posts/1-About-SBCGG.md) - The story behind this project and why it was built
+- [gRPC in SBCGG](posts/2-gRPC-in-SBCGG.md) - Spring gRPC, Service Discovery, and Type-Safe Mapping
+- [Testcontainers with Gradle Test Fixtures](posts/3-Testcontainers-with-Gradle-Test-Fixtures.md) - Sharing Testcontainers configuration across microservices
+- [Claude Skills for Dependency Upgrades](posts/4-Claude-Skills-for-Dependency-Upgrades.md) - Automating dependency upgrades with Claude Code skills
 
 ### Additional Resources
 
