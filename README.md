@@ -621,6 +621,7 @@ Micrometer collects metrics for:
 - [gRPC in SBCGG](posts/2-gRPC-in-SBCGG.md) - Spring gRPC, Service Discovery, and Type-Safe Mapping
 - [Testcontainers with Gradle Test Fixtures](posts/3-Testcontainers-with-Gradle-Test-Fixtures.md) - Sharing Testcontainers configuration across microservices
 - [Claude Skills for Dependency Upgrades](posts/4-Claude-Skills-for-Dependency-Upgrades.md) - Automating dependency upgrades with Claude Code skills
+- [Observability in SBCGG](posts/5-Observability-in-SBCGG.md) - Logs, traces, and metrics with Spring Boot 4 and Grafana LGTM
 
 ### Additional Resources
 
