@@ -28,7 +28,7 @@ services:
 
   # Identity and Access Management
   keycloak:
-    image: quay.io/keycloak/keycloak:26.5.4
+    image: quay.io/keycloak/keycloak:26.5.5
     container_name: sbcgg-keycloak
     restart: unless-stopped
     ports:

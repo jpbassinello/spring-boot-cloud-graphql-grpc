@@ -181,7 +181,7 @@ principles:
 ### Observability & Monitoring
 
 - [OpenTelemetry](https://opentelemetry.io/) 2.25.0 - Distributed tracing and logging
-- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.19.1 - Loki (logs), Grafana (
+- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.20.0 - Loki (logs), Grafana (
   visualization), Tempo (traces), Mimir (metrics)
 - [Micrometer](https://micrometer.io/) - Application metrics
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html) -
@@ -189,7 +189,7 @@ principles:
 
 ### Security & Authentication
 
-- [Keycloak](https://www.keycloak.org/) 26.5.4 - Identity and access management
+- [Keycloak](https://www.keycloak.org/) 26.5.5 - Identity and access management
 
 ### Developer Tools
 
