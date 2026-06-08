@@ -12,6 +12,7 @@
 /.idea/sonarlint-state.xml
 .idea/runConfigurations.xml
 .idea/httpRequests/
+.idea/awsToolkit.xml
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
