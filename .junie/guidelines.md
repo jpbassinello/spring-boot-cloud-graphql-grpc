@@ -104,7 +104,7 @@ Uses **Gradle Version Catalogs** (defined in `settings.gradle.kts`). Key depende
 
 | Category      | Library         | Purpose                       |
 |---------------|-----------------|-------------------------------|
-| Framework     | Spring Boot 4.0.3 | Application framework         |
+| Framework     | Spring Boot 4.0.6 | Application framework         |
 | Cloud         | Spring Cloud    | Microservices toolkit         |
 | Discovery     | Consul          | Service discovery & config    |
 | Security      | Keycloak        | Identity & access management  |

@@ -3,8 +3,8 @@
 > A production-ready, enterprise-grade microservices platform built with Spring Boot, gRPC, and GraphQL
 
 [![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://openjdk.java.net/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.3-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Spring gRPC](https://img.shields.io/badge/Spring%20gRPC-1.0.2-blue.svg)](https://docs.spring.io/spring-grpc/reference/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.6-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Spring gRPC](https://img.shields.io/badge/Spring%20gRPC-1.0.3-blue.svg)](https://docs.spring.io/spring-grpc/reference/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ## Table of Contents
@@ -44,7 +44,7 @@ different approaches for the project. Feel free to contribute to sbcgg.
 ## Overview
 
 SBCGG (Spring Boot Cloud GraphQL gRPC) is a modern, cloud-native microservices platform that demonstrates
-enterprise-grade architecture patterns and best practices. Built with **Spring Boot 4.0.3** and **Spring Cloud 2025.1.1
+enterprise-grade architecture patterns and best practices. Built with **Spring Boot 4.0.6** and **Spring Cloud 2025.1.1
 **, it provides a scalable, resilient foundation for distributed systems.
 
 ### Cloud Agnostic
@@ -157,31 +157,31 @@ principles:
 
 ### Core Framework
 
-- [Spring Boot](https://spring.io/projects/spring-boot) 4.0.3 - Application framework
+- [Spring Boot](https://spring.io/projects/spring-boot) 4.0.6 - Application framework
 - [Spring Cloud](https://spring.io/projects/spring-cloud) 2025.1.1 - Microservices toolkit
-- [Spring Security](https://spring.io/projects/spring-security) 7.0.3 - Security framework
+- [Spring Security](https://spring.io/projects/spring-security) 7.0.5 - Security framework
 - [Java](https://openjdk.java.net/) 25 (LTS) - Programming language
 
 ### Communication & Infrastructure
 
-- [Spring gRPC](https://docs.spring.io/spring-grpc/reference/) 1.0.2 - High-performance RPC framework
+- [Spring gRPC](https://docs.spring.io/spring-grpc/reference/) 1.0.3 - High-performance RPC framework
 - [Protocol Buffers](https://developers.google.com/protocol-buffers) 4.33.4 - Serialization format
 - [GraphQL Java](https://www.graphql-java.com/) - GraphQL implementation
 - [Spring Cloud Consul](https://docs.spring.io/spring-cloud-consul/reference/) - Service discovery and configuration
-- [HashiCorp Consul](https://www.consul.io/) 1.22.5 - Service mesh, discovery, and configuration
+- [HashiCorp Consul](https://www.consul.io/) 1.22.7 - Service mesh, discovery, and configuration
 
 ### Data & Persistence
 
 - [Spring Data JPA](https://spring.io/projects/spring-data-jpa) - Data access layer
-- [PostgreSQL](https://www.postgresql.org/) 18.3 - Relational database
+- [PostgreSQL](https://www.postgresql.org/) 18.4 - Relational database
 - [HikariCP](https://github.com/brettwooldridge/HikariCP) - JDBC connection pool
 - [Flyway](https://flywaydb.org/) - Database migration tool
-- [Redis](https://redis.io/) 8.6.1 - Distributed cache
+- [Redis](https://redis.io/) 8.8.0 - Distributed cache
 
 ### Observability & Monitoring
 
-- [OpenTelemetry](https://opentelemetry.io/) 2.25.0 - Distributed tracing and logging
-- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.20.0 - Loki (logs), Grafana (
+- [OpenTelemetry](https://opentelemetry.io/) 2.28.1 - Distributed tracing and logging
+- [Grafana LGTM Stack](https://grafana.com/docs/opentelemetry/docker-lgtm/) 0.28.0 - Loki (logs), Grafana (
   visualization), Tempo (traces), Mimir (metrics)
 - [Micrometer](https://micrometer.io/) - Application metrics
 - [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html) -
@@ -189,13 +189,13 @@ principles:
 
 ### Security & Authentication
 
-- [Keycloak](https://www.keycloak.org/) 26.5.5 - Identity and access management
+- [Keycloak](https://www.keycloak.org/) 26.6.3 - Identity and access management
 
 ### Developer Tools
 
 - [MapStruct](https://mapstruct.org/) 1.6.3 - Type-safe bean mapping
 - [Lombok](https://projectlombok.org/) - Boilerplate reduction
-- [ShedLock](https://github.com/lukas-krecan/ShedLock) 7.6.0 - Distributed lock
+- [ShedLock](https://github.com/lukas-krecan/ShedLock) 7.7.0 - Distributed lock
 
 ### Build & Quality
 

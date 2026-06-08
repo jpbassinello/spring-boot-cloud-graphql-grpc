@@ -45,7 +45,7 @@ subprojects {
         annotationProcessor("no.entur.mapstruct.spi:protobuf-spi-impl:${rootProject.libs.versions.spi.protobuf.mapstruct.get()}")
 
         // JUnit platform launcher for all test executions
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.0")
     }
 
     tasks.withType<Test>().configureEach {
@@ -60,7 +60,7 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion = "13.3.0"
+        toolVersion = "13.5.0"
         configFile = rootProject.file("config/checkstyle/checkstyle.xml")
     }
 

@@ -47,13 +47,38 @@ Plugins:
 | `buf` | `build.buf` |
 | `lombok` | `io.freefair.lombok` |
 
-### Hardcoded Versions (`build.gradle.kts`)
+### Hardcoded Versions (root `build.gradle.kts`)
 
 | Artifact | What to grep |
 |----------|-------------|
 | `com.github.spotbugs:spotbugs-annotations` | `spotbugs-annotations:` |
 | `org.junit.platform:junit-platform-launcher` | `junit-platform-launcher:` |
 | Checkstyle | `toolVersion =` |
+
+### Module-Level Hardcoded Dependencies (all `build.gradle.kts`)
+
+The version catalog and root `build.gradle.kts` do NOT capture every dependency.
+Individual module `build.gradle.kts` files pin their own coordinates inline. **Always
+scan for these** — do not rely on a static list, as modules and deps change over time:
+
+```bash
+grep -rnE '"[a-z][^"]*:[^"]*:[0-9][^"]*"' --include="build.gradle.kts" . \
+  | grep -viE 'rootProject\.libs|SpringBootPlugin|version = "0\.'
+```
+
+This surfaces coordinates like `group:artifact:version` that are hardcoded outside the
+catalog. Known examples (verify against current scan output — the list is not exhaustive):
+
+| Coordinate | Module |
+|------------|--------|
+| `commons-io:commons-io` | `tests/e2e` |
+| `com.github.f4b6a3:uuid-creator` | `shared/spring-jpa` |
+| `com.googlecode.libphonenumber:libphonenumber` | `shared/validation` |
+| `com.graphql-java:graphql-java-extended-scalars` | `services/graphql/gateway` |
+| `javax.annotation:javax.annotation-api` | `grpc-interfaces` (legacy EOL — no newer release) |
+
+Record each coordinate + current version + owning module file. Treat these as part of the
+`java` scope.
 
 ### Docker Images
 
@@ -81,11 +106,23 @@ Search for the latest **stable** release of each dependency (no RC, milestone, s
 
 ### Java / Gradle Dependencies
 
-For each dependency, use these search strategies:
+For each dependency, use these search strategies (in order of reliability):
 
-1. **GitHub releases page** of the project (most reliable)
-2. **Maven Central API**: `https://search.maven.org/solrsearch/select?q=g:<groupId>+AND+a:<artifactId>&rows=5&wt=json`
-3. **Web search** for `<library-name> latest version` as fallback
+1. **Maven Central metadata XML via `curl`** (most reliable + always current):
+   ```bash
+   curl -s "https://repo1.maven.org/maven2/<group/path>/<artifact>/maven-metadata.xml" \
+     | grep -E "<release>|<latest>"
+   # and to see recent versions / filter pre-releases:
+   curl -s ".../maven-metadata.xml" | grep -oE "<version>[^<]+</version>" | tail -12
+   ```
+   Convert the groupId dots to slashes in the path (e.g. `org.mapstruct` → `org/mapstruct`).
+   NOTE: `WebFetch` returns HTTP 403 on `repo1.maven.org` — use `curl` (via Bash) for these.
+   `<release>`/`<latest>` may point at a pre-release (RC/M/Beta); always confirm against the
+   version list and pick the newest STABLE one.
+2. **`search.maven.org/solrsearch` is UNRELIABLE** — its index lags badly and has returned
+   versions OLDER than what the project already used. Avoid it; use metadata XML instead.
+3. **GitHub releases page** of the project as a cross-check.
+4. **Web search** for `<library-name> latest version` as a last-resort fallback.
 
 For Gradle plugins, check:
 - `https://plugins.gradle.org/plugin/<plugin-id>`
@@ -135,6 +172,12 @@ For Docker Hub images, search for latest stable tags:
 | spotbugs-annotations | X.Y.Z   | A.B.C  | UPDATE/SKIP |
 | ...
 
+### Module-Level Dependencies
+| Coordinate           | Module           | Current | Latest | Action      |
+|----------------------|------------------|---------|--------|-------------|
+| commons-io           | tests/e2e        | X.Y.Z   | A.B.C  | UPDATE/SKIP |
+| ...
+
 ### Docker Images
 | Image               | Compose  | K8s     | Latest  | Action      |
 |---------------------|----------|---------|---------|-------------|
@@ -174,6 +217,12 @@ Edit the hardcoded version strings:
 
 Do NOT change `JavaLanguageVersion.of(25)` unless explicitly requested.
 
+### Step 2b: Module-level `build.gradle.kts` files (if scope includes `java` or `all`)
+
+For each hardcoded coordinate found by the Phase 1 module scan, edit the inline version
+string in its owning module file. Skip any already at the latest stable version, and skip
+EOL artifacts with no newer release (e.g. `javax.annotation-api`).
+
 ### Step 3: Docker Compose files (if scope includes `docker` or `all`)
 
 Update image tags in:
@@ -202,6 +251,8 @@ Update ALL image tags to match Docker Compose versions (fix any drift):
 - Update Prerequisites section if Gradle version changed
 
 **`CLAUDE.md` (root):**
+- NOTE: root `CLAUDE.md` is a **symlink** to `.junie/guidelines.md`. Editing the symlink path
+  is refused — edit the real target `.junie/guidelines.md` directly (`realpath CLAUDE.md` to confirm).
 - Update the Key Dependencies table (Version column)
 - Update any version references in the Prerequisites section
 
