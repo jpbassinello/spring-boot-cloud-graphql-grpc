@@ -1,3 +1,5 @@
+name: sbcgg-dev
+
 include:
   - ../shared/docker-compose.yml
 
@@ -38,6 +40,14 @@ services:
       - '4317:4317'
       - '4318:4318'
       - '3100:3000'
+    environment:
+      # Loki ships with no compactor and no limits_config, which means retention is both
+      # infinite and unenforceable -- an idle stack grows until the disk fills, and a full WAL
+      # disk makes Loki 503 every log push (this silently killed log ingestion in a fork of
+      # this project). Passing flags rather than mounting a replacement loki-config.yaml keeps
+      # the image's own config authoritative across upgrades; the compactor needs a working
+      # dir and a delete-request store before -store.retention is honoured.
+      - LOKI_EXTRA_ARGS=-compactor.working-directory=/data/loki/compactor -compactor.retention-enabled=true -compactor.delete-request-store=filesystem -store.retention=336h
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:3000" ]
       interval: 5s

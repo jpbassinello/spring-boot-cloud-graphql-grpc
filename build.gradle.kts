@@ -38,6 +38,11 @@ subprojects {
         implementation(platform("org.springframework.security:spring-security-bom:${rootProject.libs.versions.spring.security.get()}"))
         implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${rootProject.libs.versions.spring.cloud.get()}"))
         implementation(platform("org.springframework.grpc:spring-grpc-dependencies:${rootProject.libs.versions.spring.grpc.get()}"))
+        // Boot's grpc-bom pins an older grpc than spring-grpc-core's direct dependency, which
+        // skews grpc-netty behind grpc-core at runtime (AbstractMethodError starting the gRPC
+        // server). Re-import grpc-bom at the catalog version so the whole io.grpc family moves
+        // together with the protoc-gen-grpc-java that generates our stubs.
+        implementation(platform("io.grpc:grpc-bom:${rootProject.libs.versions.protoc.grpc.get()}"))
         implementation(platform("org.testcontainers:testcontainers-bom:${rootProject.libs.versions.testcontainers.get()}"))
         implementation("com.github.spotbugs:spotbugs-annotations:4.9.8")
 
@@ -48,10 +53,25 @@ subprojects {
         testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.0")
     }
 
+    // The BOMs above are added to `implementation`, which testFixtures configurations do not
+    // extend, so a module with test fixtures would otherwise have to re-import every platform in
+    // its own build file just to write an unversioned testFixtures dependency.
+    plugins.withId("java-test-fixtures") {
+        dependencies {
+            "testFixturesImplementation"(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
+            "testFixturesImplementation"(platform("org.testcontainers:testcontainers-bom:${rootProject.libs.versions.testcontainers.get()}"))
+        }
+    }
+
     tasks.withType<Test>().configureEach {
         useJUnitPlatform()
         maxParallelForks = (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
-        jvmArgs("-XX:+EnableDynamicAgentLoading")
+        jvmArgs("-XX:+EnableDynamicAgentLoading", "--sun-misc-unsafe-memory-access=allow")
+    }
+
+    tasks.withType<JavaExec>().configureEach {
+        // Silence JEP 498 warning from protobuf-java's sun.misc.Unsafe usage
+        jvmArgs("--sun-misc-unsafe-memory-access=allow")
     }
 
     tasks.withType<JavaCompile>().configureEach {

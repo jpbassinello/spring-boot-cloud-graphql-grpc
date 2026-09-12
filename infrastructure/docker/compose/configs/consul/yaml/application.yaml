@@ -1,0 +1,12 @@
+# Shared Consul KV seed, loaded by every service under the `application` key.
+#
+# Consul-imported values override the profile config that declares the import (that is how
+# `password: "" # from config server` gets filled), so a literal value here would beat the
+# environment variable the container is started with. Keep entries as placeholder
+# *expressions*, not placeholder *values*, so the env var stays authoritative.
+#
+# Nothing service-specific belongs here — use <service>.yaml for that.
+ai:
+  client:
+    open-ai:
+      api-key: ${OPENAI_API_KEY:}

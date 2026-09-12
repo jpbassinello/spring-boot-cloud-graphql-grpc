@@ -1,0 +1,7 @@
+storage:
+  endpoint: http://minio:9000
+  region: us-east-1
+  access-key: minio
+  secret-key: miniominio
+  bucket: growth-console-dev
+  path-style-access: true

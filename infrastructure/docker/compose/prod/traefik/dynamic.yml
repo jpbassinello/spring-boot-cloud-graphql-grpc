@@ -1,0 +1,22 @@
+# Traefik dynamic (file-provider) config.
+#
+# Deliberately defines NO TLS certificate. Every router in docker-compose.yml sets
+# `tls.certresolver=le`, so Let's Encrypt (HTTP-01) issues a real, publicly trusted cert per
+# hostname. That works with plain DNS A records pointing at the host.
+#
+# If you put the stack behind a CDN that terminates browser TLS (Cloudflare "Full", non-strict),
+# you can drop `tls.certresolver=le` from the proxied routers and let them be served Traefik's
+# built-in self-signed default cert instead — the CDN accepts it at the edge.
+#
+# In that setup, do NOT add a wildcard `*.example.com` cert here (neither as `tls.certificates`
+# nor as `stores.default.defaultCertificate`): its SAN would cover every host, which makes
+# Traefik's ACME coverage check log "No ACME certificate generation required" and never issue
+# the cert that a DNS-only host (e.g. one receiving provider webhooks directly, bypassing the
+# CDN) actually needs.
+#
+# NOTE: `tls` must not be an empty/standalone element (Traefik rejects `tls: {}`), so give it
+# real, cert-free content via a TLS options block — which also enforces a sane version floor.
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12

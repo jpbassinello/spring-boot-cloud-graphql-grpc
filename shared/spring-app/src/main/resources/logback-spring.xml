@@ -8,15 +8,29 @@
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
-    <springProfile name="dev-docker">
+    <springProfile name="dev-docker,prod-docker">
         <appender name="OpenTelemetry"
                   class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+            <!-- Everything captured here rides along as Loki structured metadata, which is
+                 stored per log record and counts against the same disk as the log bodies.
+                 In a fork of this project, with code attributes, logger context and a wildcard
+                 MDC turned on, metadata was 74% of everything Loki ingested, and records were
+                 dropped with reason=structured_metadata_too_large. So capture only what
+                 something actually reads:
+                 * code attributes: the logger name is already on every record and pins down
+                   the class; file/line/function per record is not worth 4 attributes.
+                 * logger context: static per JVM, and service.name already identifies it.
+                 * MDC: nothing in this codebase writes to the MDC, and trace/span ids reach
+                   Loki through the log record's trace context, not as metadata
+                   (application.yaml also blanks the correlation pattern). Re-add specific keys
+                   here (never `*`) if a service starts populating the MDC.
+                 Markers and key-value pairs stay on: nothing emits them today, so they cost
+                 nothing, and they are the two that carry real per-record meaning if used. -->
             <captureExperimentalAttributes>false</captureExperimentalAttributes>
-            <captureCodeAttributes>true</captureCodeAttributes>
+            <captureCodeAttributes>false</captureCodeAttributes>
             <captureMarkerAttribute>true</captureMarkerAttribute>
             <captureKeyValuePairAttributes>true</captureKeyValuePairAttributes>
-            <captureLoggerContext>true</captureLoggerContext>
-            <captureMdcAttributes>*</captureMdcAttributes>
+            <captureLoggerContext>false</captureLoggerContext>
         </appender>
 
         <root level="INFO">

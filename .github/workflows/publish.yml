@@ -1,0 +1,191 @@
+name: Publish
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io/jpbassinello
+  # The services that are actually deployed, and the only ones images are built for. Listing
+  # them explicitly rather than running a blanket `./gradlew bootBuildImage` keeps local-only
+  # or tooling modules from producing images nobody pulls — pure runner disk for nothing.
+  IMAGE_TASKS: >-
+    :services:graphql:gateway:bootBuildImage
+    :services:grpc:messages:bootBuildImage
+    :services:grpc:users:bootBuildImage
+
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Build and test
+        run: ./gradlew build
+
+      # ubuntu-latest ships ~25GB of toolchains this build never touches, while a buildpack run
+      # needs room for the builder+run image pair, every app image, and the per-image pack cache
+      # volumes. Reclaim first, or the export dies with "no space left on device" partway through.
+      - name: Free disk space on the runner
+        run: |
+          echo "before:"; df -h / | tail -1
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+                      /usr/local/.ghcup /opt/hostedtoolcache/CodeQL \
+                      /usr/local/share/powershell /usr/share/swift || true
+          sudo docker image prune -af || true
+          echo "after:"; df -h / | tail -1
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # --max-workers=2 is load-bearing: gradle.properties sets org.gradle.parallel=true, so on
+      # a 4-core runner up to four buildpack exports run at once, each holding a full temp
+      # write-set of its layers. Peak disk, not total disk, is what overflows.
+      - name: Build and push images
+        run: |
+          ./gradlew ${{ env.IMAGE_TASKS }} \
+            --max-workers=2 \
+            -PimageRegistry=${{ env.REGISTRY }} \
+            -PpublishImage=true \
+            -PregistryUsername=${{ github.actor }} \
+            -PregistryPassword=${{ secrets.GITHUB_TOKEN }}
+          # pack leaves a build+launch cache volume per image; useless on a throwaway runner but
+          # still occupying the disk the next step needs.
+          docker volume prune -af || true
+          df -h / | tail -1
+
+      # Tag every image with the immutable commit SHA, taken from the ':latest' images just
+      # built. Deploys pin to this tag so all services move together and a stale build can never
+      # linger. Runs last, so a partial/failed publish never produces a deployable SHA.
+      - name: Tag and push immutable per-commit images
+        run: |
+          for svc in users messages gateway; do
+            docker tag "${{ env.REGISTRY }}/sbcgg/$svc:latest" "${{ env.REGISTRY }}/sbcgg/$svc:${{ github.sha }}"
+            docker push "${{ env.REGISTRY }}/sbcgg/$svc:${{ github.sha }}"
+          done
+
+  deploy:
+    needs: build-test-publish
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          REGISTRY: ${{ env.REGISTRY }}
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          passphrase: ${{ secrets.DEPLOY_SSH_KEY_PASSPHRASE }}
+          envs: IMAGE_TAG,REGISTRY
+          script: |
+            set -e
+            cd ${{ secrets.DEPLOY_PATH }}
+            echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.DEPLOY_USER }} --password-stdin
+
+            # Sync the host checkout to the exact deployed commit so compose/config changes
+            # actually ship. reset --hard only touches tracked files, leaving untracked host
+            # files (.env, traefik/certs) intact.
+            git fetch --all --prune
+            git checkout --detach "${IMAGE_TAG}"
+            git reset --hard "${IMAGE_TAG}"
+
+            cd infrastructure/docker/compose/prod
+
+            # Fail fast if the host .env is missing or lacks its secrets. The rewrite below only
+            # preserves values that are already present; without this guard a missing/blank .env
+            # silently collapses to just IMAGE_TAG, every secret resolves to "", and Keycloak
+            # dies ~60s later on an empty admin password.
+            if [ ! -f .env ]; then
+              echo "FATAL: host .env is missing in $(pwd) — refusing to rewrite it down to just IMAGE_TAG"
+              exit 1
+            fi
+            for k in POSTGRES_PASSWORD KEYCLOAK_ADMIN_PASSWORD REDIS_PASSWORD \
+                     KEYCLOAK_HOSTNAME GATEWAY_HOSTNAME ADMIN_BASIC_AUTH ACME_EMAIL; do
+              if ! grep -qE "^${k}=.+" .env; then
+                echo "FATAL: ${k} missing or empty in host .env"
+                exit 1
+              fi
+            done
+
+            # Pin this deploy to the exact commit's images so every service moves together.
+            # Persisted to .env so manual `docker compose` on the host uses the same set.
+            grep -v '^IMAGE_TAG=' .env > .env.tmp 2>/dev/null || true
+            echo "IMAGE_TAG=${IMAGE_TAG}" >> .env.tmp
+            mv .env.tmp .env
+
+            docker compose pull
+            docker compose up -d --remove-orphans
+            # -a, not just dangling: every deploy pulls two tags per service (:latest and
+            # :<sha>), so the previous deploy's sha-tagged images stay *tagged* and a plain
+            # `prune -f` never reclaims them. They pile up until the disk fills, which makes
+            # Loki 503 every log push.
+            docker image prune -af --filter "until=24h"
+
+            echo "Waiting for services to be healthy..."
+            RETRIES=30
+            HEALTHY=0
+            for i in $(seq 1 $RETRIES); do
+              EXITED=$(docker compose ps --format json | grep -c '"exited"' || true)
+              if [ "$EXITED" -gt 0 ]; then
+                echo "ERROR: Some containers exited unexpectedly"
+                docker compose ps
+                docker compose logs --tail=30 $(docker compose ps --status=exited --format '{{.Name}}')
+                exit 1
+              fi
+              UNHEALTHY=$(docker compose ps --format json | grep -c '"unhealthy"\|"starting"' || true)
+              if [ "$UNHEALTHY" -eq 0 ]; then
+                echo "All services are healthy"
+                HEALTHY=1
+                break
+              fi
+              echo "Attempt $i/$RETRIES - waiting for services..."
+              sleep 10
+            done
+
+            if [ "$HEALTHY" -ne 1 ]; then
+              echo "ERROR: Services did not become healthy in time"
+              docker compose ps
+              docker compose logs --tail=30
+              exit 1
+            fi
+
+            # Guard against version skew: every app service must run THIS deploy's image.
+            # Catches a service that failed to recreate — the class of bug that produces
+            # cross-service UNIMPLEMENTED gRPC errors.
+            echo "Verifying all services run tag ${IMAGE_TAG}..."
+            SKEW=0
+            for svc in users messages gateway; do
+              RUNNING=$(docker inspect --format '{{.Config.Image}}' "sbcgg-$svc" 2>/dev/null || echo "MISSING")
+              EXPECT="${REGISTRY}/sbcgg/$svc:${IMAGE_TAG}"
+              if [ "$RUNNING" != "$EXPECT" ]; then
+                echo "ERROR: sbcgg-$svc runs '$RUNNING', expected '$EXPECT'"
+                SKEW=1
+              fi
+            done
+            if [ "$SKEW" -ne 0 ]; then
+              exit 1
+            fi
+            echo "Deploy complete: all services on ${IMAGE_TAG}"

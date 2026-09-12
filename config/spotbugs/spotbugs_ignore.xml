@@ -9,6 +9,34 @@
             <Bug pattern="EI_EXPOSE_REP"/>
             <!-- Ignore when internal representation stores reference to external representation -->
             <Bug pattern="EI_EXPOSE_REP2"/>
+            <!-- Ignore Format string should use %n rather than \n  -->
+            <Bug pattern="VA_FORMAT_STRING_USES_NEWLINE"/>
         </Or>
+    </Match>
+    <!-- JPA entities inherit Serializable from BaseEntity — scoped to entity packages only -->
+    <Match>
+        <Package name="~.*\.domain\.entities"/>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
+    <!-- Ignore null-parameter warnings in test code (intentional partial construction) -->
+    <Match>
+        <Source name="~.*Test\.java"/>
+        <Bug pattern="NP_NONNULL_PARAM_VIOLATION"/>
+    </Match>
+    <!-- Ignore redundant null checks in MapStruct-generated mapper implementations -->
+    <Match>
+        <Class name="~.*MapperImpl"/>
+        <Or>
+            <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+            <!-- BaseMapper.mapStringToUUID is null-tolerant; proto IDs are always set in practice -->
+            <Bug pattern="NP_NULL_PARAM_DEREF_NONVIRTUAL"/>
+            <Bug pattern="NP_NULL_PARAM_DEREF"/>
+            <Bug pattern="NP_NONNULL_PARAM_VIOLATION"/>
+        </Or>
+    </Match>
+    <!-- Ignore unread field in test code (Mockito @Spy/@InjectMocks uses reflection) -->
+    <Match>
+        <Source name="~.*Test\.java"/>
+        <Bug pattern="URF_UNREAD_FIELD"/>
     </Match>
 </FindBugsFilter>

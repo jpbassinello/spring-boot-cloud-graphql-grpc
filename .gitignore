@@ -49,3 +49,21 @@ build/
 buildSrc/.gradle/
 buildSrc/build/
 build-cache/
+
+# Local credentials (per-developer overrides, never committed)
+application-local.yaml
+
+# Production secrets
+infrastructure/docker/compose/prod/.env
+infrastructure/docker/compose/prod/traefik/certs/
+
+# Node / Next.js (ui/)
+node_modules/
+.next/
+.env.local
+.env.*.local
+# Local Netlify folder
+.netlify
+# Generated GraphQL types (pnpm codegen)
+ui/src/graphql/generated/
+tsconfig.tsbuildinfo

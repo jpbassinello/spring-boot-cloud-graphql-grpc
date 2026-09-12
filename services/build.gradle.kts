@@ -18,6 +18,9 @@ subprojects {
         if (subprojects.isEmpty()) {
             apply(plugin = "org.springframework.boot")
 
+            val imageRegistry = findProperty("imageRegistry")?.toString()?.trimEnd('/')
+            val imagePrefix = if (imageRegistry.isNullOrBlank()) "sbcgg" else "$imageRegistry/sbcgg"
+
             tasks.named<BootBuildImage>("bootBuildImage") {
                 buildpacks.set(
                     listOf(
@@ -25,7 +28,7 @@ subprojects {
                         "docker.io/paketobuildpacks/health-checker:latest"
                     )
                 )
-                imageName.set("sbcgg/${project.name}:${project.version}")
+                imageName.set("${imagePrefix}/${project.name}:${project.version}")
                 environment.set(
                     mapOf(
                         "BP_JVM_VERSION" to "25",
@@ -34,10 +37,20 @@ subprojects {
                 )
                 tags.set(
                     listOf(
-                        "sbcgg/${project.name}:latest",
-                        "sbcgg/${project.name}:${project.version}"
+                        "${imagePrefix}/${project.name}:latest",
+                        "${imagePrefix}/${project.name}:${project.version}"
                     )
                 )
+                if (findProperty("publishImage") == "true") {
+                    publish.set(true)
+                    docker {
+                        publishRegistry {
+                            url.set(imageRegistry ?: "")
+                            username.set(findProperty("registryUsername")?.toString() ?: "")
+                            password.set(findProperty("registryPassword")?.toString() ?: "")
+                        }
+                    }
+                }
             }
         }
     }

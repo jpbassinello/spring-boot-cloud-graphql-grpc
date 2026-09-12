@@ -83,8 +83,17 @@ Record each coordinate + current version + owning module file. Treat these as pa
 ### Docker Images
 
 Read image tags from:
-- `infrastructure/docker/compose/shared/docker-compose.yml` (postgres, keycloak, redis)
+- `infrastructure/docker/compose/shared/docker-compose.yml` (postgres, keycloak, redis, minio, mc)
 - `infrastructure/docker/compose/dev/docker-compose.yml` (consul, lgtm)
+- `infrastructure/docker/compose/prod/docker-compose.yml` (traefik, postgres, keycloak, redis,
+  consul, lgtm) — **standalone: it does NOT `include:` `shared/`**, so it redefines every
+  infrastructure image. Its tags drift silently unless bumped here too.
+
+### Testcontainers Images (test fixtures)
+
+These pin their own image tags and must match the Docker Compose images:
+- `shared/spring-jpa/src/testFixtures/java/.../PostgresContainer.java` (postgres)
+- `shared/spring-storage/src/testFixtures/java/.../MinioContainer.java` (minio)
 
 ### Kubernetes Images
 
@@ -103,6 +112,30 @@ Read image tags from all manifests under `infrastructure/kubernetes/`:
 ## Phase 2: Research Latest Stable Versions
 
 Search for the latest **stable** release of each dependency (no RC, milestone, snapshot, or alpha/beta).
+
+### Known breaking changes to watch for
+
+These have bitten this project (or its forks) before — check them explicitly rather than
+assuming a minor bump is transparent:
+
+- **spring-grpc client properties.** `spring.grpc.client.channels.<name>.address` was renamed
+  to `spring.grpc.client.channel.<name>.target` in spring-grpc 1.1. Grep every
+  `application*.yml`/`yaml` under `services/` when bumping spring-grpc.
+- **spring-grpc starter coordinates.** `org.springframework.grpc:spring-grpc-{client,server}-spring-boot-starter`
+  became `org.springframework.boot:spring-boot-starter-grpc-{client,server}` once gRPC support
+  moved into Boot. Affects `shared/grpc-client` and `shared/grpc-server`.
+- **OpenTelemetry instrumentation vs core.** See the comment on the `opentelemetry` catalog
+  entry: instrumentation 2.N pairs with core 1.(N+34), and the core version comes from the Boot
+  BOM. Bumping instrumentation alone crashes at startup.
+- **protoc vs resolved runtime.** See the comment on `protoc-protobuf` / `protoc-grpc`. After
+  bumping Boot or spring-grpc, confirm with
+  `./gradlew :grpc-interfaces:users:dependencyInsight --dependency protobuf-java` and the same
+  for `grpc-core`.
+- **Spring Cloud ↔ Boot compatibility.** A Boot minor usually needs a specific Spring Cloud
+  service release; check the compatibility matrix before pairing them.
+- **SpotBugs plugin.** Held back deliberately (see the catalog comment). A bump can introduce
+  new detectors that fail the build on MapStruct-generated code; expect to extend
+  `config/spotbugs/spotbugs_ignore.xml`.
 
 ### Java / Gradle Dependencies
 
@@ -226,8 +259,16 @@ EOL artifacts with no newer release (e.g. `javax.annotation-api`).
 ### Step 3: Docker Compose files (if scope includes `docker` or `all`)
 
 Update image tags in:
-- `infrastructure/docker/compose/shared/docker-compose.yml` (postgres, keycloak, redis)
+- `infrastructure/docker/compose/shared/docker-compose.yml` (postgres, keycloak, redis, minio, mc)
 - `infrastructure/docker/compose/dev/docker-compose.yml` (consul, lgtm)
+- `infrastructure/docker/compose/prod/docker-compose.yml` (traefik + every infrastructure image
+  again — standalone file, keep in lockstep with `shared/` and `dev/`)
+
+### Step 3b: Testcontainers fixtures (if scope includes `docker` or `all`)
+
+Update the pinned image tags so the test containers match what compose runs:
+- `shared/spring-jpa/src/testFixtures/java/.../PostgresContainer.java`
+- `shared/spring-storage/src/testFixtures/java/.../MinioContainer.java`
 
 ### Step 4: Kubernetes manifests (if scope includes `kubernetes` or `all`)
 
@@ -251,8 +292,6 @@ Update ALL image tags to match Docker Compose versions (fix any drift):
 - Update Prerequisites section if Gradle version changed
 
 **`CLAUDE.md` (root):**
-- NOTE: root `CLAUDE.md` is a **symlink** to `.junie/guidelines.md`. Editing the symlink path
-  is refused — edit the real target `.junie/guidelines.md` directly (`realpath CLAUDE.md` to confirm).
 - Update the Key Dependencies table (Version column)
 - Update any version references in the Prerequisites section
 
@@ -261,6 +300,12 @@ Update ALL image tags to match Docker Compose versions (fix any drift):
 
 **`infrastructure/CLAUDE.md`:**
 - Review and update any inline version references (Docker image versions, etc.)
+
+**`.claude/` docs:**
+- `.claude/rules/troubleshooting.md` — infrastructure version / port references
+- `.claude/rules/code-quality.md` — SpotBugs plugin + annotations versions
+- `.claude/skills/consul-config/SKILL.md` — if the Consul version changed
+- `.claude/skills/database-migration/SKILL.md` — if DB/Redis versions changed
 
 ---
 

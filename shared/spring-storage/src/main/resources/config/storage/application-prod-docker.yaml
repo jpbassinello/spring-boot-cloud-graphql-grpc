@@ -1,0 +1,7 @@
+storage:
+  endpoint: https://60dc616db5456e593415fcff89966ba4.r2.cloudflarestorage.com
+  region: us-east-1
+  access-key: 1edeed43de9fee8cf07da88c3fc5f8e5
+  secret-key: ${STORAGE_SECRET_KEY}
+  bucket: growth-console-prod
+  path-style-access: true

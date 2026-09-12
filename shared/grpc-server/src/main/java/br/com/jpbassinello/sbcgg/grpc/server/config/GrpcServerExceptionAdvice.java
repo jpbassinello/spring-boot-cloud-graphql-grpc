@@ -47,10 +47,15 @@ public class GrpcServerExceptionAdvice implements GrpcExceptionHandler {
         .distinct()
         .toList();
 
-    return createConstraintViolationException(violations, ex);
+    // Bean-validation messages are framework-generated and carry internal argument paths
+    // ("registerUser.arg0.email: must not be blank"), so they stay out of the description; the
+    // per-field messages are already exposed through the violations metadata.
+    return createConstraintViolationException("Constraint violation", violations, ex);
   }
 
-  private StatusException createConstraintViolationException(@Nullable List<String> violations, Exception e) {
+  private StatusException createConstraintViolationException(String description,
+                                                             @Nullable List<String> violations,
+                                                             Exception e) {
     var metadata = new Metadata();
     if (violations != null && !violations.isEmpty()) {
       try {
@@ -60,7 +65,7 @@ public class GrpcServerExceptionAdvice implements GrpcExceptionHandler {
         log.error("Unexpected trying to convert violations to grpc metadata", e);
       }
     }
-    return Status.INVALID_ARGUMENT.withDescription("Constraint violation").withCause(e).asException(metadata);
+    return Status.INVALID_ARGUMENT.withDescription(description).withCause(e).asException(metadata);
   }
 
   private StatusException handleResourceNotFoundException(ResourceNotFoundException e) {
@@ -73,7 +78,13 @@ public class GrpcServerExceptionAdvice implements GrpcExceptionHandler {
 
   private StatusException handleBadRequestException(BadRequestException e) {
     log.warn("Bad request", e);
-    return createConstraintViolationException(e.getViolationCodes(), e);
+    // Unlike bean validation, these messages are authored for the end user, so pass them through:
+    // otherwise the client only sees "Constraint violation" and has to hardcode a message per
+    // violation code to say anything useful.
+    var description = e.getMessage() == null || e.getMessage().isBlank()
+        ? "Constraint violation"
+        : e.getMessage();
+    return createConstraintViolationException(description, e.getViolationCodes(), e);
   }
 
   private StatusException handleTimedOutException(TimedOutException e) {

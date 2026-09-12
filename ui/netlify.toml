@@ -1,0 +1,27 @@
+[build]
+  command = "pnpm build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Long-lived caching for Next.js fingerprinted static assets.
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache and immutable for static images and icons in /public.
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+# HSTS only — the rest of the security/crawl headers (X-Content-Type-Options,
+# Referrer-Policy, X-Frame-Options, sitemap Link) moved to next.config.ts's
+# headers(): Next.js's own SSR/edge-rendered routes didn't pick them up from
+# here, only static-asset responses did.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"

@@ -1,5 +1,6 @@
 package br.com.jpbassinello.sbcgg.graphql.gateway.config;
 
+import br.com.jpbassinello.sbcgg.exception.RateLimitException;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
@@ -71,6 +72,15 @@ public class CustomExceptionResolver extends DataFetcherExceptionResolverAdapter
           .path(env.getExecutionStepInfo().getPath())
           .location(env.getField().getSourceLocation())
           .extensions(extensions)
+          .build();
+    }
+
+    if (e instanceof RateLimitException) {
+      return GraphqlErrorBuilder.newError()
+          .errorType(ErrorType.FORBIDDEN)
+          .message(e.getMessage())
+          .path(env.getExecutionStepInfo().getPath())
+          .location(env.getField().getSourceLocation())
           .build();
     }
 

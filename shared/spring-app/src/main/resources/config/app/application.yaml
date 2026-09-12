@@ -23,5 +23,7 @@ management:
       application: ${spring.application.name}
 
 logging:
+  pattern:
+    correlation: "" # removes the blank trace ID field
   level:
     br.com.jpbassinello.sbcgg: INFO

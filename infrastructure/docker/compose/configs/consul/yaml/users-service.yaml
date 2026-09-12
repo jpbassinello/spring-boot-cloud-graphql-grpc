@@ -1,7 +1,13 @@
-# local file for grpc microservice configuration
+# Consul KV seed for the users service, loaded for dev, dev-docker and prod-docker.
+#
+# Placeholder *expressions*, not literal secrets: the defaults after the colon keep the local
+# stack working, while prod-docker resolves them from the users container's environment (fed
+# from the host .env). init-prod.sh only seeds keys that do not already exist, so a literal
+# dev password committed here would become the permanent prod value on first boot.
 spring:
   datasource:
-    password: postgres
+    password: ${POSTGRES_PASSWORD:postgres}
 
 keycloak:
-  password: keycloak
+  username: ${KEYCLOAK_ADMIN:keycloak}
+  password: ${KEYCLOAK_ADMIN_PASSWORD:keycloak}

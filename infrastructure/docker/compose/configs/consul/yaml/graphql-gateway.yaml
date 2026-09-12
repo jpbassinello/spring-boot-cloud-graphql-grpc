@@ -1,0 +1,9 @@
+# Consul KV seed for the GraphQL gateway, loaded for dev, dev-docker and prod-docker.
+#
+# Placeholder *expressions*, not literal secrets: the defaults after the colon keep the local
+# stack working, while prod-docker resolves them from the gateway container's environment (fed
+# from the host .env). init-prod.sh only seeds keys that do not already exist.
+spring:
+  data:
+    redis:
+      password: ${REDIS_PASSWORD:redis}

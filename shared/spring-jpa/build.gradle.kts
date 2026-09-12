@@ -1,5 +1,5 @@
 plugins {
-    `java-test-fixtures`
+    id("java-test-fixtures")
 }
 
 dependencies {
@@ -13,8 +13,6 @@ dependencies {
     api("org.postgresql:postgresql")
     api("com.github.f4b6a3:uuid-creator:6.1.1")
 
-    testFixturesApi(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
-    testFixturesApi(platform("org.testcontainers:testcontainers-bom:${rootProject.libs.versions.testcontainers.get()}"))
     testFixturesApi("org.springframework.boot:spring-boot-testcontainers")
     testFixturesApi("org.testcontainers:testcontainers-junit-jupiter")
     testFixturesApi("org.testcontainers:testcontainers-postgresql")

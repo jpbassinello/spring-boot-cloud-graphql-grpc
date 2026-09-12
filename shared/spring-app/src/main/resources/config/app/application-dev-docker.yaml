@@ -12,10 +12,22 @@ spring:
         enabled: true
         format: YAML
         fail-fast: true
+        retry:
+          enabled: true
+          initial-interval: 1000
+          max-attempts: 6
+          max-interval: 5000
+          multiplier: 1.5
       discovery:
         enabled: true
         register: true
         fail-fast: true
+        retry:
+          enabled: true
+          initial-interval: 1000
+          max-attempts: 6
+          max-interval: 5000
+          multiplier: 1.5
         prefer-ip-address: true
         health-check-path: /actuator/health
         health-check-interval: 15s

@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/users?cachePrepStmts=true&useServerPrepStmts=true
+    username: postgres
+    password: "" # from config server
+  cloud:
+    consul:
+      host: consul
+      config:
+        enabled: true
+        format: YAML
+        fail-fast: true
+  config:
+    import:
+      - "optional:consul:"
+      - "optional:classpath:config/jpa/application.yaml"
+      - "optional:classpath:config/app/application.yaml"
+      - "optional:classpath:config/app/application-prod-docker.yaml"
+  grpc:
+    client:
+      channels:
+        messages:
+          address: "discovery:///messages-service"
+
+keycloak:
+  server-url: http://keycloak:8080

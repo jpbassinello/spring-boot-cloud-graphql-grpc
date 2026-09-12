@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 @Configuration
 @Import(RedisConfig.class)
@@ -19,5 +20,13 @@ public class ShedLockConfig {
   @Bean
   public LockProvider lockProvider(RedisConnectionFactory redisConnectionFactory) {
     return new RedisLockProvider(redisConnectionFactory);
+  }
+
+  @Bean
+  public ThreadPoolTaskScheduler taskScheduler() {
+    var scheduler = new ThreadPoolTaskScheduler();
+    scheduler.setPoolSize(10);
+    scheduler.setThreadNamePrefix("scheduler-");
+    return scheduler;
   }
 }

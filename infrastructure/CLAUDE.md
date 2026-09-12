@@ -17,6 +17,42 @@ cd -
 | Consul       | 8500       | sbcgg-consul     |
 | Keycloak     | 9090       | sbcgg-keycloak   |
 | Grafana LGTM | 3100, 4318 | sbcgg-lgtm       |
+| MinIO        | 9000, 9001 | sbcgg-minio      |
+
+Note the layering: `dev/docker-compose.yml` `include:`s `shared/docker-compose.yml`, which holds
+everything that is not dev-only (Postgres, Keycloak, Redis, MinIO). Consul, LGTM and the app
+containers live in `dev/`.
+
+Postgres port 5432 is published as 5433 on the host to avoid colliding with a local install.
+
+## Production Stack
+
+```bash
+cd infrastructure/docker/compose/prod
+cp .env.example .env      # fill in every value; .env is gitignored
+docker compose up -d
+```
+
+Traefik fronts the stack, terminates TLS (Let's Encrypt HTTP-01) and routes by hostname; only
+80/443 are published. Consul is seeded by `configs/consul/init-prod.sh`, which **skips keys that
+already exist** so a hand-edited KV value survives a redeploy.
+
+`prod/docker-compose.yml` is **standalone** — it does not `include:` `shared/`, because the
+infrastructure containers need production settings (real passwords, tuned Postgres, named volumes,
+no published host ports). The cost is duplicated image tags: bumping a version in `shared/` or
+`dev/` without bumping `prod/` is silent version drift in production.
+
+Deploys run through `.github/workflows/publish.yml` (build → push per-commit images to GHCR → SSH
+deploy → health check → version-skew check). The alternative deployment target, Kubernetes
+manifests, lives in `infrastructure/kubernetes/`.
+
+## Consul KV Seeds
+
+`configs/consul/yaml/` holds one file per service plus a shared `application.yaml`. Values there
+are placeholder **expressions** (`${POSTGRES_PASSWORD:postgres}`), never literal secrets: the
+default after the colon keeps the local stack working while the container's environment supplies
+the real value in `prod-docker`. A literal committed here would become the permanent production
+value on first boot, because `init-prod.sh` never overwrites.
 
 ## Observability (Grafana LGTM Stack)
 

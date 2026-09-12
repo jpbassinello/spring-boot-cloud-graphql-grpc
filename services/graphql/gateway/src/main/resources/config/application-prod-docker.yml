@@ -1,0 +1,35 @@
+spring:
+  cloud:
+    consul:
+      host: consul
+      config:
+        enabled: true
+        format: YAML
+        fail-fast: true
+  config:
+    import:
+      - "optional:consul:"
+      - "optional:classpath:config/app/application.yaml"
+      - "optional:classpath:config/app/application-prod-docker.yaml"
+  graphql:
+    # Schema printing, introspection and GraphiQL are development affordances: they hand an
+    # attacker the full API surface. Off in production.
+    schema:
+      printer:
+        enabled: false
+      introspection:
+        enabled: false
+    graphiql:
+      enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/sbcgg/protocol/openid-connect/certs
+  grpc:
+    client:
+      channels:
+        users:
+          address: "discovery:///users-service"
+        messages:
+          address: "discovery:///messages-service"

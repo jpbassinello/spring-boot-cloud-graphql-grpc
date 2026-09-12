@@ -12,6 +12,8 @@ import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.SmartInitializingSingleton;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.observation.OpenTelemetryServerRequestObservationConvention;
@@ -19,12 +21,16 @@ import org.springframework.http.server.observation.OpenTelemetryServerRequestObs
 import java.util.List;
 
 @Configuration(proxyBeanMethods = false)
+@ConditionalOnProperty("management.opentelemetry.logging.export.otlp.endpoint")
 @Slf4j
 class OpenTelemetryConfig {
 
-  OpenTelemetryConfig(OpenTelemetry openTelemetry) {
-    OpenTelemetryAppender.install(openTelemetry);
-    log.info("Initialized OpenTelemetry");
+  @Bean
+  SmartInitializingSingleton openTelemetryAppenderInitializer(OpenTelemetry openTelemetry) {
+    return () -> {
+      OpenTelemetryAppender.install(openTelemetry);
+      log.info("Initialized OpenTelemetry");
+    };
   }
 
   @Bean
