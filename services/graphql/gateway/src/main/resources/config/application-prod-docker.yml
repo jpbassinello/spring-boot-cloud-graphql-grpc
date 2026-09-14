@@ -28,8 +28,8 @@ spring:
           jwk-set-uri: http://keycloak:8080/realms/sbcgg/protocol/openid-connect/certs
   grpc:
     client:
-      channels:
+      channel:
         users:
-          address: "discovery:///users-service"
+          target: "discovery:///users-service"
         messages:
-          address: "discovery:///messages-service"
+          target: "discovery:///messages-service"

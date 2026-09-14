@@ -3,7 +3,7 @@ spring:
     name: users-service
   grpc:
     client:
-      channels:
+      channel:
         messages:
           negotiation-type: PLAINTEXT
 

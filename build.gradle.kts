@@ -44,13 +44,13 @@ subprojects {
         // together with the protoc-gen-grpc-java that generates our stubs.
         implementation(platform("io.grpc:grpc-bom:${rootProject.libs.versions.protoc.grpc.get()}"))
         implementation(platform("org.testcontainers:testcontainers-bom:${rootProject.libs.versions.testcontainers.get()}"))
-        implementation("com.github.spotbugs:spotbugs-annotations:4.9.8")
+        implementation("com.github.spotbugs:spotbugs-annotations:4.10.4")
 
         annotationProcessor("org.mapstruct:mapstruct-processor:${rootProject.libs.versions.mapstruct.get()}")
         annotationProcessor("no.entur.mapstruct.spi:protobuf-spi-impl:${rootProject.libs.versions.spi.protobuf.mapstruct.get()}")
 
         // JUnit platform launcher for all test executions
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.0")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.3")
     }
 
     // The BOMs above are added to `implementation`, which testFixtures configurations do not
@@ -80,7 +80,7 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion = "13.5.0"
+        toolVersion = "14.1.0"
         configFile = rootProject.file("config/checkstyle/checkstyle.xml")
     }
 

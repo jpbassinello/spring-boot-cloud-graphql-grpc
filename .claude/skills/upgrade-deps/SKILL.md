@@ -121,9 +121,22 @@ assuming a minor bump is transparent:
 - **spring-grpc client properties.** `spring.grpc.client.channels.<name>.address` was renamed
   to `spring.grpc.client.channel.<name>.target` in spring-grpc 1.1. Grep every
   `application*.yml`/`yaml` under `services/` when bumping spring-grpc.
-- **spring-grpc starter coordinates.** `org.springframework.grpc:spring-grpc-{client,server}-spring-boot-starter`
-  became `org.springframework.boot:spring-boot-starter-grpc-{client,server}` once gRPC support
-  moved into Boot. Affects `shared/grpc-client` and `shared/grpc-server`.
+- **spring-grpc moved into Boot (Boot 4.1 / spring-grpc 1.1).** Three separate renames, all of
+  which this project hit:
+  - starters: `org.springframework.grpc:spring-grpc-{client,server}-spring-boot-starter` ->
+    `org.springframework.boot:spring-boot-starter-grpc-{client,server}` (`shared/grpc-client`,
+    `shared/grpc-server`).
+  - test support: `org.springframework.grpc:spring-grpc-test` stopped publishing at 1.0.3 and
+    became `org.springframework.boot:spring-boot-grpc-test`. A missing version on the old
+    coordinate is the symptom ("Could not find org.springframework.grpc:spring-grpc-test:").
+  - test annotation: `@AutoConfigureInProcessTransport` ->
+    `@AutoConfigureTestGrpcTransport`, same package.
+- **grpc-java split out the in-process transport.** `io.grpc:grpc-inprocess` is its own artifact
+  and neither `spring-boot-grpc-test` nor the client starter (which brings `grpc-netty`) pulls it
+  in. Without it `@AutoConfigureTestGrpcTransport` silently backs off on a missing
+  `InProcessServerBuilder`, and the test context comes up with **no `GrpcChannelFactory` bean at
+  all** — the error names the missing bean, never the missing transport. Any module with an
+  in-process gRPC integration test needs `testImplementation("io.grpc:grpc-inprocess")`.
 - **OpenTelemetry instrumentation vs core.** See the comment on the `opentelemetry` catalog
   entry: instrumentation 2.N pairs with core 1.(N+34), and the core version comes from the Boot
   BOM. Bumping instrumentation alone crashes at startup.
@@ -169,7 +182,14 @@ For Docker Hub images, search for latest stable tags:
 - Use web search: `<image-name> docker hub tags` or check the Docker Hub page directly
 - For `quay.io/keycloak/keycloak`, search Quay.io or the Keycloak releases page
 
-**Alpine tag strategy**: For `postgres` and `redis`, find the latest stable version and pair with the latest Alpine suffix. Pattern: `<version>-alpine<alpine-version>`.
+**Alpine tag strategy**: For `postgres` and `redis`, find the latest stable version and pair with the latest Alpine suffix. Pattern: `<version>-alpine<alpine-version>`. The two do not track the same Alpine: verify the exact tag exists rather than assuming (redis has had no `alpine3.24` build while postgres did).
+
+**MinIO is on quay.io, not Docker Hub.** `docker pull minio/minio` is denied; the images live at
+`quay.io/minio/{minio,mc}` under the same `RELEASE.*` tags. Testcontainers' MinIO module still
+expects the Docker Hub name, so `MinioContainer` has to declare the quay coordinates with
+`.asCompatibleSubstituteFor("minio/minio")` — without it the container refuses to start with
+"is a compatible substitute for". Verify a tag really resolves with
+`docker manifest inspect <image>` before committing it.
 
 **Important**: The Keycloak Docker image version and the Keycloak Java client library version are INDEPENDENT. Update them separately.
 

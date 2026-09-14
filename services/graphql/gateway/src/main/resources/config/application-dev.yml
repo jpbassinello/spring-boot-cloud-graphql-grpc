@@ -21,8 +21,8 @@ spring:
       port: 35732
   grpc:
     client:
-      channels:
+      channel:
         users:
-          address: "dns:///localhost:8091"
+          target: "dns:///localhost:8091"
         messages:
-          address: "dns:///localhost:8191"
+          target: "dns:///localhost:8191"

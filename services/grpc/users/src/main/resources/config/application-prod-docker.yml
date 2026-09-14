@@ -18,9 +18,9 @@ spring:
       - "optional:classpath:config/app/application-prod-docker.yaml"
   grpc:
     client:
-      channels:
+      channel:
         messages:
-          address: "discovery:///messages-service"
+          target: "discovery:///messages-service"
 
 keycloak:
   server-url: http://keycloak:8080

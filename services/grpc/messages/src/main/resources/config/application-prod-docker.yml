@@ -22,6 +22,6 @@ spring:
       - "optional:classpath:config/app/application-prod-docker.yaml"
   grpc:
     client:
-      channels:
+      channel:
         users:
-          address: "discovery:///users-service"
+          target: "discovery:///users-service"

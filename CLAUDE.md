@@ -36,7 +36,7 @@ cd ui && pnpm dev                        # Frontend dev server
 ## Prerequisites
 
 - **Java 25 (LTS)** - Required
-- **Gradle 9.7.0** - Wrapper included
+- **Gradle 9.7.1** - Wrapper included
 - **Docker & Docker Compose** - For infrastructure services
 - **Node 22+ and pnpm** - For the `ui/` frontend only
 
@@ -135,7 +135,7 @@ Uses **Gradle Version Catalogs** (defined in `settings.gradle.kts`). Key depende
 
 | Category      | Library         | Purpose                       |
 |---------------|-----------------|-------------------------------|
-| Framework     | Spring Boot 4.0.6 | Application framework         |
+| Framework     | Spring Boot 4.1.1 | Application framework         |
 | Cloud         | Spring Cloud    | Microservices toolkit         |
 | Discovery     | Consul          | Service discovery & config    |
 | Security      | Keycloak        | Identity & access management  |

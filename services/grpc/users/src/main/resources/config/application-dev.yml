@@ -18,9 +18,9 @@ spring:
     server:
       port: 8091
     client:
-      channels:
+      channel:
         messages:
-          address: "dns:///localhost:8191"
+          target: "dns:///localhost:8191"
 
 keycloak:
   server-url: http://localhost:9090

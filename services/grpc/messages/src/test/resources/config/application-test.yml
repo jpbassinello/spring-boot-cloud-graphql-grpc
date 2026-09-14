@@ -7,9 +7,9 @@ spring:
       inprocess:
         name: test
     client:
-      channels:
+      channel:
         inProcess:
-          address: "in-process:test"
+          target: "in-process:test"
 
 management:
   metrics:
