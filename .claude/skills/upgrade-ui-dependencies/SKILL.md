@@ -15,6 +15,20 @@ All commands run from the `ui/` directory.
 - **Package manager is pnpm.** Netlify builds with `pnpm build` (see `ui/netlify.toml`) and `ui/pnpm-lock.yaml` is the live lockfile. Use `pnpm`, never `npm`.
 - **Never run `npm install`.** A `package-lock.json` is not used by the build, drifts from reality, and shadows the real lockfile. If one appears, delete it.
 - **Some packages are pinned exactly (no caret) on purpose.** `next`, `react`, `react-dom`, and `eslint-config-next` are exact-pinned because they move together. Keep the exact-pin style when bumping them.
+- **`typescript` and `eslint` are deliberately held below their latest major.** Both are blocked by
+  the transitive toolchain `eslint-config-next` drags in, not by anything in `src/`, and a
+  published peer range will NOT warn you — the failures are runtime checks:
+  - **TypeScript is held at `~6.x`.** `typescript-eslint` hard-fails on TS 7.0 ("typescript-eslint
+    does not support TS 7.0"); `eslint-config-next` peers `typescript: ">=3.3.1"`, which is
+    misleading. Track https://github.com/typescript-eslint/typescript-eslint/issues/10940 and lift
+    the pin once TS >=7.1 is supported.
+  - **ESLint is held at `^9.x`.** ESLint 10 removed `context.getFilename()`, which
+    `eslint-plugin-react` (pulled in by `eslint-config-next`) still calls — `pnpm lint` dies with
+    "contextOrFilename.getFilename is not a function" before linting a single file. Retry when
+    `eslint-config-next` ships an `eslint-plugin-react` that supports ESLint 10.
+
+  Bump either one only as a deliberate experiment, and revert if `pnpm lint` fails — the build
+  (`pnpm build`) passes either way, so **lint is the gate that catches these, not build**.
 
 ## Phase 1: Discover Current Versions
 
@@ -100,3 +114,6 @@ Update version references if the upgrade changed anything documented:
 - [ ] `graphql` satisfies urql + codegen peer ranges
 - [ ] `pnpm build` passes
 - [ ] no `package-lock.json` was created
+- [ ] `typescript` still `~6.x` and `eslint` still `^9.x` (see Ground Rules) unless their
+      blockers are confirmed resolved
+- [ ] `pnpm-workspace.yaml`'s `minimumReleaseAgeExclude` entries match the new pinned versions
